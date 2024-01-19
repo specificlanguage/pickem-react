@@ -1,0 +1,56 @@
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import NavLink from "@/components/navbar/NavLink";
+import { FIREBASE_AUTH } from "@/components/firebase.ts";
+import { Button } from "@/components/ui/button.tsx";
+import { useNavigate } from "@tanstack/react-router";
+import { DarkmodeToggle } from "@/components/darkmode-toggle.tsx";
+
+export default function UserNav() {
+  const auth = FIREBASE_AUTH;
+  const user = auth.currentUser;
+  const navigate = useNavigate();
+
+  function logOut() {
+    auth.signOut();
+    navigate({ to: "/" });
+  }
+
+  return (
+    <NavigationMenu className="text-lg my-2 mx-4 container flex">
+      <NavigationMenuList className="lg:space-x-10 sm:space-x-4 md:flex">
+        {user ? (
+          <Avatar>
+            {user.photoURL ? (
+              <AvatarImage src={user.photoURL} />
+            ) : (
+              <AvatarFallback>{user.displayName?.at(0) ?? "?"}</AvatarFallback>
+            )}
+          </Avatar>
+        ) : null}
+        <NavigationMenuItem>
+          {user ? (
+            <Button
+              variant="ghost"
+              onClick={() => logOut()}
+              className="text-lg"
+            >
+              Sign Out
+            </Button>
+          ) : (
+            <NavLink href={"/login"} className="text-[12pt]">
+              Log In/Sign Up
+            </NavLink>
+          )}
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <DarkmodeToggle />
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
+}
