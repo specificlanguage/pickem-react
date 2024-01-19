@@ -13,7 +13,7 @@ interface NavLinkProps {
 export default function NavLink({ href, ...props }: NavLinkProps) {
   return (
     <Link
-      className="transition-all ease-in-out duration-100 hover:font-bold"
+      className="transition-all ease-in-out duration-100 hover:text-neutral-500"
       to={href}
       activeProps={{
         style: {

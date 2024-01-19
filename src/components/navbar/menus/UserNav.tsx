@@ -11,6 +11,19 @@ import { useNavigate } from "@tanstack/react-router";
 import { DarkmodeToggle } from "@/components/darkmode-toggle.tsx";
 
 export default function UserNav() {
+  function LoggedOutNav() {
+    return (
+      <div className={"space-x-6"}>
+        <NavLink href={"/login"} className="text-[12pt]">
+          Log In
+        </NavLink>
+        <NavLink href={"/signup"} className="text-[12pt]">
+          Sign Up
+        </NavLink>
+      </div>
+    );
+  }
+
   const auth = FIREBASE_AUTH;
   const user = auth.currentUser;
   const navigate = useNavigate();
@@ -22,7 +35,7 @@ export default function UserNav() {
 
   return (
     <NavigationMenu className="text-lg my-2 mx-4 container flex">
-      <NavigationMenuList className="lg:space-x-10 sm:space-x-4 md:flex">
+      <NavigationMenuList className="lg:space-x-10 sm:space-x-6 md:flex">
         {user ? (
           <Avatar>
             {user.photoURL ? (
@@ -42,9 +55,7 @@ export default function UserNav() {
               Sign Out
             </Button>
           ) : (
-            <NavLink href={"/login"} className="text-[12pt]">
-              Log In/Sign Up
-            </NavLink>
+            <LoggedOutNav />
           )}
         </NavigationMenuItem>
         <NavigationMenuItem>
