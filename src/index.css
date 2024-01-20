@@ -20,12 +20,12 @@
     --muted-foreground: 119 5% 35%;
     --accent: 81 10% 80%;
     --accent-foreground: 119 5% 10%;
-    --destructive: 0 50% 30%;
+    --destructive: 0 90% 40%;
     --destructive-foreground: 119 5% 90%;
     --border: 119 20% 50%;
     --input: 119 20% 18%;
     --ring: 119 49% 25%;
-    --radius: 0rem;
+    --radius: 0.5rem;
   }
   .dark  {
     --background: 119 10% 5%;
@@ -42,12 +42,12 @@
     --muted-foreground: 119 5% 60%;
     --accent: 81 10% 15%;
     --accent-foreground: 119 5% 90%;
-    --destructive: 0 50% 30%;
+    --destructive: 0 90% 40%;
     --destructive-foreground: 119 5% 90%;
     --border: 119 20% 18%;
     --input: 119 20% 18%;
     --ring: 119 44% 32%;
-    --radius: 0rem;
+    --radius: 0.5rem;
   }
 }
 

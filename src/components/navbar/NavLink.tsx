@@ -1,8 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import {
-  NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu.tsx";
 
 interface NavLinkProps {
   children: React.ReactNode;
@@ -10,7 +6,7 @@ interface NavLinkProps {
   className?: string;
 }
 
-export default function NavLink({ href, ...props }: NavLinkProps) {
+export default function NavLink({ href, children, ...props }: NavLinkProps) {
   return (
     <Link
       className="transition-all ease-in-out duration-100 hover:text-neutral-500"
@@ -20,8 +16,9 @@ export default function NavLink({ href, ...props }: NavLinkProps) {
           fontWeight: "bold",
         },
       }}
+      {...props}
     >
-      <NavigationMenuLink className={navigationMenuTriggerStyle()} {...props} />
+      {children}
     </Link>
   );
 }

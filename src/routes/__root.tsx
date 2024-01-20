@@ -7,9 +7,8 @@ export const Route = new RootRoute({
   component: () => (
     <div className="flex flex-col min-h-screen">
       <header className="w-full bg-white dark:bg-neutral-900">
-        <div className="ml-auto flex items-center space-x-4 max-w-6xl mx-auto p-2 gap-2">
+        <div className="ml-auto flex justify-between max-w-6xl mx-auto p-2 gap-2">
           <MainNav />
-          <div className="flex-1 flex items-center space-x-4" />
           <UserNav />
         </div>
       </header>
