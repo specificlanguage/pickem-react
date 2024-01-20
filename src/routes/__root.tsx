@@ -6,7 +6,7 @@ import UserNav from "@/components/navbar/menus/UserNav.tsx";
 export const Route = new RootRoute({
   component: () => (
     <div className="flex flex-col min-h-screen">
-      <header className="w-full bg-white dark:bg-neutral-900">
+      <header className="w-full bg-neutral-200 text-black">
         <div className="ml-auto flex justify-between max-w-6xl mx-auto p-2 gap-2">
           <MainNav />
           <UserNav />

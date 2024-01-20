@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 
 export default function LoginCard() {
   return (
-    <Card>
+    <Card className="bg-neutral-200">
       <CardHeader>
         <CardTitle>Log In</CardTitle>
         <CardDescription>

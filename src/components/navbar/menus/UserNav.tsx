@@ -8,7 +8,7 @@ import NavLink from "@/components/navbar/NavLink";
 import { FIREBASE_AUTH } from "@/components/firebase.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { useNavigate } from "@tanstack/react-router";
-import { DarkmodeToggle } from "@/components/darkmode-toggle.tsx";
+import { DarkmodeToggle } from "@/components/navbar/darkmode-toggle.tsx";
 
 export default function UserNav() {
   function LoggedOutNav() {

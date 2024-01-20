@@ -86,7 +86,7 @@ export function LoginForm() {
         <div className="flex justify-between">
           <Button
             type="button"
-            className="bg-neutral-500"
+            className="bg-neutral-500 hover:bg-neutral-600"
             onClick={() => navigate({ to: "/" })}
           >
             <FaArrowLeft className="mr-2" /> Back
