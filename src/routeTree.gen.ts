@@ -8,11 +8,24 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const SignupComponentImport = new FileRoute('/signup').createRoute()
 const LoginComponentImport = new FileRoute('/login').createRoute()
-const AboutComponentImport = new FileRoute('/about').createRoute()
 const IndexComponentImport = new FileRoute('/').createRoute()
+const UserOnboardingComponentImport = new FileRoute(
+  '/user/onboarding',
+).createRoute()
 
 // Create/Update Routes
+
+const SignupComponentRoute = SignupComponentImport.update({
+  path: '/signup',
+  getParentRoute: () => rootRoute,
+} as any).update({
+  component: lazyRouteComponent(
+    () => import('./routes/signup.component'),
+    'component',
+  ),
+})
 
 const LoginComponentRoute = LoginComponentImport.update({
   path: '/login',
@@ -20,16 +33,6 @@ const LoginComponentRoute = LoginComponentImport.update({
 } as any).update({
   component: lazyRouteComponent(
     () => import('./routes/login.component'),
-    'component',
-  ),
-})
-
-const AboutComponentRoute = AboutComponentImport.update({
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).update({
-  component: lazyRouteComponent(
-    () => import('./routes/about.component'),
     'component',
   ),
 })
@@ -44,6 +47,16 @@ const IndexComponentRoute = IndexComponentImport.update({
   ),
 })
 
+const UserOnboardingComponentRoute = UserOnboardingComponentImport.update({
+  path: '/user/onboarding',
+  getParentRoute: () => rootRoute,
+} as any).update({
+  component: lazyRouteComponent(
+    () => import('./routes/user/onboarding.component'),
+    'component',
+  ),
+})
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -52,12 +65,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexComponentImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      preLoaderRoute: typeof AboutComponentImport
-      parentRoute: typeof rootRoute
-    }
     '/login': {
       preLoaderRoute: typeof LoginComponentImport
+      parentRoute: typeof rootRoute
+    }
+    '/signup': {
+      preLoaderRoute: typeof SignupComponentImport
+      parentRoute: typeof rootRoute
+    }
+    '/user/onboarding': {
+      preLoaderRoute: typeof UserOnboardingComponentImport
       parentRoute: typeof rootRoute
     }
   }
@@ -67,6 +84,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexComponentRoute,
-  AboutComponentRoute,
   LoginComponentRoute,
+  SignupComponentRoute,
+  UserOnboardingComponentRoute,
 ])

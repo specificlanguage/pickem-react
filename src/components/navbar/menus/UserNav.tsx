@@ -9,6 +9,8 @@ import { FIREBASE_AUTH } from "@/components/firebase.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import { DarkmodeToggle } from "@/components/navbar/darkmode-toggle.tsx";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
 
 export default function UserNav() {
   function LoggedOutNav() {
@@ -24,9 +26,10 @@ export default function UserNav() {
     );
   }
 
-  const auth = FIREBASE_AUTH;
-  const user = auth.currentUser;
+  const auth = getAuth();
+  const [user] = useAuthState(FIREBASE_AUTH);
   const navigate = useNavigate();
+  console.log(user);
 
   function logOut() {
     auth.signOut();
@@ -41,7 +44,9 @@ export default function UserNav() {
             {user.photoURL ? (
               <AvatarImage src={user.photoURL} />
             ) : (
-              <AvatarFallback>{user.displayName?.at(0) ?? "?"}</AvatarFallback>
+              <AvatarFallback className="bg-neutral-500">
+                {user.displayName?.at(0) ?? "?"}
+              </AvatarFallback>
             )}
           </Avatar>
         ) : null}
