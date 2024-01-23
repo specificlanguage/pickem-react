@@ -3,8 +3,6 @@ import * as z from "zod";
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { FIREBASE_AUTH } from "@/components/firebase.ts";
 import {
   Form,
   FormControl,
@@ -18,11 +16,12 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { FaArrowLeft } from "react-icons/fa6";
 import { LuLoader2 } from "react-icons/lu";
-import { createUser, getUserByUsername } from "@/lib/http/users.ts";
+import { useSignUp } from "@clerk/clerk-react";
 
 export function RegisterForm() {
   const [isLoading, setLoading] = useState(false);
   const [queryError, setQueryError] = useState<null | string>(null);
+  const { signUp, setActive } = useSignUp();
 
   const formSchema = z
     .object({
@@ -33,12 +32,12 @@ export function RegisterForm() {
       email: z.string().email({ message: "Email is required" }),
       password: z
         .string()
-        .min(6, { message: "Password must be at least 6 characters long" })
+        .min(8, { message: "Password must be at least 8 characters long" })
         .regex(
           /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
           "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character",
         ),
-      confirmPassword: z.string().min(6),
+      confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords must match",
@@ -60,39 +59,32 @@ export function RegisterForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    // Don't create account if they already exist first.
-    const user = await getUserByUsername(values.username);
-    if (user) {
-      setLoading(false);
-      setQueryError("Username already exists");
-      return;
-    }
+    // TODO: email verfication, see https://clerk.com/docs/references/javascript/sign-up/email-verification#email-verification
 
-    createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
-      .then(async (userCredential) => {
-        // Add relevant information to each database.
-        await createUser({
-          email: values.email,
-          uid: userCredential.user.uid,
-          username: values.username,
-        });
-        await updateProfile(userCredential.user, {
-          displayName: values.username,
-        });
-
-        // Navigate user to onboarding screen
-        navigate({ to: "/user/onboarding" });
+    await signUp
+      ?.create({
+        emailAddress: values.email,
+        username: values.username,
+        password: values.password,
       })
-      .catch((error) => {
-        console.log(error);
+      .then((res) => {
+        if (res.status === "complete") {
+          setActive({ session: res.createdSessionId });
+          navigate({ to: "/user/onboarding" });
+        } else {
+          setLoading(false);
+          setQueryError(
+            "Could not create account. Try again or with a different email or username!",
+          );
+        }
+      })
+      .catch(() => {
         setLoading(false);
         setQueryError(
           "Could not create account. Try again or with a different email or username!",
         );
       });
   }
-
-  // form.getFieldState("username");
 
   return (
     <Form {...form}>

@@ -2,8 +2,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from "@/components/firebase.ts";
 import {
   Form,
   FormControl,
@@ -17,17 +15,17 @@ import { Button } from "@/components/ui/button.tsx";
 import { FaArrowLeft } from "react-icons/fa6";
 import { LuLoader2 } from "react-icons/lu";
 import { useState } from "react";
-import { getUser } from "@/lib/http/users.ts";
+import { useSignIn } from "@clerk/clerk-react";
 
 export function LoginForm() {
   const [isLoading, setLoading] = useState(false);
+  const { signIn, setActive } = useSignIn();
+  const navigate = useNavigate();
 
   const formSchema = z.object({
     email: z.string().email({ message: "Email is required" }),
     password: z.string().min(1, { message: "Password is required" }),
   });
-
-  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,22 +35,26 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    // Sign in with email and password via firebase.
-    signInWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
-      .then(async (userCredential) => {
-        const user = await getUser(userCredential.user.uid); // Guaranteed to exist
-        // console.log(user?.username);
-        await navigate({ to: "/" });
+    await signIn
+      ?.create({
+        identifier: values.email,
+        password: values.password,
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode);
-        console.log(errorMessage);
-        // TODO send message to user
+      .then((result) => {
+        if (result.status === "complete") {
+          setActive({ session: result.createdSessionId });
+          navigate({ to: "/" });
+        } else {
+          console.log(result);
+          setLoading(false);
+          // TODO set query error
+        }
+      })
+      .catch((err) => {
+        console.log(err);
         setLoading(false);
       });
   }

@@ -10,6 +10,8 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { Link } from "@tanstack/react-router";
 
 export default function LoginCard() {
+  // TODO eventually: OAuth implementations with Google/Discord, see https://clerk.com/docs/custom-flows/oauth-connections
+
   return (
     <Card>
       <CardHeader>

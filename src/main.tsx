@@ -7,10 +7,12 @@ import "@/index.css";
 import { routeTree } from "./routeTree.gen";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ClerkProvider } from "@clerk/clerk-react";
 
 // Create a new router instance
 const router = new Router({ routeTree });
 const queryClient = new QueryClient();
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {
@@ -25,11 +27,13 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <RouterProvider router={router} />
-        </ThemeProvider>
-      </QueryClientProvider>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </QueryClientProvider>
+      </ClerkProvider>
     </StrictMode>,
   );
 }
