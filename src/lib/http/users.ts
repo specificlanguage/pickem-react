@@ -1,4 +1,5 @@
 import { getAuth } from "firebase/auth";
+import axios from "axios";
 
 interface User {
   username: string;
@@ -15,9 +16,11 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
  * @returns The user object if found, or null if not found.
  */
 export function getUser(uid: string): Promise<User | null> {
-  return fetch(BACKEND_URL + `/users?id=${uid}`)
+  return axios
+    .get(BACKEND_URL + `/users?id=${uid}`)
     .then((res) => {
-      return res.json();
+      if (res.status === 404) return null;
+      else return res.data as User;
     })
     .catch((err) => {
       console.error(err);
@@ -31,13 +34,11 @@ export function getUser(uid: string): Promise<User | null> {
  * @returns The user object if found, or null if not found.
  */
 export function getUserByUsername(username: string): Promise<User | null> {
-  return fetch(BACKEND_URL + `/users?username=${username}`)
+  return axios
+    .get(BACKEND_URL + `/users?username=${username}`)
     .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return null;
-      }
+      if (res.status === 404) return null;
+      else return res.data as User;
     })
     .catch(() => {
       return null;
@@ -54,18 +55,25 @@ export async function createUser(user: User) {
   const currentUser = auth.currentUser;
   if (currentUser === null) throw new Error("User is not logged in");
   else {
-    return fetch(BACKEND_URL + "/users", {
-      method: "POST",
-      body: JSON.stringify(user),
+    return axios.post(BACKEND_URL + "/users", user, {
       headers: {
         Authorization: await currentUser.getIdToken(),
         "Content-Type": "application/json",
       },
-    })
-      .then((res) => res.json())
-      .catch((err) => {
-        console.error(err);
-        return null;
-      });
+    });
   }
+}
+
+/**
+ * Deletes the current user logging in. WARNING: this should not be used anywhere except in tests.
+ */
+export async function deleteUser() {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  if (currentUser === null) throw new Error("User is not logged in");
+  return axios.delete(BACKEND_URL + "/users", {
+    headers: {
+      Authorization: await currentUser.getIdToken(),
+    },
+  });
 }
