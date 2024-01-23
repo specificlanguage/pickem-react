@@ -26,6 +26,9 @@ dependencies:
   '@radix-ui/react-slot':
     specifier: ^1.0.2
     version: 1.0.2(@types/react@18.2.48)(react@18.2.0)
+  '@tanstack/react-query':
+    specifier: ^5.17.19
+    version: 5.17.19(react@18.2.0)
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -1974,6 +1977,19 @@ packages:
     resolution: {integrity: sha512-C7xeLqdSdXhjAPip3p+XKfXQcaqrrg8+yJJpEcDLXG50ZDo4KI3U7eiPyRhvF+uIf/09cUfEF6s9P6m1HgyuKA==}
     engines: {node: '>=12'}
     dev: true
+
+  /@tanstack/query-core@5.17.19:
+    resolution: {integrity: sha512-Lzw8FUtnLCc9Jwz0sw9xOjZB+/mCCmJev38v2wHMUl/ioXNIhnNWeMxu0NKUjIhAd62IRB3eAtvxAGDJ55UkyA==}
+    dev: false
+
+  /@tanstack/react-query@5.17.19(react@18.2.0):
+    resolution: {integrity: sha512-qaQENB6/03Gj3dFZGvdmUoqeUGlGm7P1p0RmaR04Bf1Ib1T9lLGimcC9T3oCFbrx0b2ZF21ngjFZNjj9uPJMcg==}
+    peerDependencies:
+      react: ^18.0.0
+    dependencies:
+      '@tanstack/query-core': 5.17.19
+      react: 18.2.0
+    dev: false
 
   /@tanstack/react-router@1.6.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-+3v56WJCMyof8VA0w5Evcnt9pzom15wy7WknUeF7QdBmdsKdpFPsIDaI2EGg3P5ilAwoch9A/jxJ8zViI/WDpQ==}

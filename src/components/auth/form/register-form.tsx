@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { FaArrowLeft } from "react-icons/fa6";
 import { LuLoader2 } from "react-icons/lu";
+import { createUser, getUserByUsername } from "@/lib/http/users.ts";
 
 export function RegisterForm() {
   const [isLoading, setLoading] = useState(false);
@@ -56,14 +57,30 @@ export function RegisterForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
+
+    // Don't create account if they already exist first.
+    const user = await getUserByUsername(values.username);
+    if (user) {
+      setLoading(false);
+      setQueryError("Username already exists");
+      return;
+    }
+
     createUserWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
       .then(async (userCredential) => {
-        // TODO: prevent duplicate usernames
+        // Add relevant information to each database.
+        await createUser({
+          email: values.email,
+          uid: userCredential.user.uid,
+          username: values.username,
+        });
         await updateProfile(userCredential.user, {
           displayName: values.username,
         });
+
+        // Navigate user to onboarding screen
         navigate({ to: "/user/onboarding" });
       })
       .catch((error) => {

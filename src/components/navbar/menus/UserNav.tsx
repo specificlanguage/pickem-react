@@ -29,7 +29,6 @@ export default function UserNav() {
   const auth = getAuth();
   const [user] = useAuthState(FIREBASE_AUTH);
   const navigate = useNavigate();
-  console.log(user);
 
   function logOut() {
     auth.signOut();

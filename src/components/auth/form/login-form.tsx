@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { FaArrowLeft } from "react-icons/fa6";
 import { LuLoader2 } from "react-icons/lu";
 import { useState } from "react";
+import { getUser } from "@/lib/http/users.ts";
 
 export function LoginForm() {
   const [isLoading, setLoading] = useState(false);
@@ -38,9 +39,12 @@ export function LoginForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
+
+    // Sign in with email and password via firebase.
     signInWithEmailAndPassword(FIREBASE_AUTH, values.email, values.password)
       .then(async (userCredential) => {
-        console.log(userCredential.user.uid);
+        const user = await getUser(userCredential.user.uid); // Guaranteed to exist
+        // console.log(user?.username);
         await navigate({ to: "/" });
       })
       .catch((error) => {
