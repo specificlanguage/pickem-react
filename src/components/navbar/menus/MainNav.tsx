@@ -14,7 +14,9 @@ export default function MainNav() {
             Pick'ems
           </NavLink>
         </NavigationMenuItem>
-        <NavigationMenuItem>Games</NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavLink href="/games">Games</NavLink>
+        </NavigationMenuItem>
         <NavigationMenuItem>Leaderboards</NavigationMenuItem>
         <NavigationMenuItem>Clubs</NavigationMenuItem>
       </NavigationMenuList>

@@ -1,5 +1,7 @@
 import { Outlet, RootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 import MainNav from "@/components/navbar/menus/MainNav.tsx";
 import UserNav from "@/components/navbar/menus/UserNav.tsx";
 
@@ -16,6 +18,7 @@ export const Route = new RootRoute({
         <Outlet />
       </main>
       <TanStackRouterDevtools />
+      <ReactQueryDevtools />
     </div>
   ),
 });

@@ -10,6 +10,7 @@ import { Route as rootRoute } from './routes/__root'
 
 const SignupComponentImport = new FileRoute('/signup').createRoute()
 const LoginComponentImport = new FileRoute('/login').createRoute()
+const GamesComponentImport = new FileRoute('/games').createRoute()
 const IndexComponentImport = new FileRoute('/').createRoute()
 const UserOnboardingComponentImport = new FileRoute(
   '/user/onboarding',
@@ -33,6 +34,16 @@ const LoginComponentRoute = LoginComponentImport.update({
 } as any).update({
   component: lazyRouteComponent(
     () => import('./routes/login.component'),
+    'component',
+  ),
+})
+
+const GamesComponentRoute = GamesComponentImport.update({
+  path: '/games',
+  getParentRoute: () => rootRoute,
+} as any).update({
+  component: lazyRouteComponent(
+    () => import('./routes/games.component'),
     'component',
   ),
 })
@@ -65,6 +76,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexComponentImport
       parentRoute: typeof rootRoute
     }
+    '/games': {
+      preLoaderRoute: typeof GamesComponentImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       preLoaderRoute: typeof LoginComponentImport
       parentRoute: typeof rootRoute
@@ -84,6 +99,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexComponentRoute,
+  GamesComponentRoute,
   LoginComponentRoute,
   SignupComponentRoute,
   UserOnboardingComponentRoute,
