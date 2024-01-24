@@ -23,14 +23,14 @@ export function LoginForm() {
   const navigate = useNavigate();
 
   const formSchema = z.object({
-    email: z.string().email({ message: "Email is required" }),
+    username: z.string(),
     password: z.string().min(1, { message: "Password is required" }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
@@ -40,7 +40,7 @@ export function LoginForm() {
 
     await signIn
       ?.create({
-        identifier: values.email,
+        identifier: values.username,
         password: values.password,
       })
       .then((result) => {
@@ -50,7 +50,6 @@ export function LoginForm() {
         } else {
           console.log(result);
           setLoading(false);
-          // TODO set query error
         }
       })
       .catch((err) => {
@@ -64,12 +63,12 @@ export function LoginForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="email"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="name@domain.com" {...field} />
+                <Input placeholder="username" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
