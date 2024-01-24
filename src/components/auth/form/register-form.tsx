@@ -17,11 +17,13 @@ import { Button } from "@/components/ui/button.tsx";
 import { FaArrowLeft } from "react-icons/fa6";
 import { LuLoader2 } from "react-icons/lu";
 import { useSignUp } from "@clerk/clerk-react";
+import { PendingVerification } from "@/components/auth/form/pending-verification.tsx";
 
 export function RegisterForm() {
   const [isLoading, setLoading] = useState(false);
   const [queryError, setQueryError] = useState<null | string>(null);
-  const { signUp, setActive } = useSignUp();
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const { signUp } = useSignUp();
 
   const formSchema = z
     .object({
@@ -67,23 +69,21 @@ export function RegisterForm() {
         username: values.username,
         password: values.password,
       })
-      .then((res) => {
-        if (res.status === "complete") {
-          setActive({ session: res.createdSessionId });
-          navigate({ to: "/user/onboarding" });
-        } else {
-          setLoading(false);
-          setQueryError(
-            "Could not create account. Try again or with a different email or username!",
-          );
-        }
+      .then(() => {
+        signUp?.prepareEmailAddressVerification({ strategy: "email_code" });
+        setPendingVerification(true);
       })
-      .catch(() => {
+      .catch((err) => {
         setLoading(false);
         setQueryError(
-          "Could not create account. Try again or with a different email or username!",
+          "Couldn't create account, try a different email address or username.",
         );
+        console.error(JSON.stringify(err, null, 2));
       });
+  }
+
+  if (pendingVerification) {
+    return <PendingVerification {...form.getValues()} />;
   }
 
   return (
