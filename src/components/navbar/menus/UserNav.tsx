@@ -4,20 +4,21 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { DarkmodeToggle } from "@/components/navbar/darkmode-toggle.tsx";
-import { SignedIn, SignedOut, useClerk, UserButton } from "@clerk/clerk-react";
+import {
+  SignedIn,
+  SignedOut,
+  SignOutButton,
+  UserButton,
+} from "@clerk/clerk-react";
 import NavLink from "@/components/navbar/NavLink.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { useNavigate } from "@tanstack/react-router";
 
 export default function UserNav() {
-  const clerk = useClerk();
-  const navigate = useNavigate();
-
   return (
     <NavigationMenu className="text-lg my-2 mx-4 container flex">
       <NavigationMenuList className="lg:space-x-10 sm:space-x-6 md:flex">
         <SignedIn>
-          <UserButton />
+          <UserButton afterSignOutUrl={"/"} />
         </SignedIn>
         <NavigationMenuItem>
           <SignedOut>
@@ -27,16 +28,11 @@ export default function UserNav() {
             </div>
           </SignedOut>
           <SignedIn>
-            <Button
-              className="text-lg text-black"
-              variant="link"
-              onClick={() => {
-                clerk.signOut();
-                navigate({ to: "/" });
-              }}
-            >
-              Sign Out
-            </Button>
+            <SignOutButton>
+              <Button className="text-lg text-black" variant="link">
+                Sign Out
+              </Button>
+            </SignOutButton>
           </SignedIn>
         </NavigationMenuItem>
         <NavigationMenuItem>
