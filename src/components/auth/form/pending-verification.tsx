@@ -44,7 +44,7 @@ export function PendingVerification(props: UserInputs) {
       .then((result) => {
         if (result.status === "complete") {
           setActive({ session: result.createdSessionId });
-          navigate({ to: "/" });
+          navigate({ to: "/user/onboarding" });
         } else {
           console.log(result);
           setLoading(false);
@@ -58,7 +58,11 @@ export function PendingVerification(props: UserInputs) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4"
+        data-testid="verification-form"
+      >
         <h3 className="scroll-m-20 text-2xl font-semibold tracking-tigh">
           Verify Email
         </h3>
@@ -83,7 +87,7 @@ export function PendingVerification(props: UserInputs) {
           {isLoading ? (
             <LuLoader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            "Submit"
+            "Verify"
           )}
         </Button>
       </form>

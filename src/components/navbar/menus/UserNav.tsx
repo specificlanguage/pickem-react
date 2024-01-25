@@ -18,7 +18,9 @@ export default function UserNav() {
     <NavigationMenu className="text-lg my-2 mx-4 container flex">
       <NavigationMenuList className="lg:space-x-10 sm:space-x-6 md:flex">
         <SignedIn>
-          <UserButton afterSignOutUrl={"/"} />
+          <div data-testid="userbutton">
+            <UserButton afterSignOutUrl={"/"} />
+          </div>
         </SignedIn>
         <NavigationMenuItem>
           <SignedOut>
