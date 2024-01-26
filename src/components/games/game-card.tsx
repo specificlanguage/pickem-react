@@ -14,7 +14,7 @@ export default function GameCard({ game }: GameCardProps) {
   return (
     <Card data-testid={game.id}>
       <CardContent data-testid="game-card" className="my-2 pb-0 space-y-2">
-        <div className="flex justify-between">
+        <div className="flex justify-center">
           <div className="flex justify-between">
             <img
               src={`https://midfield.mlbstatic.com/v1/team/${game.awayTeam_id}/spots`}
@@ -25,6 +25,9 @@ export default function GameCard({ game }: GameCardProps) {
             <div className="mx-2 h-[32px] text-center leading-[32px]">
               <p className="inline-block align-middle">{game.awayName}</p>
             </div>
+          </div>
+          <div className="flex justify-between">
+            <p className="mx-2 h-[32px] text-center leading-[32px]">@</p>
           </div>
           <div className="flex justify-between">
             <div className="mx-2 h-[32px] text-center leading-[32px]">
@@ -44,7 +47,9 @@ export default function GameCard({ game }: GameCardProps) {
             <div>
               {zonedDate.getMinutes() == 33
                 ? "TBD"
-                : format(zonedDate, "h:mmaa zz", { timeZone })}
+                : format(zonedDate, "h:mmaa zzz", { timeZone })
+                    .replace("DT", "T")
+                    .replace("ST", "T")}
             </div>
             <div className="leading-[16px]">
               <div className="inline-block align-middle">
