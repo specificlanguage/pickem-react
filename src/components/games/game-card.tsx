@@ -2,6 +2,7 @@ import { Game } from "@/lib/http/games.ts";
 import { Card, CardContent } from "@/components/ui/card.tsx";
 import { utcToZonedTime, format } from "date-fns-tz";
 import { FaCircle } from "react-icons/fa6";
+import { TeamLogo } from "@/components/teams/logos.tsx";
 
 interface GameCardProps {
   game: Game;
@@ -15,29 +16,23 @@ export default function GameCard({ game }: GameCardProps) {
     <Card data-testid={game.id}>
       <CardContent data-testid="game-card" className="my-2 pb-0 space-y-2">
         <div className="flex justify-center">
-          <div className="flex justify-between">
-            <img
-              src={`https://midfield.mlbstatic.com/v1/team/${game.awayTeam_id}/spots`}
-              height={"32"}
-              width={"32"}
-              alt={game.awayName}
-            />
-            <div className="mx-2 h-[32px] text-center leading-[32px]">
-              <p className="inline-block align-middle">{game.awayName}</p>
-            </div>
-          </div>
+          <TeamLogo
+            imageOrientation={"left"}
+            label={game.awayName}
+            teamID={game.awayTeam_id}
+            height={32}
+            imageScheme="spot"
+          />
           <div className="flex justify-between">
             <p className="mx-2 h-[32px] text-center leading-[32px]">@</p>
           </div>
           <div className="flex justify-between">
-            <div className="mx-2 h-[32px] text-center leading-[32px]">
-              <p className="inline-block align-middle">{game.homeName}</p>
-            </div>
-            <img
-              src={`https://midfield.mlbstatic.com/v1/team/${game.homeTeam_id}/spots`}
-              height={"32"}
-              width={"32"}
-              alt={game.homeName}
+            <TeamLogo
+              imageOrientation={"right"}
+              label={game.homeName}
+              teamID={game.homeTeam_id}
+              height={32}
+              imageScheme="spot"
             />
           </div>
         </div>
