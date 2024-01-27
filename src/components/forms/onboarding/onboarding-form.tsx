@@ -26,14 +26,17 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { LuLoader2 } from "react-icons/lu";
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
+import { setPreferences } from "@/lib/http/users.ts";
+import { useAuth } from "@clerk/clerk-react";
 
 export default function OnboardingForm() {
   // TODO: abstract this into its own hook
   const { data } = useFetchTeams();
-  const [isLoading, setLoading] = useState();
+  const [isLoading, setLoading] = useState(false);
+  const { getToken } = useAuth();
 
   const onboardingFormSchema = z.object({
-    favoriteTeam: z.number().optional(),
+    favoriteTeam: z.string(),
     // otherFavorites: z.array(z.string()).max(3),
     selectionTiming: z.string(),
   });
@@ -51,9 +54,13 @@ export default function OnboardingForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof onboardingFormSchema>) {
+  async function onSubmit(values: z.infer<typeof onboardingFormSchema>) {
     setLoading(true);
-    console.log(values); // TODO: send to server
+    await setPreferences((await getToken()) ?? "", {
+      favoriteTeam: parseInt(values.favoriteTeam),
+      selectionTiming: values.selectionTiming,
+    });
+    console.log("submitted");
   }
 
   if (data) {
@@ -87,7 +94,7 @@ export default function OnboardingForm() {
                 </FormControl>
                 {/* Team selection here. */}
                 <SelectContent>
-                  <SelectItem key={0} value={"none"}>
+                  <SelectItem key={0} value={"0"}>
                     {/* No team insert for the selection only. */}
                     <div className="flex justify-between space-x-2">
                       <img
