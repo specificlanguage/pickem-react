@@ -28,12 +28,14 @@ import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
 import { setPreferences } from "@/lib/http/users.ts";
 import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function OnboardingForm() {
   // TODO: abstract this into its own hook
   const { data } = useFetchTeams();
   const [isLoading, setLoading] = useState(false);
   const { getToken } = useAuth();
+  const navigate = useNavigate();
 
   const onboardingFormSchema = z.object({
     favoriteTeam: z.string(),
@@ -48,7 +50,7 @@ export default function OnboardingForm() {
   const onboardingForm = useForm<z.infer<typeof onboardingFormSchema>>({
     resolver: zodResolver(onboardingFormSchema),
     defaultValues: {
-      favoriteTeam: "",
+      favoriteTeam: "0",
       // otherFavorites: [],
       selectionTiming: "",
     },
@@ -59,8 +61,22 @@ export default function OnboardingForm() {
     await setPreferences((await getToken()) ?? "", {
       favoriteTeam: parseInt(values.favoriteTeam),
       selectionTiming: values.selectionTiming,
-    });
-    console.log("submitted");
+    })
+      .then((result) => {
+        if (result) {
+          console.log("submitted");
+          setLoading(false);
+          navigate({ to: "/" });
+        } else {
+          // TODO set message of error
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        /// TODO set error message
+        console.log(err);
+        setLoading(false);
+      });
   }
 
   if (data) {
