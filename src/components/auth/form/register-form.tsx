@@ -61,8 +61,6 @@ export function RegisterForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    // TODO: email verfication, see https://clerk.com/docs/references/javascript/sign-up/email-verification#email-verification
-
     await signUp
       ?.create({
         emailAddress: values.email,

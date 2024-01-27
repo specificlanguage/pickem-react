@@ -90,7 +90,7 @@ export function TeamLogo({
 
   return (
     <div className="flex justify-between">
-      {useLabel || (label && imageOrientation === "right")
+      {(useLabel || label) && imageOrientation === "right"
         ? labelElement
         : null}
       <img
@@ -99,7 +99,7 @@ export function TeamLogo({
         width={finalHeight}
         alt={teamInfo?.name}
       />
-      {useLabel || (label && imageOrientation === "left") ? labelElement : null}
+      {(useLabel || label) && imageOrientation === "left" ? labelElement : null}
     </div>
   );
 }
