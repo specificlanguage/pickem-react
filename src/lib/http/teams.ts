@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 export interface Team {
   teamName: string;
@@ -13,3 +14,11 @@ export function getAllTeamInfo() {
     return res.data as Team[];
   });
 }
+
+export const useFetchTeams = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: "teams",
+    queryFn: getAllTeamInfo,
+  });
+  return { data, isLoading, isError };
+};

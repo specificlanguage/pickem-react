@@ -17,25 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select.tsx";
-import { useQuery } from "@tanstack/react-query";
-import { getAllTeamInfo } from "@/lib/http/teams.ts";
+import { useFetchTeams } from "@/lib/http/teams.ts";
 import { TeamLogo } from "@/components/teams/logos.tsx";
-// import SelectableRadioCard from "@/components/ui/selectable-card.tsx";
-// import {
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card.tsx";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
-import {
-  FaApple,
-  FaCalendar,
-  FaCalendarDays,
-  FaCalendarWeek,
-} from "react-icons/fa6";
-import { Label } from "@/components/ui/label.tsx";
-import { FaCheck } from "react-icons/fa";
+import { RadioGroup } from "@/components/ui/radio-group.tsx";
+import { FaCalendarDays, FaCalendarWeek } from "react-icons/fa6";
 import { FrequencyCard } from "@/components/forms/onboarding/frequency-card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { LuLoader2 } from "react-icons/lu";
@@ -44,14 +29,11 @@ import { useState } from "react";
 
 export default function OnboardingForm() {
   // TODO: abstract this into its own hook
-  const { data } = useQuery({
-    queryKey: ["teams"],
-    queryFn: () => getAllTeamInfo(),
-  });
+  const { data } = useFetchTeams();
   const [isLoading, setLoading] = useState();
 
   const onboardingFormSchema = z.object({
-    favoriteTeam: z.number(),
+    favoriteTeam: z.number().optional(),
     // otherFavorites: z.array(z.string()).max(3),
     selectionTiming: z.string(),
   });
@@ -90,6 +72,10 @@ export default function OnboardingForm() {
               <FormLabel className="font-bold text-xl tracking-tight">
                 Favorite Team
               </FormLabel>
+              <FormDescription>
+                You'll be picking games for this team every session. You don't
+                have to pick a team, but you can change it later.
+              </FormDescription>
               <Select onValueChange={field.onChange}>
                 <FormControl>
                   <SelectTrigger>
@@ -101,13 +87,33 @@ export default function OnboardingForm() {
                 </FormControl>
                 {/* Team selection here. */}
                 <SelectContent>
+                  <SelectItem key={0} value={"none"}>
+                    {/* No team insert for the selection only. */}
+                    <div className="flex justify-between space-x-2">
+                      <img
+                        src={
+                          "https://midfield.mlbstatic.com/v1/team/343/spots/"
+                        }
+                        height={32}
+                        width={32}
+                        alt={"No team"}
+                      />
+                      <div className="h-[32px] leading-[32px]">
+                        <p className="mx-auto inline-block align-center">
+                          No team
+                        </p>
+                      </div>
+                    </div>
+                  </SelectItem>
+
+                  {/* All other teams */}
                   {data
                     ? data.map((team) => (
                         <SelectItem key={team.id} value={team.id.toString()}>
                           <TeamLogo
                             height={32}
                             imageScheme={"spot"}
-                            teamID={team.id}
+                            team={team}
                             imageOrientation={"left"}
                             useLabel="team"
                           />
@@ -116,10 +122,6 @@ export default function OnboardingForm() {
                     : null}
                 </SelectContent>
               </Select>
-              <FormDescription>
-                You'll be picking games for this team (almost) every day. You
-                don't have to pick a team, but you can change it later.
-              </FormDescription>
               <FormMessage {...field} />
             </FormItem>
           )}
@@ -138,6 +140,10 @@ export default function OnboardingForm() {
               <FormLabel className="font-bold text-xl tracking-tight">
                 Frequency
               </FormLabel>
+              <FormDescription>
+                This asks how many sessions of picking you're going to look at
+                per week.
+              </FormDescription>
               <FormControl>
                 <RadioGroup
                   required
@@ -150,12 +156,12 @@ export default function OnboardingForm() {
                         Series <FaCalendarWeek />
                       </p>
                       <p>
-                        Series are a collection of games that are played in a
-                        row.
+                        Series are games that are played in a row against the
+                        same team.
                       </p>
                       <p>
-                        You would select four series, <i>twice per week</i>,
-                        resulting in 8 picks per week.
+                        You would select winners for four series,{" "}
+                        <i>twice per week</i>, about 8 picks per week.
                       </p>
                     </div>
                   </FrequencyCard>
@@ -166,18 +172,22 @@ export default function OnboardingForm() {
                         Daily <FaCalendarDays />
                       </p>
                       <p>
-                        This is recommended this for those who really follow
-                        baseball.
+                        Baseball is played every day, recommended for true fans.
                       </p>
                       <p>
-                        You would select four series, <i>every day,</i>{" "}
-                        resulting in about 28 picks per week.
+                        You would select winners for four series,{" "}
+                        <i>every day,</i> about 28 picks per week.
                       </p>
                     </div>
                   </FrequencyCard>
                 </RadioGroup>
               </FormControl>
               <FormMessage />
+              <FormDescription>
+                More options for picking will come soon. You can also pick daily
+                games if you choose series regardless of this option, but they
+                won't count towards the leaderboard.
+              </FormDescription>
             </FormItem>
           )}
         />

@@ -1,7 +1,5 @@
 import { RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { FaCalendar } from "react-icons/fa6";
-import { FaCheck } from "react-icons/fa";
 
 export function FrequencyCard({ children, value, ...props }) {
   return (

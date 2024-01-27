@@ -21,7 +21,7 @@ interface DateQueryProps {
 export async function getGamesByDate({
   queryKey,
 }: DateQueryProps): Promise<Game[] | null> {
-  const [_, { year, month, day }] = queryKey as [
+  const [key, { year, month, day }] = queryKey as [
     string,
     { year: number; month: number; day: number },
   ];

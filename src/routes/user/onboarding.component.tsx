@@ -23,8 +23,8 @@ export const component = function Onboard() {
         <CardHeader>
           <CardTitle>Before we start...</CardTitle>
           <CardDescription>
-            We'd lke to know a few more details so we can better personalize the
-            picking experience for you.
+            We'd like to know a few more details so we can better personalize
+            the picking experience for you.
           </CardDescription>
         </CardHeader>
         <CardContent>
