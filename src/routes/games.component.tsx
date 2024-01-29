@@ -2,17 +2,24 @@ import { useQuery } from "@tanstack/react-query";
 import { Game, getGamesByDate } from "@/lib/http/games.ts";
 import GameCard from "@/components/games/game-card.tsx";
 import { useState } from "react";
-import { format } from "date-fns-tz";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import GameSkeleton from "@/components/games/game-skeleton.tsx";
 import GamesLayout from "@/layouts/games-layout.tsx";
+import DatePicker from "@/components/date-picker.tsx";
+import { add } from "date-fns";
 
 export const component = function GamePage() {
-  // const queryClient = useQueryClient();
-  // Why is month 0-indexed? Javascript moment.
-  const [date] = useState(new Date(2024, 3, 1));
+  const [date, setDate] = useState<Date>(new Date(2024, 2, 28));
+
   const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["games", { year: 2024, month: 4, day: 1 }],
+    queryKey: [
+      "games",
+      {
+        year: date.getFullYear(),
+        month: date.getMonth() + 1, // Why is month 0-indexed? Javascript moment.
+        day: date.getDate(),
+      },
+    ],
     queryFn: getGamesByDate,
   });
 
@@ -29,18 +36,25 @@ export const component = function GamePage() {
 
   return (
     <GamesLayout>
-      <div className="mx-auto max-w-lg space-y-2 my-2">
+      <div className="mx-auto max-w-lg space-y-2 mb-10">
+        <h2 className="my-2 font-bold text-3xl">Games</h2>
         <div className="flex justify-between text-2xl">
           <span className="leading-8">
-            <span className="inline-block align-middle">
+            <button
+              className="inline-block align-middle"
+              onClick={() => setDate(add(new Date(date), { days: -1 }))}
+            >
               <FaArrowLeft size={24} />
-            </span>
+            </button>
           </span>
-          <h2>{format(date, "MMM d, yyy")}</h2>
+          <DatePicker date={date} setDate={setDate} />
           <span className="leading-8 inline-block align-middle">
-            <span className="inline-block align-middle">
+            <button
+              className="inline-block align-middle"
+              onClick={() => setDate(add(new Date(date), { days: 1 }))}
+            >
               <FaArrowRight size={24} />
-            </span>
+            </button>
           </span>
         </div>
         <hr className="border-2 bg-foreground" />
@@ -57,9 +71,15 @@ export const component = function GamePage() {
             })}
           {data &&
             !isError &&
-            data.map((game: Game) => {
-              return <GameCard key={game.id} game={game} />;
-            })}
+            (data.length === 0 ? (
+              <div className="flex justify-center mx-auto text-lg font-bold ">
+                No games today!
+              </div>
+            ) : (
+              data.map((game: Game) => {
+                return <GameCard key={game.id} game={game} />;
+              })
+            ))}
         </div>
       </div>
     </GamesLayout>

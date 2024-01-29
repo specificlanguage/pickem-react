@@ -14,7 +14,7 @@ export default function GamesLayout({ children }: GamesLayoutProps) {
           <UserNav />
         </div>
       </header>
-      <main className="flex-grow dark:bg-black">{children}</main>
+      <main className="flex-grow dark:bg-black my-6">{children}</main>
     </>
   );
 }
