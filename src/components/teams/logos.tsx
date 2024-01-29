@@ -1,5 +1,4 @@
 import { Team } from "@/lib/http/teams.ts";
-import { Skeleton } from "@/components/ui/skeleton.tsx";
 
 export interface TeamLogoProps {
   team: Team;

@@ -30,8 +30,8 @@
   .dark  {
     --background: 119 10% 5%;
     --foreground: 119 5% 90%;
-    --card: 119 10% 0%;
-    --card-foreground: 119 5% 90%;
+    --card: 0 5% 10%;
+    --card-foreground: 119 5% 80%;
     --popover: 119 10% 5%;
     --popover-foreground: 119 5% 90%;
     --primary: 119 44% 32%;
@@ -52,11 +52,13 @@
 }
 
 @layer base {
-
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  }
+  hr {
+    @apply border-gray-600;
   }
 }

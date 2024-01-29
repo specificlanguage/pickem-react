@@ -17,7 +17,7 @@ export function getAllTeamInfo() {
 
 export const useFetchTeams = () => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: "teams",
+    queryKey: ["teams"],
     queryFn: getAllTeamInfo,
   });
   return { data, isLoading, isError };

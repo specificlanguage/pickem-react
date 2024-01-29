@@ -1,9 +1,12 @@
 import LoginCard from "@/components/auth/login-card.tsx";
+import AuthLayout from "@/layouts/auth-layout.tsx";
 
 export const component = function Login() {
   return (
-    <div className="mx-auto max-w-sm my-5 lg:my-10">
-      <LoginCard />
-    </div>
+    <AuthLayout>
+      <div className="justify-center max-w-sm mx-auto my-6">
+        <LoginCard />
+      </div>
+    </AuthLayout>
   );
 };

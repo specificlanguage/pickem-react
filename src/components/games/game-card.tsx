@@ -3,6 +3,8 @@ import { Card, CardContent } from "@/components/ui/card.tsx";
 import { utcToZonedTime, format } from "date-fns-tz";
 import { FaCircle } from "react-icons/fa6";
 import { TeamLogo } from "@/components/teams/logos.tsx";
+import { useFetchTeams } from "@/lib/http/teams.ts";
+import { Skeleton } from "@/components/ui/skeleton.tsx";
 
 interface GameCardProps {
   game: Game;
@@ -11,32 +13,44 @@ interface GameCardProps {
 export default function GameCard({ game }: GameCardProps) {
   const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
   const zonedDate = utcToZonedTime(new Date(game.startTimeUTC + "Z"), timeZone);
+  const { data } = useFetchTeams();
+
+  const awayTeam = data?.find((team) => team.id === game.awayTeam_id);
+  const homeTeam = data?.find((team) => team.id === game.homeTeam_id);
 
   return (
     <Card data-testid={game.id}>
       <CardContent data-testid="game-card" className="my-2 pb-0 space-y-2">
         <div className="flex justify-center">
-          <TeamLogo
-            imageOrientation={"left"}
-            label={game.awayName}
-            teamID={game.awayTeam_id}
-            height={32}
-            imageScheme="spot"
-          />
+          {awayTeam ? (
+            <TeamLogo
+              imageOrientation={"left"}
+              label={game.awayName}
+              team={awayTeam}
+              height={32}
+              imageScheme="spot"
+            />
+          ) : (
+            <Skeleton className="h-[32px] w-[32px]" />
+          )}
           <div className="flex justify-between">
             <p className="mx-2 h-[32px] text-center leading-[32px]">@</p>
           </div>
           <div className="flex justify-between">
-            <TeamLogo
-              imageOrientation={"right"}
-              label={game.homeName}
-              teamID={game.homeTeam_id}
-              height={32}
-              imageScheme="spot"
-            />
+            {homeTeam ? (
+              <TeamLogo
+                imageOrientation={"right"}
+                label={game.homeName}
+                team={homeTeam}
+                height={32}
+                imageScheme="spot"
+              />
+            ) : (
+              <Skeleton className="h-[32px] w-[32px]" />
+            )}
           </div>
         </div>
-        <hr className="border" />
+        <hr className="border-[0.5]" />
         <div className="mx-auto">
           <div className="text-sm flex justify-center space-x-2">
             <div>
