@@ -27,10 +27,7 @@ export async function getGamesByDate({
   ];
 
   return await axios
-    .get(
-      import.meta.env.VITE_BACKEND_URL +
-        `/games/date?year=${year}&month=${month}&day=${day}`,
-    )
+    .get(`/api/games/date?year=${year}&month=${month}&day=${day}`)
     .then((res) => {
       return res.data as Game[];
     });

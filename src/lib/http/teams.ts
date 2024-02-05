@@ -10,7 +10,7 @@ export interface Team {
 }
 
 export function getAllTeamInfo() {
-  return axios.get(import.meta.env.VITE_BACKEND_URL + "/teams?").then((res) => {
+  return axios.get("/api/teams?").then((res) => {
     return res.data as Team[];
   });
 }

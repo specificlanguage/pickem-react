@@ -7,9 +7,7 @@ interface Preferences {
 
 /** Set user preferences from a user's uid. */
 export async function setPreferences(token: string, preferences: Preferences) {
-  return axios.put(
-    import.meta.env.VITE_BACKEND_URL + `/users/preferences`,
-    preferences,
-    { headers: { Authorization: `Bearer ${token}` } },
-  );
+  return axios.put(`/api/users/preferences`, preferences, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 }
