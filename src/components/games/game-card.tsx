@@ -5,6 +5,7 @@ import { FaCircle } from "react-icons/fa6";
 import { TeamLogo } from "@/components/teams/logos.tsx";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
+import MarqueeBadge from "@/components/games/marquee-badge.tsx";
 
 interface GameCardProps {
   game: Game;
@@ -66,6 +67,18 @@ export default function GameCard({ game }: GameCardProps) {
               </div>
             </div>
             <div>{game.venue}</div>
+            {game.is_marquee && (
+              <>
+                <div className="leading-[16px]">
+                  <div className="inline-block align-middle">
+                    <FaCircle size={5} />
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <MarqueeBadge />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </CardContent>

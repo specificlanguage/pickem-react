@@ -10,6 +10,7 @@ export interface Game {
   date: string;
   series_num: number;
   venue: string;
+  is_marquee: boolean;
   homeName?: string;
   awayName?: string;
 }

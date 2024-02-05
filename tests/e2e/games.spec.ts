@@ -11,6 +11,7 @@ const mockGamesResponse = [
     date: "2024-03-29",
     venue: "loanDepot park",
     series_num: 27,
+    is_marquee: false,
     homeName: "A",
     awayName: "B",
   },
@@ -23,6 +24,7 @@ const mockGamesResponse = [
     date: "2024-03-29",
     venue: "Tropicana Field",
     series_num: 27,
+    is_marquee: true,
     homeName: "C",
     awayName: "D",
   },
@@ -30,7 +32,7 @@ const mockGamesResponse = [
 
 test("Games show correct information", async ({ page }) => {
   await page.route(
-    "http://localhost:8000/games/date?year=2024&month=4&day=1",
+    "/api/games/date?year=2024&month=3&day=28",
     async (route) => {
       const json = mockGamesResponse;
       await route.fulfill({
@@ -54,5 +56,8 @@ test("Games show correct information", async ({ page }) => {
   );
   await expect(page.getByTestId(mockGamesResponse[0].id.toString())).toHaveText(
     new RegExp(format(timeConverted, "h:mmaa")),
+  );
+  await expect(page.getByTestId(mockGamesResponse[1].id.toString())).toHaveText(
+    /MARQUEE/i,
   );
 });

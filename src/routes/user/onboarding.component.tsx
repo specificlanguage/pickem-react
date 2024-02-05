@@ -6,18 +6,11 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import OnboardingForm from "@/components/forms/onboarding/onboarding-form.tsx";
-import { useAuth } from "@clerk/clerk-react";
-import { useNavigate } from "@tanstack/react-router";
+// import { useAuth } from "@clerk/clerk-react";
+// import { useNavigate } from "@tanstack/react-router";
 import AuthLayout from "@/layouts/auth-layout.tsx";
 
 export const component = function Onboard() {
-  const auth = useAuth();
-  const navigate = useNavigate();
-
-  if (auth.isSignedIn === false) {
-    navigate({ to: "/login" });
-  }
-
   return (
     <AuthLayout>
       <div className="justify-center max-w-lg mx-auto my-6">
