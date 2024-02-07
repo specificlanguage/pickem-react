@@ -9,11 +9,6 @@ export interface TeamLogoProps {
   imageOrientation?: "left" | "right";
 }
 
-const validTeamIDs = [
-  108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 133,
-  134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 158,
-];
-
 export function TeamLogo({
   team,
   label,
@@ -35,9 +30,7 @@ export function TeamLogo({
   }
 
   const labelElement = (
-    <div
-      className={`mx-2 h-[${finalHeight}px] text-center leading-[${finalHeight}px]`}
-    >
+    <div className={`mx-2 text-center leading-[${finalHeight}px]`}>
       <p className="inline-block align-middle">
         {label ? (
           label

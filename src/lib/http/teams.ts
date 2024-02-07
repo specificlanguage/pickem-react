@@ -20,5 +20,5 @@ export const useFetchTeams = () => {
     queryKey: ["teams"],
     queryFn: getAllTeamInfo,
   });
-  return { data, isLoading, isError };
+  return { data, isLoading, isError, teams: data };
 };
