@@ -1,5 +1,6 @@
 import MainNav from "@/components/navbar/menus/MainNav.tsx";
 import UserNav from "@/components/navbar/menus/UserNav.tsx";
+import Footer from "@/components/navbar/menus/Footer.tsx";
 
 interface GamesLayoutProps {
   children: React.ReactNode;
@@ -14,7 +15,10 @@ export default function GamesLayout({ children }: GamesLayoutProps) {
           <UserNav />
         </div>
       </header>
-      <main className="flex-grow dark:bg-black my-6">{children}</main>
+      <main className="flex-grow dark:bg-black py-4">{children}</main>
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 }
