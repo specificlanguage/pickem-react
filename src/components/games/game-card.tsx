@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card.tsx";
 import { TeamLogo } from "@/components/teams/logos.tsx";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
-import GameInfo from "@/components/games/picks/game-info.tsx";
+import GameInfo from "@/components/games/game-info.tsx";
 
 interface GameCardProps {
   game: Game;

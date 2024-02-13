@@ -6,7 +6,7 @@ import { toast } from "@/components/ui/use-toast.ts";
 import { Form, FormField } from "@/components/ui/form.tsx";
 import SubmitButton from "@/components/forms/submit-button.tsx";
 import { useState } from "react";
-import GameInfo from "@/components/games/picks/game-info.tsx";
+import GameInfo from "@/components/games/game-info.tsx";
 import PickOptions from "@/components/games/picks/pick-options.tsx";
 
 interface PickFormProps {
@@ -27,11 +27,19 @@ export default function PickForm({ game }: PickFormProps) {
   const [isLoading, setLoading] = useState(false);
   // todo: setError() when the game is too late to pick, or other validation error on serverside.
 
-  const PickFormSchema = z.object({
-    team: z.enum([game.awayTeam_id.toString(), game.homeTeam_id.toString()], {
-      required_error: "You must pick a team",
-    }),
-  });
+  const fields = [
+    {
+      name: game.id.toString(),
+      fieldType: z.enum([
+        game.awayTeam_id.toString(),
+        game.homeTeam_id.toString(),
+      ]),
+    },
+  ];
+
+  const PickFormSchema = z.object(
+    Object.fromEntries(fields.map((field) => [field.name, field.fieldType])),
+  );
 
   const form = useForm<z.infer<typeof PickFormSchema>>({
     resolver: zodResolver(PickFormSchema),
@@ -66,7 +74,7 @@ export default function PickForm({ game }: PickFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 py-4">
         <FormField
           control={form.control}
-          name="team"
+          name={game.id.toString()}
           render={({ field }) => <PickOptions field={field} game={game} />}
         />
         <GameInfo game={game} />

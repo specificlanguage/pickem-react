@@ -7,7 +7,7 @@ import { Game } from "@/lib/http/games.ts";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 
 interface PickOptionsProps {
-  field: ControllerRenderProps<{ team: string }, "team">;
+  field: ControllerRenderProps<{ [x: string]: string }, string>;
   game: Game;
 }
 
