@@ -3,6 +3,7 @@ import UserNav from "@/components/navbar/menus/UserNav.tsx";
 import Footer from "@/components/navbar/menus/Footer.tsx";
 
 interface GamesLayoutProps {
+  className?: string;
   children: React.ReactNode;
 }
 

@@ -7,6 +7,7 @@ export interface TeamLogoProps {
   useLabel?: "none" | "city" | "team" | "abbr";
   imageScheme?: "spot" | "light" | "dark";
   imageOrientation?: "left" | "right" | "middle";
+  textSize?: "sm" | "md" | "lg";
 }
 
 export function TeamLogo({
@@ -16,8 +17,10 @@ export function TeamLogo({
   useLabel,
   imageScheme,
   imageOrientation,
+  textSize,
 }: TeamLogoProps) {
   const finalHeight = height ?? 32;
+  const finalSize = textSize ?? "md";
 
   let logoURL = "https://cdn-pickem.speclang.dev/";
 
@@ -31,7 +34,12 @@ export function TeamLogo({
 
   const labelElement = (
     <div className={`mx-2 text-center leading-[${finalHeight}px]`}>
-      <p className="inline-block align-middle">
+      <p
+        className={
+          `inline-block align-middle leading-[${finalHeight + 10}px] text-` +
+          finalSize
+        }
+      >
         {label ? (
           label
         ) : (

@@ -8,34 +8,12 @@ import { cn } from "@/lib/utils.ts";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns-tz";
 import { Calendar } from "@/components/ui/calendar.tsx";
-import { differenceInCalendarDays } from "date-fns";
 import { Row, RowProps } from "react-day-picker";
+import { disabledDays, isValidDate } from "@/lib/datetime/gameDates.ts";
 
 interface DatePickerProps {
   date: Date;
   setDate: (date: Date) => void;
-}
-
-const disabledDays = [
-  {
-    from: new Date(0),
-    to: Math.max(new Date(), new Date(2024, 2, 19)),
-  },
-  {
-    from: new Date(2024, 2, 22),
-    to: new Date(2024, 2, 27),
-  },
-  {
-    from: new Date(2024, 8, 29),
-    to: new Date(2027, 1, 1),
-  },
-];
-
-function isValidDate(date: Date) {
-  return (
-    differenceInCalendarDays(date, new Date(2024, 8, 30)) > 0 &&
-    differenceInCalendarDays(date, new Date(2024, 3, 1))
-  );
 }
 
 function OnlyFutureRow(props: RowProps) {

@@ -17,6 +17,7 @@ import { useFetchTeams } from "@/lib/http/teams.ts";
 import SubmitButton from "@/components/forms/submit-button.tsx";
 import { useState } from "react";
 import { OptionCard } from "@/components/forms/option-card.tsx";
+import GameInfo from "@/components/games/picks/game-info.tsx";
 
 interface PickFormProps {
   game: Game;
@@ -76,17 +77,20 @@ export default function PickForm({ game }: PickFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
         <FormField
           control={form.control}
           name="team"
           render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel htmlFor="team">Pick the winner:</FormLabel>
+            <FormItem>
+              <FormLabel htmlFor="team" className="text-2xl">
+                Pick the winner:
+              </FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
+                  className="gap-0"
                 >
                   {/* TODO: background should be proportionally filled to those who picked it, like the YouTube polls.*/}
                   {/* ====== AWAY TEAM ========== */}
@@ -94,13 +98,14 @@ export default function PickForm({ game }: PickFormProps) {
                     value={game.awayTeam_id.toString()}
                     className="items-start"
                   >
-                    <div className="space-y-2 leading-5">
+                    <div className="leading-5">
                       {awayTeam ? (
                         <TeamLogo
                           imageOrientation={"left"}
                           useLabel={"team"}
                           team={awayTeam}
-                          height={32}
+                          height={32.25}
+                          textSize="lg"
                           imageScheme="spot"
                         />
                       ) : null}
@@ -111,7 +116,7 @@ export default function PickForm({ game }: PickFormProps) {
                   {/* ====== HOME TEAM ========== */}
                   <OptionCard
                     value={game.homeTeam_id.toString()}
-                    className="items-start"
+                    className="items-start my-0"
                   >
                     <div className="space-y-2 leading-5">
                       {homeTeam ? (
@@ -119,7 +124,8 @@ export default function PickForm({ game }: PickFormProps) {
                           imageOrientation={"left"}
                           useLabel={"team"}
                           team={homeTeam}
-                          height={32}
+                          height={32.25}
+                          textSize="lg"
                           imageScheme="spot"
                         />
                       ) : null}
@@ -132,6 +138,7 @@ export default function PickForm({ game }: PickFormProps) {
             </FormItem>
           )}
         />
+        <GameInfo game={game} />
         <div className="flex justify-center">
           <SubmitButton isLoading={isLoading} />
         </div>
