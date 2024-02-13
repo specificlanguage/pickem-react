@@ -38,3 +38,25 @@ export async function getOrCreateSession({
       return null;
     });
 }
+
+export async function submitSessionPicks(
+  picks: {
+    gameID: number;
+    pickedHome: boolean;
+    isSeries: boolean;
+    comment?: string;
+  }[],
+  token: string,
+) {
+  console.log(picks);
+  return await axios
+    .post(
+      `/api/picks/`,
+      { picks },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    )
+    .then(() => true)
+    .catch(() => false);
+}

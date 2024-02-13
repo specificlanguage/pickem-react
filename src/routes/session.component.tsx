@@ -54,7 +54,6 @@ export const component = function SessionPick() {
                 new Date(g1.startTimeUTC).getTime() -
                 new Date(g2.startTimeUTC).getTime(),
             )}
-            date={date}
           />
         ) : (
           "No games today!"
