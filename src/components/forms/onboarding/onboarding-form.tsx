@@ -21,7 +21,7 @@ import { useFetchTeams } from "@/lib/http/teams.ts";
 import { TeamLogo } from "@/components/teams/logos.tsx";
 import { RadioGroup } from "@/components/ui/radio-group.tsx";
 import { FaCalendarDays, FaCalendarWeek } from "react-icons/fa6";
-import { FrequencyCard } from "@/components/forms/onboarding/frequency-card.tsx";
+import { OptionCard } from "@/components/forms/option-card.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { LuLoader2 } from "react-icons/lu";
 import { Button } from "@/components/ui/button.tsx";
@@ -173,7 +173,7 @@ export default function OnboardingForm() {
                   onValueChange={field.onChange}
                   className="grid grid-cols-2 gap-4"
                 >
-                  <FrequencyCard value="series">
+                  <OptionCard value="series">
                     <div className="min-h-48 space-y-2 text-left leading-5">
                       <p className="font-bold text-lg flex justify-between">
                         Series <FaCalendarWeek />
@@ -187,9 +187,9 @@ export default function OnboardingForm() {
                         <i>twice per week</i>, about 8 picks per week.
                       </p>
                     </div>
-                  </FrequencyCard>
+                  </OptionCard>
 
-                  <FrequencyCard value="daily">
+                  <OptionCard value="daily">
                     <div className="min-h-48 space-y-2 text-left leading-5">
                       <p className="font-bold text-lg flex justify-between">
                         Daily <FaCalendarDays />
@@ -202,7 +202,7 @@ export default function OnboardingForm() {
                         <i>every day,</i> about 28 picks per week.
                       </p>
                     </div>
-                  </FrequencyCard>
+                  </OptionCard>
                 </RadioGroup>
               </FormControl>
               <FormMessage />

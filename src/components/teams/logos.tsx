@@ -6,7 +6,7 @@ export interface TeamLogoProps {
   height?: number;
   useLabel?: "none" | "city" | "team" | "abbr";
   imageScheme?: "spot" | "light" | "dark";
-  imageOrientation?: "left" | "right";
+  imageOrientation?: "left" | "right" | "middle";
 }
 
 export function TeamLogo({
@@ -51,6 +51,7 @@ export function TeamLogo({
         ? labelElement
         : null}
       <img
+        className={imageOrientation === "middle" ? "mx-auto" : ""}
         src={logoURL}
         height={finalHeight}
         width={finalHeight}

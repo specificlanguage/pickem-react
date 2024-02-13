@@ -5,12 +5,14 @@ import { ReactNode } from "react";
 export default function SubmitButton({
   isLoading,
   children,
+  className,
 }: {
   isLoading: boolean;
   children?: ReactNode;
+  className?: string;
 }) {
   return (
-    <Button type="submit" disabled={isLoading} className="float-right">
+    <Button type="submit" disabled={isLoading} className={className}>
       {isLoading ? (
         <LuLoader2 className="mx-auto h-4 w-4 animate-spin" />
       ) : children ? (

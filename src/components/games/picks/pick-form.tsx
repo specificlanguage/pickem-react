@@ -11,11 +11,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form.tsx";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
+import { RadioGroup } from "@/components/ui/radio-group.tsx";
 import { TeamLogo } from "@/components/teams/logos.tsx";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import SubmitButton from "@/components/forms/submit-button.tsx";
 import { useState } from "react";
+import { OptionCard } from "@/components/forms/option-card.tsx";
 
 interface PickFormProps {
   game: Game;
@@ -86,60 +87,54 @@ export default function PickForm({ game }: PickFormProps) {
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className="flex flex-col space-y-1"
                 >
+                  {/* TODO: background should be proportionally filled to those who picked it, like the YouTube polls.*/}
                   {/* ====== AWAY TEAM ========== */}
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem
-                        value={game.awayTeam_id.toString()}
-                        id={game.awayTeam_id.toString()}
-                      />
-                    </FormControl>
-                    <FormLabel className="text-xl">
+                  <OptionCard
+                    value={game.awayTeam_id.toString()}
+                    className="items-start"
+                  >
+                    <div className="space-y-2 leading-5">
                       {awayTeam ? (
                         <TeamLogo
-                          imageOrientation={"right"}
-                          label={awayTeam.name}
+                          imageOrientation={"left"}
+                          useLabel={"team"}
                           team={awayTeam}
                           height={32}
                           imageScheme="spot"
                         />
-                      ) : (
-                        game.awayName
-                      )}
-                    </FormLabel>
-                  </FormItem>
+                      ) : null}
+                      {/* TODO: add team stats, proj. pitchers*/}
+                    </div>
+                  </OptionCard>
 
                   {/* ====== HOME TEAM ========== */}
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem
-                        value={game.homeTeam_id.toString()}
-                        id={game.homeTeam_id.toString()}
-                      />
-                    </FormControl>
-                    <FormLabel className="text-xl">
+                  <OptionCard
+                    value={game.homeTeam_id.toString()}
+                    className="items-start"
+                  >
+                    <div className="space-y-2 leading-5">
                       {homeTeam ? (
                         <TeamLogo
-                          imageOrientation={"right"}
-                          label={homeTeam.name}
+                          imageOrientation={"left"}
+                          useLabel={"team"}
                           team={homeTeam}
                           height={32}
                           imageScheme="spot"
                         />
-                      ) : (
-                        game.homeName
-                      )}
-                    </FormLabel>
-                  </FormItem>
+                      ) : null}
+                      {/* TODO: add team stats, proj. pitchers*/}
+                    </div>
+                  </OptionCard>
                 </RadioGroup>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <SubmitButton isLoading={isLoading} />
+        <div className="flex justify-center">
+          <SubmitButton isLoading={isLoading} />
+        </div>
       </form>
     </Form>
   );
