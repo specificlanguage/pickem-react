@@ -3,21 +3,11 @@ import { Game } from "@/lib/http/games.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast.ts";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form.tsx";
-import { RadioGroup } from "@/components/ui/radio-group.tsx";
-import { TeamLogo } from "@/components/teams/logos.tsx";
-import { useFetchTeams } from "@/lib/http/teams.ts";
+import { Form, FormField } from "@/components/ui/form.tsx";
 import SubmitButton from "@/components/forms/submit-button.tsx";
 import { useState } from "react";
-import { OptionCard } from "@/components/forms/option-card.tsx";
 import GameInfo from "@/components/games/picks/game-info.tsx";
+import PickOptions from "@/components/games/picks/pick-options.tsx";
 
 interface PickFormProps {
   game: Game;
@@ -36,10 +26,6 @@ interface PickFormProps {
 export default function PickForm({ game }: PickFormProps) {
   const [isLoading, setLoading] = useState(false);
   // todo: setError() when the game is too late to pick, or other validation error on serverside.
-
-  const { teams } = useFetchTeams();
-  const awayTeam = teams?.find((team) => team.id === game.awayTeam_id);
-  const homeTeam = teams?.find((team) => team.id === game.homeTeam_id);
 
   const PickFormSchema = z.object({
     team: z.enum([game.awayTeam_id.toString(), game.homeTeam_id.toString()], {
@@ -77,66 +63,11 @@ export default function PickForm({ game }: PickFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 py-4">
         <FormField
           control={form.control}
           name="team"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel htmlFor="team" className="text-2xl">
-                Pick the winner:
-              </FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="gap-0"
-                >
-                  {/* TODO: background should be proportionally filled to those who picked it, like the YouTube polls.*/}
-                  {/* ====== AWAY TEAM ========== */}
-                  <OptionCard
-                    value={game.awayTeam_id.toString()}
-                    className="items-start"
-                  >
-                    <div className="leading-5">
-                      {awayTeam ? (
-                        <TeamLogo
-                          imageOrientation={"left"}
-                          useLabel={"team"}
-                          team={awayTeam}
-                          height={32.25}
-                          textSize="lg"
-                          imageScheme="spot"
-                        />
-                      ) : null}
-                      {/* TODO: add team stats, proj. pitchers*/}
-                    </div>
-                  </OptionCard>
-
-                  {/* ====== HOME TEAM ========== */}
-                  <OptionCard
-                    value={game.homeTeam_id.toString()}
-                    className="items-start my-0"
-                  >
-                    <div className="space-y-2 leading-5">
-                      {homeTeam ? (
-                        <TeamLogo
-                          imageOrientation={"left"}
-                          useLabel={"team"}
-                          team={homeTeam}
-                          height={32.25}
-                          textSize="lg"
-                          imageScheme="spot"
-                        />
-                      ) : null}
-                      {/* TODO: add team stats, proj. pitchers*/}
-                    </div>
-                  </OptionCard>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => <PickOptions field={field} game={game} />}
         />
         <GameInfo game={game} />
         <div className="flex justify-center">

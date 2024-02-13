@@ -15,7 +15,6 @@ export default function GameInfo({
 
   return (
     <>
-      <hr />
       <div className="mx-auto">
         <div className={"flex justify-center space-x-2 " + className}>
           <p>

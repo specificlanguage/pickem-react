@@ -15,7 +15,7 @@ export function OptionCard({
   ...props
 }: FrequencyCardProps) {
   return (
-    <div className="p-2">
+    <div className="my-1">
       <RadioGroupItem
         value={value}
         id={value}
