@@ -18,6 +18,14 @@ export default defineConfig(({ command, mode }) => {
           target: env.VITE_BACKEND_URL as string,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
+          configure: (proxy) => {
+            proxy.on("proxyReq", (proxyReq, req) => {
+              proxyReq.setHeader(
+                "Authorization",
+                req.headers.authorization ?? "",
+              );
+            });
+          },
         },
       },
     },
