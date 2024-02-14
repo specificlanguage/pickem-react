@@ -1,5 +1,6 @@
 import axios from "axios";
 import { QueryKey } from "@tanstack/react-query";
+import { formatAPIPath } from "@/lib/http/utils.ts";
 
 export interface Game {
   homeTeam_id: number;
@@ -19,6 +20,10 @@ interface DateQueryProps {
   queryKey: QueryKey;
 }
 
+/**
+ * Get games by date from the API.
+ * @param queryKey - The query key, formatted as ["games", {year: number, month: number, day: number}]
+ */
 export async function getGamesByDate({
   queryKey,
 }: DateQueryProps): Promise<Game[] | null> {
@@ -28,7 +33,7 @@ export async function getGamesByDate({
   ];
 
   return await axios
-    .get(`/api/games/date?year=${year}&month=${month}&day=${day}`)
+    .get(formatAPIPath(`/games/date?year=${year}&month=${month}&day=${day}`))
     .then((res) => {
       return res.data as Game[];
     });

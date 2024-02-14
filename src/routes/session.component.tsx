@@ -4,10 +4,12 @@ import { useAuth } from "@clerk/clerk-react";
 import { getOrCreateSession } from "@/lib/http/picks.ts";
 import GamesLayout from "@/layouts/games-layout.tsx";
 import SessionForm from "@/components/forms/sessions/session-form.tsx";
+import { useNavigate } from "@tanstack/react-router";
 
 export const component = function SessionPick() {
   const [date] = useState<Date>(new Date(2024, 2, 28));
-  const { getToken } = useAuth();
+  const { getToken, isSignedIn } = useAuth();
+  const navigate = useNavigate();
 
   const { isLoading, isError, data, error } = useQuery({
     queryKey: [
@@ -36,6 +38,11 @@ export const component = function SessionPick() {
       }
     },
   });
+
+  // Note: is temporary! This will be replaced with a proper info page telling people to sign in.
+  if (isSignedIn === false) {
+    navigate({ to: "/" });
+  }
 
   // TODO: join pick forms into a single form
   return (

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Game } from "@/lib/http/games.ts";
-import { authHeader } from "@/lib/http/auth.ts";
+import { authHeader, formatAPIPath } from "@/lib/http/utils.ts";
 
 export interface CreateSessionProps {
   year: number;
@@ -59,11 +59,9 @@ export async function getOrCreateSession({
 }: CreateSessionProps): Promise<CreateSessionResponse | null> {
   return await axios
     .post(
-      `/api/picks/session/new`,
+      formatAPIPath(`/picks/session/new`),
       { year, month, day },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
+      authHeader(token),
     )
     .then((res) => {
       return res.data as CreateSessionResponse;
@@ -82,13 +80,7 @@ export async function getOrCreateSession({
  */
 export async function submitSessionPicks(picks: Pick[], token: string) {
   return await axios
-    .post(
-      `/api/picks/`,
-      { picks },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
-    )
+    .post(formatAPIPath(`/picks/`), { picks }, authHeader(token))
     .then(() => true)
     .catch(() => false);
 }
@@ -100,7 +92,7 @@ export async function submitSessionPicks(picks: Pick[], token: string) {
  */
 export async function getPick(gameID: number, token: string) {
   return await axios
-    .get(`/api/picks/${gameID}`, authHeader(token))
+    .get(formatAPIPath(`/picks/${gameID}`), authHeader(token))
     .then((res) => res.data)
     .catch(() => null);
 }
@@ -112,7 +104,11 @@ export async function getPick(gameID: number, token: string) {
  */
 export async function submitPick(pick: Pick, token: string) {
   return await axios
-    .post(`/api/picks/${pick.gameID}`, { ...pick }, authHeader(token))
+    .post(
+      formatAPIPath(`/picks/${pick.gameID}`),
+      { ...pick },
+      authHeader(token),
+    )
     .then(() => true)
     .catch(() => false);
 }

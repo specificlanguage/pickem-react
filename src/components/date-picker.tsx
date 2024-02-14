@@ -13,7 +13,7 @@ import { disabledDays, isValidDate } from "@/lib/datetime/gameDates.ts";
 
 interface DatePickerProps {
   date: Date;
-  setDate: (date: Date) => void;
+  setDate: (date: Date | undefined) => void;
 }
 
 function OnlyFutureRow(props: RowProps) {
@@ -40,7 +40,6 @@ export default function DatePicker({ date, setDate }: DatePickerProps) {
       <PopoverContent className="w-auto p-0">
         <Calendar
           defaultMonth={date}
-          default={date}
           components={{ Row: OnlyFutureRow }}
           mode="single"
           selected={date}
