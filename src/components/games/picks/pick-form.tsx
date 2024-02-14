@@ -2,12 +2,13 @@ import { z } from "zod";
 import { Game } from "@/lib/http/games.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "@/components/ui/use-toast.ts";
 import { Form, FormField } from "@/components/ui/form.tsx";
 import SubmitButton from "@/components/forms/submit-button.tsx";
 import { useState } from "react";
 import GameInfo from "@/components/games/game-info.tsx";
 import PickOptions from "@/components/games/picks/pick-options.tsx";
+import { submitPick, transformFormDataToPicks } from "@/lib/http/picks.ts";
+import { useAuth } from "@clerk/clerk-react";
 
 interface PickFormProps {
   game: Game;
@@ -25,6 +26,7 @@ interface PickFormProps {
 
 export default function PickForm({ game }: PickFormProps) {
   const [isLoading, setLoading] = useState(false);
+  const { getToken } = useAuth();
   // todo: setError() when the game is too late to pick, or other validation error on serverside.
 
   const fields = [
@@ -51,22 +53,11 @@ export default function PickForm({ game }: PickFormProps) {
    * TODO: submit data to the server.
    * @param data
    */
-  function onSubmit(data: z.infer<typeof PickFormSchema>) {
+  async function onSubmit(data: z.infer<typeof PickFormSchema>) {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    toast({
-      title: "Pick submitted",
-      description: (
-        <p>
-          You submitted:{" "}
-          {data.team === game.awayTeam_id.toString()
-            ? game.awayName
-            : game.homeName}
-        </p>
-      ),
-    });
+    const pick = transformFormDataToPicks(data, [game])[0]; // Function transforms a list, so just use the first element.
+    await submitPick(pick, (await getToken()) ?? "");
+    setLoading(false);
   }
 
   return (

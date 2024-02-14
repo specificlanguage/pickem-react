@@ -5,6 +5,7 @@ import { useFetchTeams } from "@/lib/http/teams.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import GameInfo from "@/components/games/game-info.tsx";
 import { useState } from "react";
+import GameIconRow from "@/components/games/game-icon-row.tsx";
 
 interface GameCardProps {
   game: Game;
@@ -35,7 +36,7 @@ export default function GameCard({ game }: GameCardProps) {
 
   return (
     <Card data-testid={game.id}>
-      <CardContent data-testid="game-card" className="my-2 pb-0 space-y-2">
+      <CardContent data-testid="game-card" className="my-2 pb-0 space-y-1">
         <div className="flex flex-row">
           <div
             className="flex justify-end basis-[48%]"
@@ -75,6 +76,9 @@ export default function GameCard({ game }: GameCardProps) {
         </div>
         <hr />
         <GameInfo game={game} />
+        <div className="-mt-2">
+          <GameIconRow game={game} />
+        </div>
       </CardContent>
     </Card>
   );

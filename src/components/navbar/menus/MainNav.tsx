@@ -15,6 +15,9 @@ export default function MainNav() {
           </NavLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
+          <NavLink href="/session">Pick</NavLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
           <NavLink href="/games">Games</NavLink>
         </NavigationMenuItem>
         <NavigationMenuItem>Leaderboards</NavigationMenuItem>

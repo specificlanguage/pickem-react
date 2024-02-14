@@ -7,7 +7,10 @@ import { Game } from "@/lib/http/games.ts";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { submitSessionPicks } from "@/lib/http/picks.ts";
+import {
+  submitSessionPicks,
+  transformFormDataToPicks,
+} from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
 
 interface SessionFormProps {
@@ -37,17 +40,8 @@ export default function SessionForm({ games }: SessionFormProps) {
 
   async function onSubmit(data: z.infer<typeof sessionFormSchema>) {
     setLoading(true);
-    const pickList = Object.entries(data).map(([gameID, pick]) => ({
-      gameID: parseInt(gameID),
-      pickedHome:
-        pick ===
-        games
-          .find((game) => game.id.toString() === gameID)
-          ?.homeTeam_id.toString(),
-      isSeries: false, // TODO: Implement series
-    }));
-    console.log(pickList);
-    await submitSessionPicks(pickList, (await getToken()) ?? "");
+    const picks = transformFormDataToPicks(data, games);
+    await submitSessionPicks(picks, (await getToken()) ?? "");
     setLoading(false);
   }
 

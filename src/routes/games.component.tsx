@@ -58,7 +58,7 @@ export const component = function GamePage() {
           </span>
         </div>
         <hr className="border-2 bg-foreground" />
-        <div className="space-y-2">
+        <div className="space-y-4">
           {isError && (
             <div className="flex justify-center mx-auto text-lg font-bold">
               Something went wrong... try again later!
@@ -66,8 +66,8 @@ export const component = function GamePage() {
           )}
           {isLoading &&
             !isError &&
-            Array.from({ length: 8 }, (_, i) => i).map(() => {
-              return <GameSkeleton />;
+            Array.from({ length: 8 }, (_, i) => i).map((_, i) => {
+              return <GameSkeleton key={i} />;
             })}
           {data &&
             !isError &&
