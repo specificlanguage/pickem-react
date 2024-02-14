@@ -73,6 +73,7 @@ export default function GameCard({ game }: GameCardProps) {
             )}
           </div>
         </div>
+        <hr />
         <GameInfo game={game} />
       </CardContent>
     </Card>

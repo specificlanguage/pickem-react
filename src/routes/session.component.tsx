@@ -42,7 +42,10 @@ export const component = function SessionPick() {
     <GamesLayout>
       <div className="justify-center max-w-xl mx-auto my-6 space-y-2">
         <h3 className="text-3xl font-bold">Session</h3>
-        <p>These are the games that will be counted on the leaderboards.</p>
+        <p className="text-lg">Pick the winners for each game!</p>
+        <p className="text-[12pt]">
+          These are the games that will be counted on the leaderboards.
+        </p>
         {isLoading ? (
           <p>Loading...</p>
         ) : isError ? (
