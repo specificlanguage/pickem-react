@@ -9,6 +9,13 @@ interface GameInfoProps {
   className?: string;
 }
 
+/**
+ * GameInfoVertical -- a component to render game info in a vertical layout
+ * @param game -  Game object for info to display
+ * @param className - optional class name to apply to the component
+ * @param zonedDate - zoned time object that gets passed by the GameInfo component
+ * @constructor
+ */
 function GameInfoVertical({ game, className, zonedDate }: GameInfoProps) {
   const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
@@ -35,8 +42,30 @@ function GameInfoVertical({ game, className, zonedDate }: GameInfoProps) {
   );
 }
 
+/**
+ * GameInfoHorizontal -- a component to render game info in a horizontal layout
+ * @param game - Game object for info to display
+ * @param className - optional class name to apply to the component
+ * @param zonedDate - zoned time object that gets passed by the GameInfo component
+ * @constructor
+ */
+
 function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
   const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
+
+  /**
+   * CircleDivider -- a simple component to render a circle divider
+   * @constructor
+   */
+  function CircleDivider() {
+    return (
+      <div className="leading-[24px]">
+        <p className="inline-block align-middle">
+          <FaCircle size={5} />
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto">
@@ -48,19 +77,11 @@ function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
                 .replace("DT", "T")
                 .replace("ST", "T")}
         </p>
-        <div className="leading-[24px]">
-          <p className="inline-block align-middle">
-            <FaCircle size={5} />
-          </p>
-        </div>
+        <CircleDivider />
         <p>{game.venue}</p>
         {game.is_marquee && (
           <>
-            <div className="leading-[24px]">
-              <div className="inline-block align-middle">
-                <FaCircle size={5} />
-              </div>
-            </div>
+            <CircleDivider />
             <div className="flex justify-center leading-[24px]">
               <MarqueeBadge />
             </div>
@@ -71,6 +92,13 @@ function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
   );
 }
 
+/**
+ * GameInfo -- a component to render game info in a vertical or horizontal layout
+ * @param game - Game object for info to display
+ * @param className - optional class name to apply to the component
+ * @param orientation - optional orientation to render the component, defaults to horizontal
+ * @constructor
+ */
 export default function GameInfo({
   game,
   className,
