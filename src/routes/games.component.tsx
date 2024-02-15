@@ -67,8 +67,8 @@ export const component = function GamePage() {
           )}
           {isLoading &&
             !isError &&
-            Array.from({ length: 8 }, (_, i) => i).map(() => {
-              return <GameSkeleton />;
+            Array.from({ length: 8 }, (_, i) => i).map((_, i) => {
+              return <GameSkeleton key={i} />;
             })}
           {data &&
             !isError &&

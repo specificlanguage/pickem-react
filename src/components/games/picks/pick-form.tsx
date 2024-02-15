@@ -12,6 +12,8 @@ import { useAuth } from "@clerk/clerk-react";
 
 interface PickFormProps {
   game: Game;
+  id?: string;
+  showSubmitButton?: boolean;
 }
 
 /**
@@ -24,7 +26,11 @@ interface PickFormProps {
  * @constructor
  */
 
-export default function PickForm({ game }: PickFormProps) {
+export default function PickForm({
+  game,
+  id,
+  showSubmitButton = true,
+}: PickFormProps) {
   const [isLoading, setLoading] = useState(false);
   const { getToken } = useAuth();
   // todo: setError() when the game is too late to pick, or other validation error on serverside.
@@ -62,16 +68,22 @@ export default function PickForm({ game }: PickFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 py-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-2 py-4"
+        id={id}
+      >
         <FormField
           control={form.control}
           name={game.id.toString()}
           render={({ field }) => <PickOptions field={field} game={game} />}
         />
         <GameInfo game={game} />
-        <div className="flex justify-center">
-          <SubmitButton isLoading={isLoading} />
-        </div>
+        {showSubmitButton ? (
+          <div className="flex justify-center">
+            <SubmitButton isLoading={isLoading} />
+          </div>
+        ) : null}
       </form>
     </Form>
   );

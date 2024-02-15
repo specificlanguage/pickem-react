@@ -6,13 +6,20 @@ export default function SubmitButton({
   isLoading,
   children,
   className,
+  form,
 }: {
   isLoading: boolean;
   children?: ReactNode;
   className?: string;
+  form?: string;
 }) {
   return (
-    <Button type="submit" disabled={isLoading} className={className}>
+    <Button
+      type="submit"
+      disabled={isLoading}
+      className={className}
+      form={form ?? undefined}
+    >
       {isLoading ? (
         <LuLoader2 className="mx-auto h-4 w-4 animate-spin" />
       ) : children ? (

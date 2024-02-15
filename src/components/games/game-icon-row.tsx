@@ -77,18 +77,7 @@ function MLBTVIcon({ game }: PickIconProps) {
  * @constructor
  */
 function PickIcon({ game }: PickIconProps) {
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>
-          <PickIconDialog game={game} />
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Pick winner for this game!</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
+  return <PickIconDialog game={game} />;
 }
 
 /**
