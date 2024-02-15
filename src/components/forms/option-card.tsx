@@ -3,18 +3,29 @@ import { Label } from "@/components/ui/label.tsx";
 import { ReactNode } from "react";
 import { FaCheck } from "react-icons/fa";
 
-interface FrequencyCardProps {
+interface OptionCardProps {
   children: ReactNode;
   value: string;
   className?: string;
+  disabled?: boolean;
 }
 
+/**
+ * OptionCard -- a component to render a card for a radio group option.
+ * @param children - the content of the option
+ * @param value - the value of the option
+ * @param className - additional classes to add to the card
+ * @param disabled - whether the option is disabled
+ * @param props - any other props to pass to the radio group item
+ * @constructor
+ */
 export function OptionCard({
   children,
   value,
   className,
+  disabled,
   ...props
-}: FrequencyCardProps) {
+}: OptionCardProps) {
   return (
     <div className="my-1">
       <Label
@@ -29,6 +40,7 @@ export function OptionCard({
         }
       >
         <RadioGroupItem
+          disabled={disabled}
           value={value}
           id={value}
           className="peer sr-only"

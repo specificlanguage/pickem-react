@@ -7,16 +7,18 @@ export default function SubmitButton({
   children,
   className,
   form,
+  disable,
 }: {
   isLoading: boolean;
   children?: ReactNode;
   className?: string;
   form?: string;
+  disable?: boolean;
 }) {
   return (
     <Button
       type="submit"
-      disabled={isLoading}
+      disabled={isLoading || disable}
       className={className}
       form={form ?? undefined}
     >

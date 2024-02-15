@@ -7,11 +7,16 @@ import SubmitButton from "@/components/forms/submit-button.tsx";
 import { useState } from "react";
 import GameInfo from "@/components/games/game-info.tsx";
 import PickOptions from "@/components/games/picks/pick-options.tsx";
-import { submitPick, transformFormDataToPicks } from "@/lib/http/picks.ts";
+import {
+  GamePick,
+  submitPick,
+  transformFormDataToPicks,
+} from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
 
 interface PickFormProps {
   game: Game;
+  pick?: GamePick;
   id?: string;
   showSubmitButton?: boolean;
 }
@@ -23,17 +28,23 @@ interface PickFormProps {
  * TODO later: prevent submissions if the timestamp is too late!
  *
  * @param game - Game that they are predicting the winner for.
+ * @param pick - Optional picks object to prefill the form with. If present and the pick matches the game, the form will be disabled.
+ * @param id - Optional id for the form.
+ * @param showSubmitButton - Whether to show the submit button. Should be used in conjunction with the id.
  * @constructor
  */
 
 export default function PickForm({
   game,
+  pick,
   id,
   showSubmitButton = true,
 }: PickFormProps) {
   const [isLoading, setLoading] = useState(false);
   const { getToken } = useAuth();
   // todo: setError() when the game is too late to pick, or other validation error on serverside.
+  const alreadyPicked = pick !== undefined && game.id === pick.gameID;
+  const isDisabled = alreadyPicked || new Date(game.date) < new Date();
 
   const fields = [
     {
@@ -76,12 +87,14 @@ export default function PickForm({
         <FormField
           control={form.control}
           name={game.id.toString()}
-          render={({ field }) => <PickOptions field={field} game={game} />}
+          render={({ field }) => (
+            <PickOptions field={field} game={game} gamePick={pick} />
+          )}
         />
         <GameInfo game={game} />
         {showSubmitButton ? (
           <div className="flex justify-center">
-            <SubmitButton isLoading={isLoading} />
+            <SubmitButton isLoading={isLoading} disable={isDisabled} />
           </div>
         ) : null}
       </form>

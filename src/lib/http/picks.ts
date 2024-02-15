@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Game } from "@/lib/http/games.ts";
 import { authHeader, formatAPIPath } from "@/lib/http/utils.ts";
+import { useQuery } from "@tanstack/react-query";
 
 export interface CreateSessionProps {
   year: number;
@@ -17,7 +18,7 @@ export interface CreateSessionResponse {
   games: Game[];
 }
 
-export interface Pick {
+export interface GamePick {
   gameID: number;
   pickedHome: boolean;
   isSeries: boolean;
@@ -78,7 +79,7 @@ export async function getOrCreateSession({
  * @param token - The user's token
  * @returns - True if picks are submitted successfully, false if not.
  */
-export async function submitSessionPicks(picks: Pick[], token: string) {
+export async function submitSessionPicks(picks: GamePick[], token: string) {
   return await axios
     .post(formatAPIPath(`/picks/`), { picks }, authHeader(token))
     .then(() => true)
@@ -102,7 +103,7 @@ export async function getPick(gameID: number, token: string) {
  * @param pick - The pick for the game. See the interface for more details.
  * @param token - The user's token
  */
-export async function submitPick(pick: Pick, token: string) {
+export async function submitPick(pick: GamePick, token: string) {
   return await axios
     .post(
       formatAPIPath(`/picks/${pick.gameID}`),
@@ -111,4 +112,12 @@ export async function submitPick(pick: Pick, token: string) {
     )
     .then(() => true)
     .catch(() => false);
+}
+
+export async function useFetchPick(gameID: number, token: string) {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["teams", { gameID }],
+    queryFn: () => getPick(gameID, token),
+  });
+  return { data, isLoading, isError, teams: data };
 }
