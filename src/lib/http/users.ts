@@ -6,6 +6,12 @@ interface Preferences {
   selectionTiming: string;
 }
 
+export interface PreferencesResult {
+  favoriteTeam_id: number;
+  id: string;
+  selectionTiming: string;
+}
+
 /** Set user preferences from a user's uid. */
 export async function setPreferences(token: string, preferences: Preferences) {
   return axios.put(
@@ -13,4 +19,13 @@ export async function setPreferences(token: string, preferences: Preferences) {
     preferences,
     authHeader(token),
   );
+}
+
+export async function getPreferences(token: string, uid: string) {
+  return (
+    await axios.get(
+      formatAPIPath(`/users/preferences?uid=${uid}`),
+      authHeader(token),
+    )
+  ).data as PreferencesResult;
 }

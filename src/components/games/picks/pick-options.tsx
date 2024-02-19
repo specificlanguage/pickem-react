@@ -6,6 +6,10 @@ import { ControllerRenderProps } from "react-hook-form";
 import { Game } from "@/lib/http/games.ts";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import { GamePick } from "@/lib/http/picks.ts";
+import { useAuth } from "@clerk/clerk-react";
+import { getPreferences, PreferencesResult } from "@/lib/http/users.ts";
+import { FavoriteTeamIcon } from "@/components/games/icons.tsx";
+import { useQuery } from "@tanstack/react-query";
 
 interface PickOptionsProps {
   field: ControllerRenderProps<{ [x: string]: string }, string>;
@@ -25,7 +29,15 @@ export default function PickOptions({
   game,
   gamePick,
 }: PickOptionsProps) {
+  const { getToken, userId } = useAuth();
   const { teams } = useFetchTeams();
+  const { data } = useQuery({
+    queryKey: ["prefs"],
+    queryFn: async () => getPreferences((await getToken()) ?? "", userId ?? ""),
+  });
+  const prefs = data as PreferencesResult | undefined;
+  console.log(prefs?.favoriteTeam_id, "prefs?.favoriteTeam_id");
+
   const awayTeam = teams?.find((team) => team.id === game.awayTeam_id);
   const homeTeam = teams?.find((team) => team.id === game.homeTeam_id);
 
@@ -57,14 +69,19 @@ export default function PickOptions({
           >
             <div className="leading-5">
               {awayTeam ? (
-                <TeamLogo
-                  imageOrientation={"left"}
-                  useLabel={"team"}
-                  team={awayTeam}
-                  height={32.25}
-                  textSize="lg"
-                  imageScheme="spot"
-                />
+                <div className="flex justify-start space-x-0.5">
+                  <TeamLogo
+                    imageOrientation={"left"}
+                    useLabel={"team"}
+                    team={awayTeam}
+                    height={32.25}
+                    textSize="lg"
+                    imageScheme="spot"
+                  />
+                  {prefs?.favoriteTeam_id === game.awayTeam_id && (
+                    <FavoriteTeamIcon />
+                  )}
+                </div>
               ) : null}
               {/* TODO: add team stats, proj. pitchers*/}
             </div>
@@ -78,14 +95,19 @@ export default function PickOptions({
           >
             <div className="leading-5">
               {homeTeam ? (
-                <TeamLogo
-                  imageOrientation={"left"}
-                  useLabel={"team"}
-                  team={homeTeam}
-                  height={32.25}
-                  textSize="lg"
-                  imageScheme="spot"
-                />
+                <div className="flex justify-start space-x-0.5">
+                  <TeamLogo
+                    imageOrientation={"left"}
+                    useLabel={"team"}
+                    team={homeTeam}
+                    height={32.25}
+                    textSize="lg"
+                    imageScheme="spot"
+                  />
+                  {prefs?.favoriteTeam_id === game.homeTeam_id && (
+                    <FavoriteTeamIcon />
+                  )}
+                </div>
               ) : null}
               {/* TODO: add team stats, proj. pitchers*/}
             </div>
