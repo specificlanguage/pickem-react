@@ -1,6 +1,6 @@
 import { Game } from "@/lib/http/games.ts";
 import { format, utcToZonedTime } from "date-fns-tz";
-import { FaCircle } from "react-icons/fa6";
+import { FaCircle, FaClock, FaLocationDot } from "react-icons/fa6";
 import MarqueeBadge from "@/components/games/marquee-badge.tsx";
 
 interface GameInfoProps {
@@ -22,14 +22,18 @@ function GameInfoVertical({ game, className, zonedDate }: GameInfoProps) {
   return (
     <div className="flex h-full justify-start items-center">
       <div className={"space-y-2 " + className}>
-        <p>
+        <p className="flex justify-start gap-x-2">
+          <FaClock />
           {zonedDate.getMinutes() == 33
             ? "TBD"
             : format(zonedDate, "h:mmaa zzz", { timeZone })
                 .replace("DT", "T")
                 .replace("ST", "T")}
         </p>
-        <p>{game.venue}</p>
+        <p className="flex justify-start gap-x-2">
+          <FaLocationDot />
+          {game.venue}
+        </p>
         {game.is_marquee && (
           <>
             <div className="flex justify-center leading-[24px]">
@@ -70,7 +74,8 @@ function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
   return (
     <div className="mx-auto">
       <div className={"flex justify-center space-x-2 " + className}>
-        <p>
+        <p className="flex justify-start gap-x-2">
+          <FaClock className="mt-1" />
           {zonedDate.getMinutes() == 33
             ? "TBD"
             : format(zonedDate, "h:mmaa zzz", { timeZone })
@@ -78,7 +83,10 @@ function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
                 .replace("ST", "T")}
         </p>
         <CircleDivider />
-        <p>{game.venue}</p>
+        <p className="flex justify-start gap-x-2">
+          <FaLocationDot className="mt-1" />
+          {game.venue}
+        </p>
         {game.is_marquee && (
           <>
             <CircleDivider />

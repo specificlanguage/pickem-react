@@ -12,13 +12,13 @@ interface GameCardProps {
 }
 
 export default function GameCard({ game }: GameCardProps) {
-  const { data } = useFetchTeams();
+  const { teams } = useFetchTeams();
 
   const possibleViews = ["team", "abbr", "full"];
   const [teamView, setTeamView] = useState<number>(0);
 
-  const awayTeam = data?.find((team) => team.id === game.awayTeam_id);
-  const homeTeam = data?.find((team) => team.id === game.homeTeam_id);
+  const awayTeam = teams?.find((team) => team.id === game.awayTeam_id);
+  const homeTeam = teams?.find((team) => team.id === game.homeTeam_id);
 
   function onClick() {
     setTeamView((teamView + 1) % possibleViews.length);

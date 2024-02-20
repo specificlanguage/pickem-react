@@ -32,7 +32,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 export default function OnboardingForm() {
   // TODO: abstract this into its own hook
-  const { data } = useFetchTeams();
+  const { teams } = useFetchTeams();
   const [isLoading, setLoading] = useState(false);
   const { getToken } = useAuth();
   const navigate = useNavigate();
@@ -79,8 +79,8 @@ export default function OnboardingForm() {
       });
   }
 
-  if (data) {
-    data.sort((a, b) => a.name.localeCompare(b.name));
+  if (teams) {
+    teams.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   return (
@@ -130,8 +130,8 @@ export default function OnboardingForm() {
                   </SelectItem>
 
                   {/* All other teams */}
-                  {data
-                    ? data.map((team) => (
+                  {teams
+                    ? teams.map((team) => (
                         <SelectItem key={team.id} value={team.id.toString()}>
                           <TeamLogo
                             height={32}
