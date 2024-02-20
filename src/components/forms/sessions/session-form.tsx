@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  GamePick,
   submitSessionPicks,
   transformFormDataToPicks,
 } from "@/lib/http/picks.ts";
@@ -15,10 +16,12 @@ import { useAuth } from "@clerk/clerk-react";
 
 interface SessionFormProps {
   games: Game[];
+  picks?: GamePick[];
 }
 
-export default function SessionForm({ games }: SessionFormProps) {
+export default function SessionForm({ games, picks }: SessionFormProps) {
   const [isLoading, setLoading] = useState(false);
+  const [playerPicks, setPlayerPicks] = useState<GamePick[]>(picks ?? []);
   const { getToken } = useAuth();
 
   // Parser to create the fields for the schema.
@@ -40,14 +43,15 @@ export default function SessionForm({ games }: SessionFormProps) {
 
   async function onSubmit(data: z.infer<typeof sessionFormSchema>) {
     setLoading(true);
-    const picks = transformFormDataToPicks(data, games);
-    await submitSessionPicks(picks, (await getToken()) ?? "");
+    const submitPicks = transformFormDataToPicks(data, games);
+    await submitSessionPicks(submitPicks, (await getToken()) ?? "");
+    setPlayerPicks(submitPicks);
     setLoading(false);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="py-4">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         {games.map((game, index) => (
           <div key={index}>
             <div className="flex flex-row gap-2 gap-x-8">
@@ -56,7 +60,11 @@ export default function SessionForm({ games }: SessionFormProps) {
                   control={form.control}
                   name={game.id.toString()}
                   render={({ field }) => (
-                    <PickOptions field={field} game={game} />
+                    <PickOptions
+                      field={field}
+                      game={game}
+                      gamePick={playerPicks?.find((p) => p.gameID === game.id)}
+                    />
                   )}
                 />
               </div>
@@ -71,7 +79,11 @@ export default function SessionForm({ games }: SessionFormProps) {
         ))}
 
         <div className="flex justify-end">
-          <SubmitButton className="text-lg px-6 py-6" isLoading={isLoading} />
+          <SubmitButton
+            className="text-lg px-6 py-6"
+            isLoading={isLoading}
+            disable={picks && picks.length > 0}
+          />
         </div>
       </form>
     </Form>

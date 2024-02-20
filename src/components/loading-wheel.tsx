@@ -1,10 +1,19 @@
-export default function LoadingWheel() {
+interface LoadingWheelProps {
+  size?: number;
+}
+
+export default function LoadingWheel({ size }: LoadingWheelProps) {
+  let finalSize = 12;
+  if (size !== undefined) {
+    finalSize = size;
+  }
+
   return (
     <div className="flex justify-center items-center">
       {/*  Flowbite component, from https://flowbite.com/docs/components/spinner/ */}
       <svg
         aria-hidden="true"
-        className="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        className={`w-${finalSize} h-${finalSize} text-gray-200 animate-spin dark:text-gray-600 fill-blue-600`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

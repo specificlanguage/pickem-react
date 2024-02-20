@@ -1,28 +1,51 @@
 import axios from "axios";
 import { Game } from "@/lib/http/games.ts";
 import { authHeader, formatAPIPath } from "@/lib/http/utils.ts";
-import { useQuery } from "@tanstack/react-query";
 
-export interface CreateSessionProps {
+export interface SessionRequest {
   year: number;
   month: number;
   day: number;
   token: string;
 }
 
-export interface CreateSessionResponse {
+export interface SessionResponse {
   id: number;
   is_series: boolean;
   date: string;
   user_id: string;
   games: Game[];
+  picks: {
+    game_id: number;
+    pickedHome: boolean;
+    isSeries: boolean;
+    comment?: string | null;
+  }[];
+}
+
+export interface SessionPick {
+  game_id: number; // Yes, I know this is a bad waste of energy, but this will be a TODO to fix this field.
+  pickedHome: boolean;
+  isSeries: boolean;
+  comment?: string | null;
 }
 
 export interface GamePick {
   gameID: number;
   pickedHome: boolean;
   isSeries: boolean;
-  comment?: string;
+  comment?: string | null;
+}
+
+export interface AllPickResponse {
+  gameID: number;
+  totalPicks: number;
+  homePicks: number;
+  awayPicks: number;
+}
+
+export interface MultiplePickResponse {
+  results: AllPickResponse[];
 }
 
 /**
@@ -45,6 +68,31 @@ export function transformFormDataToPicks(
   }));
 }
 
+export function convertSessPickToGamePick(picks: SessionPick[]): GamePick[] {
+  return picks.map((pick) => ({
+    gameID: pick.game_id,
+    pickedHome: pick.pickedHome,
+    isSeries: pick.isSeries,
+    comment: pick.comment,
+  }));
+}
+
+export async function getSession({
+  year,
+  month,
+  day,
+  token,
+}: SessionRequest): Promise<SessionResponse | null> {
+  console.log(token);
+  return await axios
+    .get(
+      formatAPIPath(`/picks/session?year=${year}&month=${month}&day=${day}`),
+      authHeader(token),
+    )
+    .then((res) => res.data as SessionResponse)
+    .catch(() => null);
+}
+
 /**
  * Gets the picks for a specific session, dictated by the day. Will return different depending on the user's preferences (not specified here.)
  * @param year - Year
@@ -52,12 +100,12 @@ export function transformFormDataToPicks(
  * @param day - Day
  * @param token - The user's token
  */
-export async function getOrCreateSession({
+export async function createSession({
   year,
   month,
   day,
   token,
-}: CreateSessionProps): Promise<CreateSessionResponse | null> {
+}: SessionRequest): Promise<SessionResponse | null> {
   return await axios
     .post(
       formatAPIPath(`/picks/session/new`),
@@ -65,7 +113,7 @@ export async function getOrCreateSession({
       authHeader(token),
     )
     .then((res) => {
-      return res.data as CreateSessionResponse;
+      return res.data as SessionResponse;
     })
     .catch((err) => {
       console.error(err);
@@ -94,7 +142,7 @@ export async function submitSessionPicks(picks: GamePick[], token: string) {
 export async function getPick(gameID: number, token: string) {
   return await axios
     .get(formatAPIPath(`/picks/${gameID}`), authHeader(token))
-    .then((res) => res.data)
+    .then((res) => res.data as GamePick)
     .catch(() => null);
 }
 
@@ -114,10 +162,20 @@ export async function submitPick(pick: GamePick, token: string) {
     .catch(() => false);
 }
 
-export async function useFetchPick(gameID: number, token: string) {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["teams", { gameID }],
-    queryFn: () => getPick(gameID, token),
-  });
-  return { data, isLoading, isError, teams: data };
+export async function getAllPicksForGames(gameIDs: number[]) {
+  return await axios
+    .get(
+      formatAPIPath(
+        `/picks/all?gameID=${gameIDs.join("&gameID=")}&isSeries=false`,
+      ),
+    ) // TODO: Implement series
+    .then((res) => res.data)
+    .catch(() => null);
+}
+
+export async function getAllPicks(gameID: number) {
+  return await axios
+    .get(formatAPIPath(`/picks/all?gameIDs=${gameID}`))
+    .then((res) => res.data as AllPickResponse)
+    .catch(() => null);
 }
