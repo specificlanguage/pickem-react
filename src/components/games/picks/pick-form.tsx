@@ -9,14 +9,16 @@ import GameInfo from "@/components/games/game-info.tsx";
 import PickOptions from "@/components/games/picks/pick-options.tsx";
 import {
   GamePick,
+  getPick,
   submitPick,
   transformFormDataToPicks,
 } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
+import { useQuery } from "@tanstack/react-query";
+import LoadingWheel from "@/components/loading-wheel.tsx";
 
 interface PickFormProps {
   game: Game;
-  pick?: GamePick;
   id?: string;
   showSubmitButton?: boolean;
 }
@@ -28,7 +30,6 @@ interface PickFormProps {
  * TODO later: prevent submissions if the timestamp is too late!
  *
  * @param game - Game that they are predicting the winner for.
- * @param pick - Optional picks object to prefill the form with. If present and the pick matches the game, the form will be disabled.
  * @param id - Optional id for the form.
  * @param showSubmitButton - Whether to show the submit button. Should be used in conjunction with the id.
  * @constructor
@@ -36,14 +37,15 @@ interface PickFormProps {
 
 export default function PickForm({
   game,
-  pick,
   id,
   showSubmitButton = true,
 }: PickFormProps) {
-  const [isLoading, setLoading] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
+  const [pick, setPick] = useState<GamePick | undefined>(undefined);
   const { getToken } = useAuth();
+
   // todo: setError() when the game is too late to pick, or other validation error on serverside.
-  const alreadyPicked = pick !== undefined && game.id === pick.gameID;
+  const alreadyPicked = pick !== undefined && game.id === pick?.gameID;
   const isDisabled = alreadyPicked || new Date(game.date) < new Date();
 
   const fields = [
@@ -64,6 +66,15 @@ export default function PickForm({
     resolver: zodResolver(PickFormSchema),
   });
 
+  const { isLoading } = useQuery({
+    queryKey: ["pick", game.id],
+    queryFn: async () => {
+      const resp = await getPick(game.id, (await getToken()) ?? "");
+      setPick(resp ?? undefined);
+      return resp ?? null;
+    },
+  });
+
   /**
    * onSubmit - Handles the form submission.
    * The body is temporary, this does not actually submit to the server as of yet.
@@ -71,10 +82,19 @@ export default function PickForm({
    * @param data
    */
   async function onSubmit(data: z.infer<typeof PickFormSchema>) {
-    setLoading(true);
+    setSubmitting(true);
     const pick = transformFormDataToPicks(data, [game])[0]; // Function transforms a list, so just use the first element.
     await submitPick(pick, (await getToken()) ?? "");
-    setLoading(false);
+    setPick(pick);
+    setSubmitting(false);
+  }
+
+  if (isLoading) {
+    return (
+      <div>
+        <LoadingWheel />
+      </div>
+    );
   }
 
   return (
@@ -88,13 +108,17 @@ export default function PickForm({
           control={form.control}
           name={game.id.toString()}
           render={({ field }) => (
-            <PickOptions field={field} game={game} gamePick={pick} />
+            <PickOptions
+              field={field}
+              game={game}
+              gamePick={pick ?? undefined}
+            />
           )}
         />
         <GameInfo game={game} />
         {showSubmitButton ? (
           <div className="flex justify-center">
-            <SubmitButton isLoading={isLoading} disable={isDisabled} />
+            <SubmitButton isLoading={isSubmitting} disable={isDisabled} />
           </div>
         ) : null}
       </form>

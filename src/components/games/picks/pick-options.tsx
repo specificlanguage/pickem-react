@@ -8,7 +8,7 @@ import { useFetchTeams } from "@/lib/http/teams.ts";
 import { GamePick } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
 import { getPreferences, PreferencesResult } from "@/lib/http/users.ts";
-import { FavoriteTeamIcon } from "@/components/games/icons.tsx";
+import { CheckedIcon, FavoriteTeamIcon } from "@/components/games/icons.tsx";
 import { useQuery } from "@tanstack/react-query";
 
 interface PickOptionsProps {
@@ -36,7 +36,6 @@ export default function PickOptions({
     queryFn: async () => getPreferences((await getToken()) ?? "", userId ?? ""),
   });
   const prefs = data as PreferencesResult | undefined;
-  console.log(prefs?.favoriteTeam_id, "prefs?.favoriteTeam_id");
 
   const awayTeam = teams?.find((team) => team.id === game.awayTeam_id);
   const homeTeam = teams?.find((team) => team.id === game.homeTeam_id);
@@ -46,18 +45,12 @@ export default function PickOptions({
   const alreadyPicked = gamePick !== undefined && game.id === gamePick.gameID;
   const isDisabled = alreadyPicked || new Date(game.date) < new Date();
 
-  const defaultValue = alreadyPicked
-    ? gamePick.pickedHome
-      ? game.homeTeam_id.toString()
-      : game.awayTeam_id.toString()
-    : field.value;
-
   return (
     <FormItem>
       <FormControl>
         <RadioGroup
           onValueChange={field.onChange}
-          defaultValue={defaultValue}
+          defaultValue={field.value}
           className="gap-0"
         >
           {/* TODO: background should be proportionally filled to those who picked it, like the YouTube polls.*/}
@@ -81,6 +74,10 @@ export default function PickOptions({
                   {prefs?.favoriteTeam_id === game.awayTeam_id && (
                     <FavoriteTeamIcon />
                   )}
+                  {field.value === game.awayTeam_id.toString() ||
+                  (alreadyPicked && !gamePick?.pickedHome) ? (
+                    <CheckedIcon />
+                  ) : null}
                 </div>
               ) : null}
               {/* TODO: add team stats, proj. pitchers*/}
@@ -107,6 +104,10 @@ export default function PickOptions({
                   {prefs?.favoriteTeam_id === game.homeTeam_id && (
                     <FavoriteTeamIcon />
                   )}
+                  {field.value === game.homeTeam_id.toString() ||
+                  (alreadyPicked && gamePick?.pickedHome) ? (
+                    <CheckedIcon />
+                  ) : null}
                 </div>
               ) : null}
               {/* TODO: add team stats, proj. pitchers*/}

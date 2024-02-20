@@ -1,7 +1,6 @@
 import { RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { ReactNode } from "react";
-import { FaCheck } from "react-icons/fa";
 
 interface OptionCardProps {
   children: ReactNode;
@@ -46,9 +45,6 @@ export function OptionCard({
           className="peer sr-only"
           {...props}
         />
-        <span className="invisible peer-data-[state=checked]:visible [&:has([data-state=checked])]:visible bg-green-700 p-1 rounded-full absolute -right-1.5 -top-1.5">
-          <FaCheck size={12} />
-        </span>
         {children}
       </Label>
     </div>
