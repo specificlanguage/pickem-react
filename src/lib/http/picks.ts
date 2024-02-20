@@ -83,7 +83,6 @@ export async function getSession({
   day,
   token,
 }: SessionRequest): Promise<SessionResponse | null> {
-  console.log(token);
   return await axios
     .get(
       formatAPIPath(`/picks/session?year=${year}&month=${month}&day=${day}`),

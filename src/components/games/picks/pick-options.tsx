@@ -7,9 +7,8 @@ import { Game } from "@/lib/http/games.ts";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import { GamePick } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
-import { getPreferences, PreferencesResult } from "@/lib/http/users.ts";
+import { usePrefs } from "@/lib/http/users.ts";
 import { CheckedIcon, FavoriteTeamIcon } from "@/components/games/icons.tsx";
-import { useQuery } from "@tanstack/react-query";
 
 interface PickOptionsProps {
   field: ControllerRenderProps<{ [x: string]: string }, string>;
@@ -31,12 +30,7 @@ export default function PickOptions({
 }: PickOptionsProps) {
   const { getToken, userId } = useAuth();
   const { teams } = useFetchTeams();
-  const { data } = useQuery({
-    queryKey: ["prefs"],
-    queryFn: async () => getPreferences((await getToken()) ?? "", userId ?? ""),
-  });
-  const prefs = data as PreferencesResult | undefined;
-
+  const { prefs } = usePrefs(getToken(), userId ?? "");
   const awayTeam = teams?.find((team) => team.id === game.awayTeam_id);
   const homeTeam = teams?.find((team) => team.id === game.homeTeam_id);
 
