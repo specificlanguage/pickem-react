@@ -30,19 +30,18 @@ export function OptionCard({
 }: OptionCardProps) {
   return (
     <div className="my-1 relative">
-      {fillPct ? (
-        <div
-          className={`absolute top-0 left-0 p-0.25 rounded-tl-sm h-full bg-neutral-300 dark:bg-neutral-800 w-[${fillPct}%]`}
-        ></div>
-      ) : null}
+      <div
+        className={`absolute top-0 left-0 rounded-xl bg-neutral-300 dark:bg-neutral-900 h-full`}
+        style={{ width: `${fillPct ?? 0}%` }}
+      />
       <Label
         htmlFor={value}
         className={
-          "flex flex-col items-center justify-between \
+          `flex flex-col items-center justify-between \
                       rounded-md border-2 border-muted bg-popover p-2.5 leading-8 \
-                      hover:bg-accent hover:text-accent-foreground \
                       peer-data-[state=checked]:border-primary \
-                      [&:has([data-state=checked])]:border-primary relative peer " +
+                      [&:has([data-state=checked])]:border-primary relative peer \
+                      ${fillPct === undefined ? "hover:bg-accent hover:text-accent-foreground" : ""} ` +
           className
         }
       >
@@ -54,7 +53,6 @@ export function OptionCard({
           {...props}
         />
         {children}
-        {fillPct ? <p className="justify-end mt-3 leading-3">96%</p> : null}
       </Label>
     </div>
   );

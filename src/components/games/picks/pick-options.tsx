@@ -5,10 +5,11 @@ import { TeamLogo } from "@/components/teams/logos.tsx";
 import { ControllerRenderProps } from "react-hook-form";
 import { Game } from "@/lib/http/games.ts";
 import { useFetchTeams } from "@/lib/http/teams.ts";
-import { GamePick } from "@/lib/http/picks.ts";
+import { GamePick, getAllPicks } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
 import { usePrefs } from "@/lib/http/users.ts";
 import { CheckedIcon, FavoriteTeamIcon } from "@/components/games/icons.tsx";
+import { useQuery } from "@tanstack/react-query";
 
 interface PickOptionsProps {
   field: ControllerRenderProps<{ [x: string]: string }, string>;
@@ -39,6 +40,12 @@ export default function PickOptions({
   const alreadyPicked = gamePick !== undefined && game.id === gamePick.gameID;
   const isDisabled = alreadyPicked || new Date(game.date) < new Date();
 
+  const { data } = useQuery({
+    queryKey: ["pickData", game.id],
+    queryFn: async () => getAllPicks(game.id),
+    enabled: isDisabled,
+  });
+
   return (
     <FormItem>
       <FormControl>
@@ -52,11 +59,14 @@ export default function PickOptions({
           <OptionCard
             value={game.awayTeam_id.toString()}
             disabled={isDisabled}
+            fillPct={
+              data ? (data?.awayPicks / data?.totalPicks) * 100 : undefined
+            }
             className={`items-start ${isDisabled ? "opacity-50" : ""}`}
           >
-            <div className="leading-5">
-              {awayTeam ? (
-                <div className="flex justify-start space-x-0.5">
+            {awayTeam ? (
+              <div className="leading-5 flex justify-between w-full space-x-0.5">
+                <div className="flex justify-start">
                   <TeamLogo
                     imageOrientation={"left"}
                     useLabel={"team"}
@@ -73,20 +83,28 @@ export default function PickOptions({
                     <CheckedIcon />
                   ) : null}
                 </div>
-              ) : null}
-              {/* TODO: add team stats, proj. pitchers*/}
-            </div>
+                <div className="flex justify-end leading-7">
+                  {data
+                    ? Math.round((data.awayPicks / data.totalPicks) * 100) + "%"
+                    : null}
+                </div>
+              </div>
+            ) : null}
+            {/* TODO: add team stats, proj. pitchers*/}
           </OptionCard>
 
           {/* ====== HOME TEAM ========== */}
           <OptionCard
             value={game.homeTeam_id.toString()}
             disabled={isDisabled}
+            fillPct={
+              data ? (data?.homePicks / data?.totalPicks) * 100 : undefined
+            }
             className={`items-start ${isDisabled ? "opacity-50" : ""}`}
           >
-            <div className="leading-5">
-              {homeTeam ? (
-                <div className="flex justify-start space-x-0.5">
+            {homeTeam ? (
+              <div className="flex justify-between w-full space-x-0.5 leading-5">
+                <div className="flex justify-start">
                   <TeamLogo
                     imageOrientation={"left"}
                     useLabel={"team"}
@@ -103,9 +121,14 @@ export default function PickOptions({
                     <CheckedIcon />
                   ) : null}
                 </div>
-              ) : null}
-              {/* TODO: add team stats, proj. pitchers*/}
-            </div>
+                <div className="flex justify-end leading-7">
+                  {data
+                    ? Math.round((data.homePicks / data.totalPicks) * 100) + "%"
+                    : null}
+                </div>
+              </div>
+            ) : null}
+            {/* TODO: add team stats, proj. pitchers*/}
           </OptionCard>
         </RadioGroup>
       </FormControl>
