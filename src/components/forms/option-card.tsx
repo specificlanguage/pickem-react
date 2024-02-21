@@ -8,6 +8,7 @@ interface OptionCardProps {
   fillPct?: number;
   className?: string;
   disabled?: boolean;
+  showHighlight?: boolean;
 }
 
 /**
@@ -26,6 +27,7 @@ export function OptionCard({
   fillPct,
   className,
   disabled,
+  showHighlight,
   ...props
 }: OptionCardProps) {
   return (
@@ -38,11 +40,9 @@ export function OptionCard({
         htmlFor={value}
         className={
           `flex flex-col items-center justify-between \
-                      rounded-md border-2 border-muted bg-popover p-2.5 leading-8 \
-                      peer-data-[state=checked]:border-primary \
-                      [&:has([data-state=checked])]:border-primary relative peer \
-                      ${fillPct === undefined ? "hover:bg-accent hover:text-accent-foreground" : ""} ` +
-          className
+                      rounded-md border-2 border-muted bg-popover p-2.5 leading-8 relative peer \
+                      ${fillPct === undefined ? "hover:bg-accent hover:text-accent-foreground" : ""} 
+                      ${showHighlight ? "border-primary" : ""} ` + className
         }
       >
         <RadioGroupItem

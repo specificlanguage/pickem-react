@@ -40,6 +40,13 @@ export default function PickOptions({
   const alreadyPicked = gamePick !== undefined && game.id === gamePick.gameID;
   const isDisabled = alreadyPicked || new Date(game.date) < new Date();
 
+  const pickedAway =
+    field.value === game.awayTeam_id.toString() ||
+    (alreadyPicked && !gamePick?.pickedHome);
+  const pickedHome =
+    field.value === game.homeTeam_id.toString() ||
+    (alreadyPicked && gamePick?.pickedHome);
+
   const { data } = useQuery({
     queryKey: ["pickData", game.id],
     queryFn: async () => getAllPicks(game.id),
@@ -59,10 +66,12 @@ export default function PickOptions({
           <OptionCard
             value={game.awayTeam_id.toString()}
             disabled={isDisabled}
+            showHighlight={pickedAway}
             fillPct={
               data ? (data?.awayPicks / data?.totalPicks) * 100 : undefined
             }
-            className={`items-start ${isDisabled ? "opacity-50" : ""}`}
+            className={`items-start 
+            ${isDisabled ? "opacity-50" : ""}`}
           >
             {awayTeam ? (
               <div className="leading-5 flex justify-between w-full space-x-0.5">
@@ -78,10 +87,7 @@ export default function PickOptions({
                   {prefs?.favoriteTeam_id === game.awayTeam_id && (
                     <FavoriteTeamIcon />
                   )}
-                  {field.value === game.awayTeam_id.toString() ||
-                  (alreadyPicked && !gamePick?.pickedHome) ? (
-                    <CheckedIcon />
-                  ) : null}
+                  {pickedAway ? <CheckedIcon /> : null}
                 </div>
                 <div className="flex justify-end leading-7">
                   {data
@@ -97,10 +103,12 @@ export default function PickOptions({
           <OptionCard
             value={game.homeTeam_id.toString()}
             disabled={isDisabled}
+            showHighlight={pickedAway}
             fillPct={
               data ? (data?.homePicks / data?.totalPicks) * 100 : undefined
             }
-            className={`items-start ${isDisabled ? "opacity-50" : ""}`}
+            className={`items-start 
+            ${isDisabled ? "opacity-50" : ""}`}
           >
             {homeTeam ? (
               <div className="flex justify-between w-full space-x-0.5 leading-5">
@@ -116,10 +124,7 @@ export default function PickOptions({
                   {prefs?.favoriteTeam_id === game.homeTeam_id && (
                     <FavoriteTeamIcon />
                   )}
-                  {field.value === game.homeTeam_id.toString() ||
-                  (alreadyPicked && gamePick?.pickedHome) ? (
-                    <CheckedIcon />
-                  ) : null}
+                  {pickedHome ? <CheckedIcon /> : null}
                 </div>
                 <div className="flex justify-end leading-7">
                   {data

@@ -173,7 +173,10 @@ export default function OnboardingForm() {
                   onValueChange={field.onChange}
                   className="grid grid-cols-2 gap-4"
                 >
-                  <OptionCard value="series">
+                  <OptionCard
+                    value="series"
+                    showHighlight={field.value === "series"}
+                  >
                     <div className="min-h-48 space-y-2 text-left leading-5">
                       <p className="font-bold text-lg flex justify-between">
                         Series <FaCalendarWeek />
@@ -189,7 +192,10 @@ export default function OnboardingForm() {
                     </div>
                   </OptionCard>
 
-                  <OptionCard value="daily">
+                  <OptionCard
+                    value="daily"
+                    showHighlight={field.value === "daily"}
+                  >
                     <div className="min-h-48 space-y-2 text-left leading-5">
                       <p className="font-bold text-lg flex justify-between">
                         Daily <FaCalendarDays />
