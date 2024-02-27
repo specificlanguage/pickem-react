@@ -50,7 +50,6 @@ export default function PickOptions({
   const { data } = useQuery({
     queryKey: ["pickData", game.id],
     queryFn: async () => getAllPicks(game.id),
-    enabled: isDisabled,
   });
 
   return (
@@ -68,14 +67,19 @@ export default function PickOptions({
             disabled={isDisabled}
             showHighlight={pickedAway}
             fillPct={
-              data ? (data?.awayPicks / data?.totalPicks) * 100 : undefined
+              isDisabled && data
+                ? (data?.awayPicks / data?.totalPicks) * 100
+                : undefined
             }
             className={`items-start 
             ${isDisabled ? "opacity-50" : ""}`}
           >
             {awayTeam ? (
               <div className="leading-5 flex justify-between w-full space-x-0.5">
-                <div className="flex justify-start">
+                <div
+                  className="flex justify-start space-x-2"
+                  id="pick-option-home-logo"
+                >
                   <TeamLogo
                     imageOrientation={"left"}
                     useLabel={"team"}
@@ -84,13 +88,20 @@ export default function PickOptions({
                     textSize="lg"
                     imageScheme="spot"
                   />
-                  {prefs?.favoriteTeam_id === game.awayTeam_id && (
-                    <FavoriteTeamIcon />
-                  )}
-                  {pickedAway ? <CheckedIcon /> : null}
+                  <div id="pick-option-away-is-favorite-team">
+                    {prefs?.favoriteTeam_id === game.awayTeam_id && (
+                      <FavoriteTeamIcon />
+                    )}
+                  </div>
+                  <div id="pick-option-away-selected">
+                    {pickedAway ? <CheckedIcon /> : null}
+                  </div>
                 </div>
-                <div className="flex justify-end leading-7">
-                  {data
+                <div
+                  id="pick-option-home-selection-data"
+                  className="flex justify-end leading-7"
+                >
+                  {isDisabled && data
                     ? Math.round((data.awayPicks / data.totalPicks) * 100) + "%"
                     : null}
                 </div>
@@ -103,16 +114,21 @@ export default function PickOptions({
           <OptionCard
             value={game.homeTeam_id.toString()}
             disabled={isDisabled}
-            showHighlight={pickedAway}
+            showHighlight={pickedHome}
             fillPct={
-              data ? (data?.homePicks / data?.totalPicks) * 100 : undefined
+              isDisabled && data
+                ? (data?.homePicks / data?.totalPicks) * 100
+                : undefined
             }
             className={`items-start 
-            ${isDisabled ? "opacity-50" : ""}`}
+            ${isDisabled && data ? "opacity-50" : ""}`}
           >
             {homeTeam ? (
               <div className="flex justify-between w-full space-x-0.5 leading-5">
-                <div className="flex justify-start">
+                <div
+                  className="flex justify-start space-x-2"
+                  id="pick-option-home-logo"
+                >
                   <TeamLogo
                     imageOrientation={"left"}
                     useLabel={"team"}
@@ -121,13 +137,20 @@ export default function PickOptions({
                     textSize="lg"
                     imageScheme="spot"
                   />
-                  {prefs?.favoriteTeam_id === game.homeTeam_id && (
-                    <FavoriteTeamIcon />
-                  )}
-                  {pickedHome ? <CheckedIcon /> : null}
+                  <div id="pick-option-home-is-favorite-team">
+                    {prefs?.favoriteTeam_id === game.homeTeam_id && (
+                      <FavoriteTeamIcon />
+                    )}
+                  </div>
+                  <div id="pick-option-home-selected">
+                    {pickedHome ? <CheckedIcon /> : null}
+                  </div>
                 </div>
-                <div className="flex justify-end leading-7">
-                  {data
+                <div
+                  id="pick-option-home-selection-data"
+                  className="flex justify-end leading-7"
+                >
+                  {isDisabled && data
                     ? Math.round((data.homePicks / data.totalPicks) * 100) + "%"
                     : null}
                 </div>

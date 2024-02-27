@@ -18,6 +18,7 @@ interface OptionCardProps {
  * @param fillPct - the percentage of the card to fill with a color -- if not present, it won't be filled.
  * @param className - additional classes to add to the card
  * @param disabled - whether the option is disabled
+ * @param showHighlight - whether to show the highlight color
  * @param props - any other props to pass to the radio group item
  * @constructor
  */
