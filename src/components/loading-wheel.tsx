@@ -2,8 +2,13 @@ interface LoadingWheelProps {
   size?: number;
 }
 
+/**
+ * A generic loading wheel taken from Flowbite.
+ * @param size - Size of the loading wheel in pixels
+ * @constructor
+ */
 export default function LoadingWheel({ size }: LoadingWheelProps) {
-  let finalSize = 12;
+  let finalSize = 24;
   if (size !== undefined) {
     finalSize = size;
   }
@@ -13,7 +18,7 @@ export default function LoadingWheel({ size }: LoadingWheelProps) {
       {/*  Flowbite component, from https://flowbite.com/docs/components/spinner/ */}
       <svg
         aria-hidden="true"
-        className={`w-${finalSize} h-${finalSize} text-gray-200 animate-spin dark:text-gray-600 fill-blue-600`}
+        className={`w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600`}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
