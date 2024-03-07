@@ -10,6 +10,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { usePrefs } from "@/lib/http/users.ts";
 import { CheckedIcon, FavoriteTeamIcon } from "@/components/games/icons.tsx";
 import { useQuery } from "@tanstack/react-query";
+import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
 
 interface PickOptionsProps {
   field: ControllerRenderProps<{ [x: string]: string }, string>;
@@ -38,7 +39,7 @@ export default function PickOptions({
   // If the game has already started or the user has already picked these options, disable the pick options
 
   const alreadyPicked = gamePick !== undefined && game.id === gamePick.gameID;
-  const isDisabled = alreadyPicked || new Date(game.date) < new Date();
+  const isDisabled = alreadyPicked || isAfterStartTime(game);
 
   const pickedAway =
     field.value === game.awayTeam_id.toString() ||
@@ -52,11 +53,14 @@ export default function PickOptions({
     queryFn: async () => getAllPicks(game.id),
   });
 
-  function calculatePercentages(data: AllPickResponse) {
+  function calculatePercentages(data: AllPickResponse, away: boolean) {
     if (data.totalPicks == 0) {
       return 0;
-    } else {
+    }
+    if (away) {
       return Math.floor((data.awayPicks / data.totalPicks) * 100);
+    } else {
+      return Math.floor((data.homePicks / data.totalPicks) * 100);
     }
   }
 
@@ -75,7 +79,7 @@ export default function PickOptions({
             disabled={isDisabled}
             showHighlight={pickedAway}
             fillPct={
-              isDisabled && data ? calculatePercentages(data) : undefined
+              isDisabled && data ? calculatePercentages(data, true) : undefined
             }
             className={`items-start 
             ${isDisabled ? "opacity-50" : ""}`}
@@ -107,7 +111,9 @@ export default function PickOptions({
                   id="pick-option-home-selection-data"
                   className="flex justify-end leading-7"
                 >
-                  {isDisabled && data ? calculatePercentages(data) + "%" : null}
+                  {isDisabled && data
+                    ? calculatePercentages(data, true) + "%"
+                    : null}
                 </div>
               </div>
             ) : null}
@@ -120,7 +126,7 @@ export default function PickOptions({
             disabled={isDisabled}
             showHighlight={pickedHome}
             fillPct={
-              isDisabled && data ? calculatePercentages(data) : undefined
+              isDisabled && data ? calculatePercentages(data, false) : undefined
             }
             className={`items-start 
             ${isDisabled && data ? "opacity-50" : ""}`}
@@ -152,7 +158,9 @@ export default function PickOptions({
                   id="pick-option-home-selection-data"
                   className="flex justify-end leading-7"
                 >
-                  {isDisabled && data ? calculatePercentages(data) + "%" : null}
+                  {isDisabled && data
+                    ? calculatePercentages(data, false) + "%"
+                    : null}
                 </div>
               </div>
             ) : null}

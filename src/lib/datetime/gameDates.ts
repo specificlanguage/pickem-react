@@ -1,4 +1,6 @@
-import { add, differenceInCalendarDays } from "date-fns";
+import { add, compareAsc, differenceInCalendarDays } from "date-fns";
+import { Game } from "@/lib/http/games.ts";
+import { utcToZonedTime } from "date-fns-tz";
 
 /**
  * Disabled days for the date picker & other utilities that should not be used.
@@ -40,4 +42,11 @@ export function getNextValidDate(date: Date) {
     return undefined; // Reached end of season, no more dates to use
   }
   return date; // Is valid date if none matches
+}
+
+export function isAfterStartTime(game: Game) {
+  const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
+  const zonedDate = utcToZonedTime(new Date(game.startTimeUTC + "Z"), timeZone);
+  const now = utcToZonedTime(new Date(Date.now()), timeZone);
+  return compareAsc(zonedDate, now) < 0;
 }

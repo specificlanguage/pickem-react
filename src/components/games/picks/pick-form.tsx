@@ -16,6 +16,7 @@ import {
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import LoadingWheel from "@/components/loading-wheel.tsx";
+import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
 
 interface PickFormProps {
   game: Game;
@@ -46,7 +47,7 @@ export default function PickForm({
 
   // todo: setError() when the game is too late to pick, or other validation error on serverside.
   const alreadyPicked = pick !== undefined && game.id === pick?.gameID;
-  const isDisabled = alreadyPicked || new Date(game.date) < new Date();
+  const isDisabled = alreadyPicked || isAfterStartTime(game);
 
   const fields = [
     {
