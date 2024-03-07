@@ -14,10 +14,27 @@ export interface Game {
   is_marquee: boolean;
   homeName?: string;
   awayName?: string;
+  status?: GameStatus;
 }
 
 interface DateQueryProps {
   queryKey: QueryKey;
+}
+
+export interface GameStatus {
+  status: "COMPLETED" | "IN_PROGRESS" | "SCHEDULED";
+  gameID: number;
+  homeScore?: number;
+  awayScore?: number;
+  startTimeUTC?: string;
+  currentInning?: number;
+  currentPitcher?: string;
+  atBat?: string;
+  isTopInning?: boolean;
+  outs?: number;
+  onFirst?: boolean;
+  onSecond?: boolean;
+  onThird?: boolean;
 }
 
 /**
@@ -36,5 +53,13 @@ export async function getGamesByDate({
     .get(formatAPIPath(`/games/date?year=${year}&month=${month}&day=${day}`))
     .then((res) => {
       return res.data as Game[];
+    });
+}
+
+export async function getStatusOfGames(gameIDs: number[]) {
+  return await axios
+    .get(formatAPIPath(`/games/status?gameID=${gameIDs.join("&gameID=")}`))
+    .then((res) => {
+      return res.data as GameStatus[];
     });
 }

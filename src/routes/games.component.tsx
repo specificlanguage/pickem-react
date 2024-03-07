@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Game, getGamesByDate } from "@/lib/http/games.ts";
+import { Game, getGamesByDate, getStatusOfGames } from "@/lib/http/games.ts";
 import GameCard from "@/components/games/game-card.tsx";
 import { useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
@@ -12,7 +12,12 @@ export const component = function GamePage() {
   // Note: undefined will *never* occur, it is only used for type checking purposes.
   const [date, setDate] = useState<Date | undefined>(startOfToday());
 
-  const { isLoading, isError, data, error } = useQuery({
+  const {
+    isLoading,
+    isError,
+    data: games,
+    error,
+  } = useQuery({
     queryKey: [
       "games",
       {
@@ -24,15 +29,26 @@ export const component = function GamePage() {
     queryFn: getGamesByDate,
   });
 
+  const { data: statuses } = useQuery({
+    queryKey: ["status", games?.map((game) => game.id)],
+    queryFn: () => getStatusOfGames(games?.map((game) => game.id) ?? []),
+    enabled: games !== null && games !== undefined && games.length > 0,
+  });
+
   if (isError) {
     console.log(error);
   }
-  if (data) {
-    data?.sort(
+  if (games) {
+    games?.sort(
       (g1, g2) =>
         new Date(g1.startTimeUTC).getTime() -
         new Date(g2.startTimeUTC).getTime(),
     );
+    if (statuses) {
+      games.forEach((game) => {
+        game.status = statuses.find((s) => s.gameID === game.id);
+      });
+    }
   }
 
   return (
@@ -70,14 +86,14 @@ export const component = function GamePage() {
             Array.from({ length: 8 }, (_, i) => i).map((_, i) => {
               return <GameSkeleton key={i} />;
             })}
-          {data &&
+          {games &&
             !isError &&
-            (data.length === 0 ? (
+            (games.length === 0 ? (
               <div className="flex justify-center mx-auto text-lg font-bold ">
                 No games today!
               </div>
             ) : (
-              data.map((game: Game) => {
+              games.map((game: Game) => {
                 return <GameCard key={game.id} game={game} />;
               })
             ))}

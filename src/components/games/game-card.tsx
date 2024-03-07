@@ -71,13 +71,6 @@ export default function GameCard({ game }: GameCardProps) {
             <Separator orientation="vertical" />
           </div>
           <div className="invisible md:visible md:basis-3/12 flex flex-row">
-            {/*<div>*/}
-            {/*  <GameInfo*/}
-            {/*    className="text-sm"*/}
-            {/*    orientation={"vertical"}*/}
-            {/*    game={game}*/}
-            {/*  />*/}
-            {/*</div>*/}
             <div className="my-auto">
               <GameButtonsCol game={game} />
             </div>
