@@ -1,11 +1,29 @@
 import { Game } from "@/lib/http/games.ts";
 import { format, utcToZonedTime } from "date-fns-tz";
-import { FaCircle, FaClock, FaLocationDot } from "react-icons/fa6";
+import {
+  FaArrowDown,
+  FaArrowUp,
+  FaCircle,
+  FaClock,
+  FaLocationDot,
+} from "react-icons/fa6";
 import MarqueeBadge from "@/components/games/marquee-badge.tsx";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible.tsx";
+import { useState } from "react";
+import { Button } from "@/components/ui/button.tsx";
 
 interface GameInfoProps {
   game: Game;
   zonedDate: Date;
+  className?: string;
+}
+
+interface GameInfoCollapsibleProps {
+  game: Game;
   className?: string;
 }
 
@@ -136,4 +154,29 @@ export default function GameInfo({
       />
     );
   }
+}
+
+export function GameInfoCollapsible({
+  game,
+  className,
+}: GameInfoCollapsibleProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <CollapsibleTrigger asChild>
+        <Button variant="ghost" className="w-full m-0 py-0.5 h-6">
+          <div className="flex justify-between space-x-2">
+            <p>More info</p>
+            <span className="mt-1">
+              {isOpen ? <FaArrowUp /> : <FaArrowDown />}
+            </span>
+          </div>
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="m-2">
+        <GameInfo game={game} className={className} />
+      </CollapsibleContent>
+    </Collapsible>
+  );
 }

@@ -3,9 +3,10 @@ import { Card, CardContent } from "@/components/ui/card.tsx";
 import { TeamLogo } from "@/components/teams/logos.tsx";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
-import GameInfo from "@/components/games/game-info.tsx";
+import { GameInfoCollapsible } from "@/components/games/game-info.tsx";
 import { useState } from "react";
-import GameIconRow from "@/components/games/game-icon-row.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
+import { GameButtonsCol } from "@/components/games/game-buttons-col.tsx";
 
 interface GameCardProps {
   game: Game;
@@ -36,49 +37,53 @@ export default function GameCard({ game }: GameCardProps) {
 
   return (
     <Card data-testid={game.id}>
-      <CardContent data-testid="game-card" className="my-2 pb-0 space-y-1">
-        <div className="flex flex-row">
-          <div
-            className="flex justify-end basis-[48%]"
-            onClick={() => onClick()}
-          >
-            {awayTeam ? (
-              <TeamLogo
-                imageOrientation={"left"}
-                label={getDisplay(awayTeam)}
-                team={awayTeam}
-                height={32}
-                imageScheme="spot"
-              />
-            ) : (
-              <Skeleton className="h-[32px] w-[32px]" />
-            )}
+      <CardContent data-testid="game-card" className="p-0 m-0 space-y-2">
+        <div className="flex flex-row pb-0 space-y-1 p-6 mb-2">
+          <div className="basis-12/12 md:basis-8/12 space-y-4">
+            <div className="text-lg" onClick={onClick}>
+              {awayTeam ? (
+                <TeamLogo
+                  imageOrientation={"left"}
+                  label={getDisplay(awayTeam)}
+                  team={awayTeam}
+                  height={32}
+                  imageScheme="spot"
+                />
+              ) : (
+                <Skeleton className="h-[32px] w-[32px]" />
+              )}
+            </div>
+            <div className="text-lg">
+              {homeTeam ? (
+                <TeamLogo
+                  imageOrientation={"left"}
+                  label={getDisplay(homeTeam)}
+                  team={homeTeam}
+                  height={32}
+                  imageScheme="spot"
+                />
+              ) : (
+                <Skeleton className="h-[32px] w-[32px]" />
+              )}
+            </div>
           </div>
-          <div className="basis-[4%]">
-            <p className="mx-2 h-[32px] text-center leading-[32px]">@</p>
+          <div className="invisible md:visible md:basis-1/12">
+            <Separator orientation="vertical" />
           </div>
-          <div
-            className="flex justify-start basis-[48%]"
-            onClick={() => onClick()}
-          >
-            {homeTeam ? (
-              <TeamLogo
-                imageOrientation={"right"}
-                label={getDisplay(homeTeam)}
-                team={homeTeam}
-                height={32}
-                imageScheme="spot"
-              />
-            ) : (
-              <Skeleton className="h-[32px] w-[32px]" />
-            )}
+          <div className="invisible md:visible md:basis-3/12 flex flex-row">
+            {/*<div>*/}
+            {/*  <GameInfo*/}
+            {/*    className="text-sm"*/}
+            {/*    orientation={"vertical"}*/}
+            {/*    game={game}*/}
+            {/*  />*/}
+            {/*</div>*/}
+            <div className="my-auto">
+              <GameButtonsCol game={game} />
+            </div>
           </div>
         </div>
-        <hr />
-        <GameInfo game={game} />
-        <div className="-mt-2">
-          <GameIconRow game={game} />
-        </div>
+        <GameInfoCollapsible game={game} />
       </CardContent>
     </Card>
   );

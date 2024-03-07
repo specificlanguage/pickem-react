@@ -54,7 +54,7 @@ export function TeamLogo({
   );
 
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-start">
       {(useLabel || label) && imageOrientation === "right"
         ? labelElement
         : null}

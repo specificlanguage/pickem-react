@@ -37,7 +37,7 @@ export const component = function GamePage() {
 
   return (
     <GamesLayout>
-      <div className="mx-auto max-w-xl space-y-2 mb-10">
+      <div className="mx-auto max-w-2xl space-y-2 mb-10">
         <h2 className="my-2 font-bold text-3xl">Games</h2>
         <div className="flex justify-between text-2xl">
           <span className="leading-8">
