@@ -5,7 +5,7 @@ import { TeamLogo } from "@/components/teams/logos.tsx";
 import { ControllerRenderProps } from "react-hook-form";
 import { Game } from "@/lib/http/games.ts";
 import { useFetchTeams } from "@/lib/http/teams.ts";
-import { GamePick, getAllPicks } from "@/lib/http/picks.ts";
+import { AllPickResponse, GamePick, getAllPicks } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
 import { usePrefs } from "@/lib/http/users.ts";
 import { CheckedIcon, FavoriteTeamIcon } from "@/components/games/icons.tsx";
@@ -52,6 +52,14 @@ export default function PickOptions({
     queryFn: async () => getAllPicks(game.id),
   });
 
+  function calculatePercentages(data: AllPickResponse) {
+    if (data.totalPicks == 0) {
+      return 0;
+    } else {
+      return Math.floor((data.awayPicks / data.totalPicks) * 100);
+    }
+  }
+
   return (
     <FormItem>
       <FormControl>
@@ -67,9 +75,7 @@ export default function PickOptions({
             disabled={isDisabled}
             showHighlight={pickedAway}
             fillPct={
-              isDisabled && data
-                ? (data?.awayPicks / data?.totalPicks) * 100
-                : undefined
+              isDisabled && data ? calculatePercentages(data) : undefined
             }
             className={`items-start 
             ${isDisabled ? "opacity-50" : ""}`}
@@ -101,9 +107,7 @@ export default function PickOptions({
                   id="pick-option-home-selection-data"
                   className="flex justify-end leading-7"
                 >
-                  {isDisabled && data
-                    ? Math.round((data.awayPicks / data.totalPicks) * 100) + "%"
-                    : null}
+                  {isDisabled && data ? calculatePercentages(data) + "%" : null}
                 </div>
               </div>
             ) : null}
@@ -116,9 +120,7 @@ export default function PickOptions({
             disabled={isDisabled}
             showHighlight={pickedHome}
             fillPct={
-              isDisabled && data
-                ? (data?.homePicks / data?.totalPicks) * 100
-                : undefined
+              isDisabled && data ? calculatePercentages(data) : undefined
             }
             className={`items-start 
             ${isDisabled && data ? "opacity-50" : ""}`}
@@ -150,9 +152,7 @@ export default function PickOptions({
                   id="pick-option-home-selection-data"
                   className="flex justify-end leading-7"
                 >
-                  {isDisabled && data
-                    ? Math.round((data.homePicks / data.totalPicks) * 100) + "%"
-                    : null}
+                  {isDisabled && data ? calculatePercentages(data) + "%" : null}
                 </div>
               </div>
             ) : null}

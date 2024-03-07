@@ -6,11 +6,11 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import GameSkeleton from "@/components/games/game-skeleton.tsx";
 import GamesLayout from "@/layouts/games-layout.tsx";
 import DatePicker from "@/components/date-picker.tsx";
-import { add } from "date-fns";
+import { add, startOfToday } from "date-fns";
 
 export const component = function GamePage() {
   // Note: undefined will *never* occur, it is only used for type checking purposes.
-  const [date, setDate] = useState<Date | undefined>(new Date(2024, 2, 28));
+  const [date, setDate] = useState<Date | undefined>(startOfToday());
 
   const { isLoading, isError, data, error } = useQuery({
     queryKey: [

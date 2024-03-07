@@ -10,9 +10,10 @@ import GamesLayout from "@/layouts/games-layout.tsx";
 import SessionForm from "@/components/forms/sessions/session-form.tsx";
 import { useNavigate } from "@tanstack/react-router";
 import LoadingWheel from "@/components/loading-wheel.tsx";
+import { startOfToday } from "date-fns";
 
 export const component = function SessionPick() {
-  const [date] = useState<Date>(new Date(2024, 2, 28));
+  const [date] = useState<Date>(startOfToday());
   const { getToken, isSignedIn } = useAuth();
   const navigate = useNavigate();
 
@@ -70,7 +71,7 @@ export const component = function SessionPick() {
     navigate({ to: "/" });
   }
 
-  // TODO: join pick forms into a single form
+  // TODO: Add way to get sessions from previous days
   return (
     <GamesLayout>
       <div className="justify-center max-w-xl mx-auto my-6 space-y-2">
