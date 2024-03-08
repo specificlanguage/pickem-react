@@ -5,12 +5,13 @@ import { TeamLogo } from "@/components/teams/logos.tsx";
 import { ControllerRenderProps } from "react-hook-form";
 import { Game } from "@/lib/http/games.ts";
 import { useFetchTeams } from "@/lib/http/teams.ts";
-import { AllPickResponse, GamePick, getAllPicks } from "@/lib/http/picks.ts";
+import { GamePick, getAllPicks } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
 import { usePrefs } from "@/lib/http/users.ts";
 import { CheckedIcon, FavoriteTeamIcon } from "@/components/games/icons.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
+import { calculatePercentages } from "@/lib/picks.ts";
 
 interface PickOptionsProps {
   field: ControllerRenderProps<{ [x: string]: string }, string>;
@@ -52,17 +53,6 @@ export default function PickOptions({
     queryKey: ["pickData", game.id],
     queryFn: async () => getAllPicks(game.id),
   });
-
-  function calculatePercentages(data: AllPickResponse, away: boolean) {
-    if (data.totalPicks == 0) {
-      return 0;
-    }
-    if (away) {
-      return Math.floor((data.awayPicks / data.totalPicks) * 100);
-    } else {
-      return Math.floor((data.homePicks / data.totalPicks) * 100);
-    }
-  }
 
   return (
     <FormItem>

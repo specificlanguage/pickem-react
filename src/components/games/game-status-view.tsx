@@ -51,12 +51,12 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
             <div className="flex justify-between mr-2 text-green-800 dark:text-green-500">
               <span>Top {status.currentInning ?? 0}</span>
               <span className="flex justify-between mt-1.5 gap-0.5">
-                {Array.from(new Array(status.outs ?? 0)).map(() => (
-                  <FaCircle size={10} />
+                {Array.from(new Array(status.outs ?? 0)).map((_, index) => (
+                  <FaCircle key={index} size={10} />
                 ))}
                 {Array.from(new Array(status.outs ? 3 - status.outs : 3)).map(
-                  () => (
-                    <FaRegCircle size={10} />
+                  (_, index) => (
+                    <FaRegCircle key={index} size={10} />
                   ),
                 )}
               </span>
@@ -75,12 +75,12 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
             <div className="flex justify-between mr-2 text-green-800 dark:text-green-500">
               <span>Bot {status.currentInning ?? 0}</span>
               <span className="flex justify-between mt-1.5 gap-0.5">
-                {Array.from(new Array(status.outs ?? 0)).map(() => (
-                  <FaCircle size={10} />
+                {Array.from(new Array(status.outs ?? 0)).map((_, index) => (
+                  <FaCircle key={index} size={10} />
                 ))}
                 {Array.from(new Array(status.outs ? 3 - status.outs : 3)).map(
-                  () => (
-                    <FaRegCircle size={10} />
+                  (_, index) => (
+                    <FaRegCircle key={index} size={10} />
                   ),
                 )}
               </span>

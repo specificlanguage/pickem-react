@@ -90,8 +90,14 @@ function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
   }
 
   return (
-    <div className="mx-auto">
-      <div className={"flex justify-center space-x-2 " + className}>
+    <div className="mx-auto gap-x-2">
+      {game.status && game.status.status === "IN_PROGRESS" && (
+        <div className={"flex justify-center space-x-8 p-2 " + className}>
+          <p>P: {game.status.currentPitcher}</p>
+          <p>AB: {game.status.atBat}</p>
+        </div>
+      )}
+      <div className={"flex justify-center space-x-2 p-2 " + className}>
         <p className="flex justify-start gap-x-2">
           <FaClock className="mt-1" />
           {zonedDate.getMinutes() == 33
@@ -165,7 +171,10 @@ export function GameInfoCollapsible({
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CollapsibleTrigger asChild>
-        <Button variant="ghost" className="w-full m-0 py-0.5 h-6">
+        <Button
+          variant="ghost"
+          className="hover:bg-background w-full m-0 py-0.5 h-6"
+        >
           <div className="flex justify-between space-x-2">
             <p>More info</p>
             <span className="mt-1">
@@ -174,7 +183,7 @@ export function GameInfoCollapsible({
           </div>
         </Button>
       </CollapsibleTrigger>
-      <CollapsibleContent className="m-2">
+      <CollapsibleContent className="bg-accent">
         <GameInfo game={game} className={className} />
       </CollapsibleContent>
     </Collapsible>
