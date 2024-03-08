@@ -22,7 +22,7 @@ interface DateQueryProps {
 }
 
 export interface GameStatus {
-  status: "COMPLETED" | "IN_PROGRESS" | "SCHEDULED";
+  status: "COMPLETED" | "IN_PROGRESS" | "SCHEDULED" | "POSTPONED";
   gameID: number;
   homeScore?: number;
   awayScore?: number;
@@ -30,7 +30,7 @@ export interface GameStatus {
   currentInning?: number;
   currentPitcher?: string;
   atBat?: string;
-  isTopInning?: boolean;
+  isTopInning?: number;
   outs?: number;
   onFirst?: boolean;
   onSecond?: boolean;
