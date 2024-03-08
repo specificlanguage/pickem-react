@@ -3,13 +3,17 @@ import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { useState } from "react";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import { Game } from "@/lib/http/games.ts";
+import { GamePick } from "@/lib/http/picks.ts";
+import { CheckedIcon } from "@/components/games/icons.tsx";
 
 export default function GameTeamDisplay({
   game,
+  pick,
   className,
   defaultView = "team",
 }: {
   game: Game;
+  pick?: GamePick;
   className?: string;
   defaultView?: "team" | "abbr" | "full";
 }) {
@@ -41,34 +45,49 @@ export default function GameTeamDisplay({
     <div className={className + " space-y-4 mx-2"}>
       <div className="flex justify-between text-lg" onClick={onClick}>
         {awayTeam ? (
-          <TeamLogo
-            imageOrientation={"left"}
-            label={getDisplay(awayTeam)}
-            team={awayTeam}
-            height={32}
-            imageScheme="spot"
-          />
+          <div className="flex justify-between">
+            <TeamLogo
+              imageOrientation={"left"}
+              label={getDisplay(awayTeam)}
+              team={awayTeam}
+              height={32}
+              imageScheme="spot"
+            />
+            {pick && !pick.pickedHome && <CheckedIcon />}
+          </div>
         ) : (
           <Skeleton className="h-[32px] w-[32px]" />
         )}
         {game.status && game.status.status !== "SCHEDULED" && (
-          <p className="text-2xl font-sans">{game.status?.awayScore}</p>
+          <div className="flex justify-between gap-x-2">
+            <p className="text-2xl font-sans">{game.status?.homeScore}</p>
+          </div>
         )}
       </div>
-      <div className="flex justify-between text-lg">
+      <div className={"flex justify-between text-lg "}>
         {homeTeam ? (
-          <TeamLogo
-            imageOrientation={"left"}
-            label={getDisplay(homeTeam)}
-            team={homeTeam}
-            height={32}
-            imageScheme="spot"
-          />
+          <div className="flex justify-between">
+            <TeamLogo
+              imageOrientation={"left"}
+              label={getDisplay(homeTeam)}
+              team={homeTeam}
+              height={32}
+              imageScheme="spot"
+            />
+            {pick && pick.pickedHome && <CheckedIcon />}
+          </div>
         ) : (
           <Skeleton className="h-[32px] w-[32px]" />
         )}
         {game.status && game.status.status !== "SCHEDULED" && (
-          <p className="text-2xl font-sans">{game.status?.homeScore}</p>
+          <div className="flex justify-between gap-x-2">
+            {/*<p className="font-sans text-sm leading-8 align-middle">*/}
+            {/*  {pickData*/}
+            {/*    ? "Picked: " + calculatePercentages(pickData, false) + "%"*/}
+            {/*    : null}*/}
+            {/*</p>*/}
+            <p className="text-2xl font-sans">{game.status?.homeScore}</p>
+          </div>
         )}
       </div>
     </div>

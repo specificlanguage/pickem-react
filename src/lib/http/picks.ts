@@ -145,6 +145,17 @@ export async function getPick(gameID: number, token: string) {
     .catch(() => null);
 }
 
+export async function getMultiplePicks(gameIDs: number[], token: string) {
+  console.log(gameIDs.join("&gameID="));
+  return await axios
+    .get(
+      formatAPIPath(`/picks/user?gameID=${gameIDs.join("&gameID=")}`),
+      authHeader(token),
+    )
+    .then((res) => res.data as GamePick[])
+    .catch(() => null);
+}
+
 /**
  * Submits a pick for a single game.
  * @param pick - The pick for the game. See the interface for more details.

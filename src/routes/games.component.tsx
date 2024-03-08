@@ -7,10 +7,13 @@ import GameSkeleton from "@/components/games/game-skeleton.tsx";
 import GamesLayout from "@/layouts/games-layout.tsx";
 import DatePicker from "@/components/date-picker.tsx";
 import { add, startOfToday } from "date-fns";
+import { useAuth } from "@clerk/clerk-react";
+import { getMultiplePicks } from "@/lib/http/picks.ts";
 
 export const component = function GamePage() {
   // Note: undefined will *never* occur, it is only used for type checking purposes.
   const [date, setDate] = useState<Date | undefined>(startOfToday());
+  const { getToken } = useAuth();
 
   const {
     isLoading,
@@ -32,6 +35,16 @@ export const component = function GamePage() {
   const { data: statuses } = useQuery({
     queryKey: ["status", games?.map((game) => game.id)],
     queryFn: () => getStatusOfGames(games?.map((game) => game.id) ?? []),
+    enabled: games !== null && games !== undefined && games.length > 0,
+  });
+
+  const { data: picks } = useQuery({
+    queryKey: ["picks", games?.map((game) => game.id)],
+    queryFn: async () =>
+      getMultiplePicks(
+        games?.map((game) => game.id) ?? [],
+        (await getToken()) ?? "",
+      ),
     enabled: games !== null && games !== undefined && games.length > 0,
   });
 
@@ -94,7 +107,17 @@ export const component = function GamePage() {
               </div>
             ) : (
               games.map((game: Game) => {
-                return <GameCard key={game.id} game={game} />;
+                return (
+                  <GameCard
+                    key={game.id}
+                    game={game}
+                    pick={
+                      picks
+                        ? picks.find((p) => p.gameID === game.id)
+                        : undefined
+                    }
+                  />
+                );
               })
             ))}
         </div>
