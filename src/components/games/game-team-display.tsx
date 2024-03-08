@@ -38,8 +38,8 @@ export default function GameTeamDisplay({
   }
 
   return (
-    <div className={className + " space-y-4"}>
-      <div className="text-lg" onClick={onClick}>
+    <div className={className + " space-y-4 mx-2"}>
+      <div className="flex justify-between text-lg" onClick={onClick}>
         {awayTeam ? (
           <TeamLogo
             imageOrientation={"left"}
@@ -51,8 +51,11 @@ export default function GameTeamDisplay({
         ) : (
           <Skeleton className="h-[32px] w-[32px]" />
         )}
+        {game.status && game.status.status !== "SCHEDULED" && (
+          <p className="text-2xl font-sans">{game.status?.awayScore}</p>
+        )}
       </div>
-      <div className="text-lg">
+      <div className="flex justify-between text-lg">
         {homeTeam ? (
           <TeamLogo
             imageOrientation={"left"}
@@ -63,6 +66,9 @@ export default function GameTeamDisplay({
           />
         ) : (
           <Skeleton className="h-[32px] w-[32px]" />
+        )}
+        {game.status && game.status.status !== "SCHEDULED" && (
+          <p className="text-2xl font-sans">{game.status?.homeScore}</p>
         )}
       </div>
     </div>

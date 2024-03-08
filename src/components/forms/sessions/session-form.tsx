@@ -27,13 +27,15 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
   const { getToken } = useAuth();
 
   // Parser to create the fields for the schema.
-  const fields = games.map((game) => ({
-    name: game.id.toString(),
-    fieldType: z.enum([
-      game.awayTeam_id.toString(),
-      game.homeTeam_id.toString(),
-    ]),
-  }));
+  const fields = games
+    .filter((game) => !isAfterStartTime(game))
+    .map((game) => ({
+      name: game.id.toString(),
+      fieldType: z.enum([
+        game.awayTeam_id.toString(),
+        game.homeTeam_id.toString(),
+      ]),
+    }));
 
   const sessionFormSchema = z.object(
     Object.fromEntries(fields.map((field) => [field.name, field.fieldType])),
