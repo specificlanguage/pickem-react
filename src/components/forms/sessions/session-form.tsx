@@ -13,6 +13,8 @@ import {
   transformFormDataToPicks,
 } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
+import GameTeamDisplay from "@/components/games/game-team-display.tsx";
+import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
 
 interface SessionFormProps {
   games: Game[];
@@ -55,17 +57,27 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
         {games.map((game, index) => (
           <div key={index}>
             <div className="flex flex-row gap-2 gap-x-8">
-              <div className="basis-8/12">
+              <div className="basis-8/12 m-2">
                 <FormField
                   control={form.control}
                   name={game.id.toString()}
-                  render={({ field }) => (
-                    <PickOptions
-                      field={field}
-                      game={game}
-                      gamePick={playerPicks?.find((p) => p.gameID === game.id)}
-                    />
-                  )}
+                  render={({ field }) =>
+                    isAfterStartTime(game) ? (
+                      <GameTeamDisplay
+                        game={game}
+                        defaultView={"full"}
+                        className="m-2"
+                      />
+                    ) : (
+                      <PickOptions
+                        field={field}
+                        game={game}
+                        gamePick={playerPicks?.find(
+                          (p) => p.gameID === game.id,
+                        )}
+                      />
+                    )
+                  }
                 />
               </div>
               <div className="basis-4/12">
