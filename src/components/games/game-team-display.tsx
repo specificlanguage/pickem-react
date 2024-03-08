@@ -60,7 +60,7 @@ export default function GameTeamDisplay({
         )}
         {game.status && game.status.status !== "SCHEDULED" && (
           <div className="flex justify-between gap-x-2">
-            <p className="text-2xl font-sans">{game.status?.homeScore}</p>
+            <p className="text-2xl font-sans">{game.status?.awayScore}</p>
           </div>
         )}
       </div>
