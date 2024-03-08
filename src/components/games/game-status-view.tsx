@@ -1,6 +1,6 @@
 import { Game } from "@/lib/http/games.ts";
 import { format, utcToZonedTime } from "date-fns-tz";
-import { FaCircle, FaRegCircle } from "react-icons/fa6";
+import { FaCircle, FaClock, FaRegCircle } from "react-icons/fa6";
 
 export function GameStatusInningInfo({ game }: { game: Game }) {
   const status = game.status;
@@ -13,12 +13,17 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
 
   if (status.status === "SCHEDULED") {
     return (
-      <span>
-        {format(zonedTime, "h:mmaa zzz", {
-          timeZone,
-        })
-          .replace("DT", "T")
-          .replace("ST", "T")}
+      <span className="flex justify-start gap-x-2">
+        <p className="mt-1">
+          <FaClock />
+        </p>
+        <p>
+          {format(zonedTime, "h:mmaa zzz", {
+            timeZone,
+          })
+            .replace("DT", "T")
+            .replace("ST", "T")}
+        </p>
       </span>
     );
   }
