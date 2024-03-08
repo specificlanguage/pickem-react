@@ -10,7 +10,7 @@ module.exports = {
   prefix: "",
   theme: {
     fontFamily: {
-      sans: ["Roboto", "Inter", "sans-serif"],
+      sans: ["Roboto Flex", "Inter", "sans-serif"],
       mono: ["JetBrains Mono", "monospace"],
     },
     container: {
