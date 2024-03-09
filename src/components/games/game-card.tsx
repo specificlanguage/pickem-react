@@ -23,7 +23,7 @@ export default function GameCard({ game, pick }: GameCardProps) {
             <Separator orientation="vertical" />
           </div>
           <div className="invisible md:visible md:basis-3/12 flex flex-row">
-            <div className="my-auto">
+            <div className="my-auto w-full">
               <GameButtonsCol game={game} />
             </div>
           </div>
