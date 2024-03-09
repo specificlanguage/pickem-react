@@ -20,7 +20,9 @@ export default function MainNav() {
         <NavigationMenuItem>
           <NavLink href="/games">Games</NavLink>
         </NavigationMenuItem>
-        <NavigationMenuItem>Leaderboards</NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavLink href="/leaderboard">Leaderboard</NavLink>
+        </NavigationMenuItem>
         <NavigationMenuItem>Clubs</NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

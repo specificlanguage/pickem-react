@@ -11,6 +11,7 @@ import { Route as rootRoute } from './routes/__root'
 const SignupComponentImport = new FileRoute('/signup').createRoute()
 const SessionComponentImport = new FileRoute('/session').createRoute()
 const LoginComponentImport = new FileRoute('/login').createRoute()
+const LeaderboardComponentImport = new FileRoute('/leaderboard').createRoute()
 const GamesComponentImport = new FileRoute('/games').createRoute()
 const IndexComponentImport = new FileRoute('/').createRoute()
 const UserOnboardingComponentImport = new FileRoute(
@@ -45,6 +46,16 @@ const LoginComponentRoute = LoginComponentImport.update({
 } as any).update({
   component: lazyRouteComponent(
     () => import('./routes/login.component'),
+    'component',
+  ),
+})
+
+const LeaderboardComponentRoute = LeaderboardComponentImport.update({
+  path: '/leaderboard',
+  getParentRoute: () => rootRoute,
+} as any).update({
+  component: lazyRouteComponent(
+    () => import('./routes/leaderboard.component'),
     'component',
   ),
 })
@@ -91,6 +102,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GamesComponentImport
       parentRoute: typeof rootRoute
     }
+    '/leaderboard': {
+      preLoaderRoute: typeof LeaderboardComponentImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       preLoaderRoute: typeof LoginComponentImport
       parentRoute: typeof rootRoute
@@ -115,6 +130,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   IndexComponentRoute,
   GamesComponentRoute,
+  LeaderboardComponentRoute,
   LoginComponentRoute,
   SessionComponentRoute,
   SignupComponentRoute,

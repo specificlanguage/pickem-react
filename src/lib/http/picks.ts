@@ -48,6 +48,13 @@ export interface MultiplePickResponse {
   results: AllPickResponse[];
 }
 
+export interface LeaderboardResponse {
+  leaders: {
+    userID: string;
+    correctPicks: number;
+  }[];
+}
+
 /**
  * Transforms form data to a pick object
  * @param data - Form data, formatted as {string: string}
@@ -187,5 +194,12 @@ export async function getAllPicks(gameID: number) {
   return await axios
     .get(formatAPIPath(`/picks/all?gameID=${gameID}&isSeries=false`))
     .then((res) => res.data.results[0] as AllPickResponse)
+    .catch(() => null);
+}
+
+export async function getLeaderboard() {
+  return await axios
+    .get(formatAPIPath("/picks/leaderboard"))
+    .then((res) => res.data as LeaderboardResponse)
     .catch(() => null);
 }

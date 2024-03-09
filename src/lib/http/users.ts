@@ -13,6 +13,17 @@ export interface PreferencesResult {
   selectionTiming: string;
 }
 
+export interface UserInfoObject {
+  id: string;
+  username: string;
+}
+
+export interface AllUsersResponse {
+  users: {
+    [uid: string]: UserInfoObject;
+  };
+}
+
 /** Set user preferences from a user's uid. */
 export async function setPreferences(token: string, preferences: Preferences) {
   return axios.put(
@@ -20,6 +31,14 @@ export async function setPreferences(token: string, preferences: Preferences) {
     preferences,
     authHeader(token),
   );
+}
+
+/** Get all users from the API. */
+export async function getAllUsers() {
+  return axios
+    .get(formatAPIPath("/users/all"))
+    .then((r) => r.data as AllUsersResponse)
+    .catch(() => null);
 }
 
 /**
