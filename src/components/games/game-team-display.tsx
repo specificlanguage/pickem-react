@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import { Game } from "@/lib/http/games.ts";
 import { GamePick } from "@/lib/http/picks.ts";
-import { CheckedIcon } from "@/components/games/icons.tsx";
+import { CheckedIcon, HollowCheckedIcon } from "@/components/games/icons.tsx";
 
 export default function GameTeamDisplay({
   game,
@@ -41,6 +41,23 @@ export default function GameTeamDisplay({
     }
   }
 
+  function PickDisplay({ game, pick }: { game: Game; pick: GamePick }) {
+    if (!game.status) {
+      return null;
+    }
+
+    const status = game.status;
+    if (status.status === "COMPLETED" && status.homeScore && status.awayScore) {
+      if (pick.pickedHome && status.homeScore > status.awayScore) {
+        return <CheckedIcon />;
+      } else if (!pick.pickedHome && status.awayScore > status.homeScore) {
+        return <CheckedIcon />;
+      }
+    }
+
+    return <HollowCheckedIcon />;
+  }
+
   return (
     <div className={className + " space-y-4 mx-2"}>
       <div className="flex justify-between text-lg" onClick={onClick}>
@@ -53,7 +70,9 @@ export default function GameTeamDisplay({
               height={32}
               imageScheme="spot"
             />
-            {pick && !pick.pickedHome && <CheckedIcon />}
+            {pick && !pick.pickedHome && (
+              <PickDisplay game={game} pick={pick} />
+            )}
           </div>
         ) : (
           <Skeleton className="h-[32px] w-[32px]" />
@@ -74,7 +93,7 @@ export default function GameTeamDisplay({
               height={32}
               imageScheme="spot"
             />
-            {pick && pick.pickedHome && <CheckedIcon />}
+            {pick && pick.pickedHome && <PickDisplay game={game} pick={pick} />}
           </div>
         ) : (
           <Skeleton className="h-[32px] w-[32px]" />
