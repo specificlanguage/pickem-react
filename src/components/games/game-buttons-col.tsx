@@ -3,6 +3,8 @@ import { SiMlb } from "react-icons/si";
 import { Game } from "@/lib/http/games.ts";
 import { PickIconDialog } from "@/components/games/picks/pick-dialog.tsx";
 import { GameStatusInningInfo } from "@/components/games/game-status-view.tsx";
+import { SignedIn } from "@clerk/clerk-react";
+import MarqueeBadge from "@/components/games/marquee-badge.tsx";
 
 interface GameButtonsColProps {
   game: Game;
@@ -33,9 +35,11 @@ export function GameButtonsCol({ game, className }: GameButtonsColProps) {
               <p className="text-sm">Live</p>
             </a>
           </Button>
-
-          <PickIconDialog game={game} />
+          <SignedIn>
+            <PickIconDialog game={game} />
+          </SignedIn>
         </div>
+        {game.is_marquee && <MarqueeBadge />}
         {/*{isToday(zonedDate) && (*/}
         {/*  <Button className="bg-neutral-600 hover:bg-neutral-800 p-0 px-2">*/}
         {/*    <span className="flex flex-row space-x-2">*/}

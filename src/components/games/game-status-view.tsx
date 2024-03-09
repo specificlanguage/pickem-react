@@ -2,6 +2,25 @@ import { Game } from "@/lib/http/games.ts";
 import { format, utcToZonedTime } from "date-fns-tz";
 import { FaCircle, FaClock, FaRegCircle } from "react-icons/fa6";
 
+function getOrdinalSuffix(n: number) {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+function OutsDisplay({ outs }: { outs?: number }) {
+  return (
+    <span className="flex justify-between mt-1.5 gap-0.5">
+      {Array.from(new Array(outs ?? 0)).map((_, index) => (
+        <FaCircle key={index} size={10} />
+      ))}
+      {Array.from(new Array(outs ? 3 - outs : 3)).map((_, index) => (
+        <FaRegCircle key={index} size={10} />
+      ))}
+    </span>
+  );
+}
+
 export function GameStatusInningInfo({ game }: { game: Game }) {
   const status = game.status;
   if (!status) {
@@ -43,23 +62,14 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
           // Yeah, this is how it is, MLB updates are fun.
           return (
             <span className="text-green-800 dark:text-green-500">
-              Mid {status.currentInning ?? 0}
+              Mid {getOrdinalSuffix(status.currentInning ?? 0)}
             </span>
           );
         } else {
           return (
             <div className="flex justify-between mr-2 text-green-800 dark:text-green-500">
-              <span>Top {status.currentInning ?? 0}</span>
-              <span className="flex justify-between mt-1.5 gap-0.5">
-                {Array.from(new Array(status.outs ?? 0)).map((_, index) => (
-                  <FaCircle key={index} size={10} />
-                ))}
-                {Array.from(new Array(status.outs ? 3 - status.outs : 3)).map(
-                  (_, index) => (
-                    <FaRegCircle key={index} size={10} />
-                  ),
-                )}
-              </span>
+              <span>Top {getOrdinalSuffix(status.currentInning ?? 0)}</span>
+              <OutsDisplay outs={status.outs ?? 0} />
             </div>
           );
         }
@@ -67,23 +77,14 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
         if (status.outs === 3) {
           return (
             <span className="text-green-800 dark:text-green-500">
-              End {status.currentInning ?? 0}
+              End {getOrdinalSuffix(status.currentInning ?? 0)}
             </span>
           );
         } else {
           return (
             <div className="flex justify-between mr-2 text-green-800 dark:text-green-500">
-              <span>Bot {status.currentInning ?? 0}</span>
-              <span className="flex justify-between mt-1.5 gap-0.5">
-                {Array.from(new Array(status.outs ?? 0)).map((_, index) => (
-                  <FaCircle key={index} size={10} />
-                ))}
-                {Array.from(new Array(status.outs ? 3 - status.outs : 3)).map(
-                  (_, index) => (
-                    <FaRegCircle key={index} size={10} />
-                  ),
-                )}
-              </span>
+              <span>Bot {getOrdinalSuffix(status.currentInning ?? 0)}</span>
+              <OutsDisplay outs={status.outs ?? 0} />
             </div>
           );
         }

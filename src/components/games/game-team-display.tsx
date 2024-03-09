@@ -77,11 +77,12 @@ export default function GameTeamDisplay({
         ) : (
           <Skeleton className="h-[32px] w-[32px]" />
         )}
-        {game.status && game.status.status !== "SCHEDULED" && (
-          <div className="flex justify-between gap-x-2">
-            <p className="text-2xl font-sans">{game.status?.awayScore}</p>
-          </div>
-        )}
+        {game.status?.status !== "SCHEDULED" &&
+          game.status?.status !== "POSTPONED" && (
+            <div className="flex justify-between gap-x-2">
+              <p className="text-2xl font-sans">{game.status?.awayScore}</p>
+            </div>
+          )}
       </div>
       <div className={"flex justify-between text-lg "}>
         {homeTeam ? (
@@ -98,16 +99,12 @@ export default function GameTeamDisplay({
         ) : (
           <Skeleton className="h-[32px] w-[32px]" />
         )}
-        {game.status && game.status.status !== "SCHEDULED" && (
-          <div className="flex justify-between gap-x-2">
-            {/*<p className="font-sans text-sm leading-8 align-middle">*/}
-            {/*  {pickData*/}
-            {/*    ? "Picked: " + calculatePercentages(pickData, false) + "%"*/}
-            {/*    : null}*/}
-            {/*</p>*/}
-            <p className="text-2xl font-sans">{game.status?.homeScore}</p>
-          </div>
-        )}
+        {game.status?.status !== "SCHEDULED" &&
+          game.status?.status !== "POSTPONED" && (
+            <div className="flex justify-between gap-x-2">
+              <p className="text-2xl font-sans">{game.status?.homeScore}</p>
+            </div>
+          )}
       </div>
     </div>
   );
