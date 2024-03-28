@@ -1,6 +1,7 @@
 import { Game } from "@/lib/http/games.ts";
 import { format, utcToZonedTime } from "date-fns-tz";
-import { FaCircle, FaClock, FaRegCircle } from "react-icons/fa6";
+import { FaCircle, FaClock, FaDiamond, FaRegCircle } from "react-icons/fa6";
+import { GoDiamond } from "react-icons/go";
 
 function getOrdinalSuffix(n: number) {
   const s = ["th", "st", "nd", "rd"];
@@ -18,6 +19,24 @@ function OutsDisplay({ outs }: { outs?: number }) {
         <FaRegCircle key={index} size={10} />
       ))}
     </span>
+  );
+}
+
+function BaseDisplay({
+  bases: { first, second, third },
+}: {
+  bases: { first: boolean; second: boolean; third: boolean };
+}) {
+  return (
+    <div className="-mt-0.5">
+      <div className="flex justify-center mt-1">
+        {second ? <FaDiamond size={10} /> : <GoDiamond size={10} />}
+      </div>
+      <div className="flex justify-center gap-[0.325rem] -mt-0.5">
+        {third ? <FaDiamond size={10} /> : <GoDiamond size={10} />}
+        {first ? <FaDiamond size={10} /> : <GoDiamond size={10} />}
+      </div>
+    </div>
   );
 }
 
@@ -69,6 +88,13 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
           return (
             <div className="flex justify-between mr-2 text-green-800 dark:text-green-500">
               <span>Top {getOrdinalSuffix(status.currentInning ?? 0)}</span>
+              <BaseDisplay
+                bases={{
+                  first: status.onFirst ?? false,
+                  second: status.onSecond ?? false,
+                  third: status.onThird ?? false,
+                }}
+              />
               <OutsDisplay outs={status.outs ?? 0} />
             </div>
           );
@@ -84,6 +110,13 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
           return (
             <div className="flex justify-between mr-2 text-green-800 dark:text-green-500">
               <span>Bot {getOrdinalSuffix(status.currentInning ?? 0)}</span>
+              <BaseDisplay
+                bases={{
+                  first: status.onFirst ?? false,
+                  second: status.onSecond ?? false,
+                  third: status.onThird ?? false,
+                }}
+              />
               <OutsDisplay outs={status.outs ?? 0} />
             </div>
           );
