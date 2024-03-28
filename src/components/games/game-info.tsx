@@ -100,11 +100,9 @@ function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
       <div className={"flex justify-center space-x-2 p-2 " + className}>
         <p className="flex justify-start gap-x-2">
           <FaClock className="mt-1" />
-          {zonedDate.getMinutes() == 33
-            ? "TBD"
-            : format(zonedDate, "h:mmaa zzz", { timeZone })
-                .replace("DT", "T")
-                .replace("ST", "T")}
+          {format(zonedDate, "h:mmaa zzz", { timeZone })
+            .replace("DT", "T")
+            .replace("ST", "T")}
         </p>
         <CircleDivider />
         <p className="flex justify-start gap-x-2">

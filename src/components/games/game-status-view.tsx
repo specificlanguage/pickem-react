@@ -2,6 +2,7 @@ import { Game } from "@/lib/http/games.ts";
 import { format, utcToZonedTime } from "date-fns-tz";
 import { FaCircle, FaClock, FaDiamond, FaRegCircle } from "react-icons/fa6";
 import { GoDiamond } from "react-icons/go";
+import { addMinutes, isAfter } from "date-fns";
 
 function getOrdinalSuffix(n: number) {
   const s = ["th", "st", "nd", "rd"];
@@ -50,6 +51,17 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
   const zonedTime = utcToZonedTime(new Date(game.startTimeUTC + "Z"), timeZone);
 
   if (status.status === "SCHEDULED") {
+    if (isAfter(addMinutes(new Date(), 5), zonedTime)) {
+      return (
+        <span className="flex justify-start gap-x-2">
+          <p className="mt-1">
+            <FaClock />
+          </p>
+          <p>Delayed</p>
+        </span>
+      );
+    }
+
     return (
       <span className="flex justify-start gap-x-2">
         <p className="mt-1">
