@@ -34,7 +34,12 @@ export const component = function GamePage() {
 
   const { data: statuses } = useQuery({
     queryKey: ["status", games?.map((game) => game.id)],
-    queryFn: () => getStatusOfGames(games?.map((game) => game.id) ?? []),
+    queryFn: () =>
+      getStatusOfGames(
+        date?.getFullYear() ?? 0,
+        date ? date.getMonth() + 1 : 0,
+        date?.getDate() ?? 0,
+      ),
     refetchInterval: 1000 * 60,
     enabled: games !== null && games !== undefined && games.length > 0,
   });

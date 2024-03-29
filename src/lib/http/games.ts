@@ -56,9 +56,13 @@ export async function getGamesByDate({
     });
 }
 
-export async function getStatusOfGames(gameIDs: number[]) {
+export async function getStatusOfGames(
+  year: number,
+  month: number,
+  day: number,
+) {
   return await axios
-    .get(formatAPIPath(`/games/status?gameID=${gameIDs.join("&gameID=")}`))
+    .get(formatAPIPath(`/games/status?year=${year}&month=${month}&day=${day}`))
     .then((res) => {
       return res.data as GameStatus[];
     });
