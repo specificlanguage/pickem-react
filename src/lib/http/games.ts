@@ -15,6 +15,8 @@ export interface Game {
   homeName?: string;
   awayName?: string;
   status?: GameStatus;
+  homeScore?: number;
+  awayScore?: number;
 }
 
 interface DateQueryProps {

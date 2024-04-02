@@ -57,7 +57,6 @@ export const useFetchStandings = () => {
         return res.data as StandingsResponse;
       }),
   });
-  console.log(data);
   return { data, isLoading, isError, standings: data };
 };
 

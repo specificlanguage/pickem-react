@@ -53,6 +53,11 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
     setLoading(false);
   }
 
+  function getPick(game: Game) {
+    console.log(game.id, playerPicks);
+    return playerPicks?.find((p) => p.gameID === game.id);
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -64,19 +69,18 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
                   control={form.control}
                   name={game.id.toString()}
                   render={({ field }) =>
-                    isAfterStartTime(game) ? (
+                    isAfterStartTime(game) || getPick(game) ? (
                       <GameTeamDisplay
                         game={game}
-                        defaultView={"full"}
                         className="m-2"
+                        showRecord={true}
+                        pick={getPick(game) ?? undefined}
                       />
                     ) : (
                       <PickOptions
                         field={field}
                         game={game}
-                        gamePick={playerPicks?.find(
-                          (p) => p.gameID === game.id,
-                        )}
+                        showRecord={true}
                       />
                     )
                   }

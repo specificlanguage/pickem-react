@@ -12,11 +12,13 @@ import { CheckedIcon, FavoriteTeamIcon } from "@/components/games/icons.tsx";
 import { useQuery } from "@tanstack/react-query";
 import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
 import { calculatePercentages } from "@/lib/picks.ts";
+import { RecordDisplay } from "@/components/teams/records";
 
 interface PickOptionsProps {
   field: ControllerRenderProps<{ [x: string]: string }, string>;
   game: Game;
   gamePick?: GamePick;
+  showRecord?: boolean;
 }
 
 /**
@@ -30,10 +32,17 @@ export default function PickOptions({
   field,
   game,
   gamePick,
+  showRecord,
 }: PickOptionsProps) {
   const { getToken, userId } = useAuth();
   const { teams } = useFetchTeams();
   const { prefs } = usePrefs(getToken(), userId ?? "");
+  const { data: picks } = useQuery({
+    queryKey: ["pickData", game.id],
+    queryFn: async () => getAllPicks(game.id),
+  });
+
+  // Get information about teams
   const awayTeam = teams?.find((team) => team.id === game.awayTeam_id);
   const homeTeam = teams?.find((team) => team.id === game.homeTeam_id);
 
@@ -49,10 +58,7 @@ export default function PickOptions({
     field.value === game.homeTeam_id.toString() ||
     (alreadyPicked && gamePick?.pickedHome);
 
-  const { data } = useQuery({
-    queryKey: ["pickData", game.id],
-    queryFn: async () => getAllPicks(game.id),
-  });
+  if (!teams || !awayTeam || !homeTeam) return null;
 
   return (
     <FormItem>
@@ -69,7 +75,9 @@ export default function PickOptions({
             disabled={isDisabled}
             showHighlight={pickedAway}
             fillPct={
-              isDisabled && data ? calculatePercentages(data, true) : undefined
+              isDisabled && picks
+                ? calculatePercentages(picks, true)
+                : undefined
             }
             className={`items-start 
             ${isDisabled ? "opacity-50" : ""}`}
@@ -88,6 +96,7 @@ export default function PickOptions({
                     textSize="lg"
                     imageScheme="spot"
                   />
+                  {showRecord && <RecordDisplay teamID={awayTeam.id} />}
                   <div id="pick-option-away-is-favorite-team">
                     {prefs?.favoriteTeam_id === game.awayTeam_id && (
                       <FavoriteTeamIcon />
@@ -101,8 +110,8 @@ export default function PickOptions({
                   id="pick-option-home-selection-data"
                   className="flex justify-end leading-7"
                 >
-                  {isDisabled && data
-                    ? calculatePercentages(data, true) + "%"
+                  {isDisabled && picks
+                    ? calculatePercentages(picks, true) + "%"
                     : null}
                 </div>
               </div>
@@ -116,10 +125,12 @@ export default function PickOptions({
             disabled={isDisabled}
             showHighlight={pickedHome}
             fillPct={
-              isDisabled && data ? calculatePercentages(data, false) : undefined
+              isDisabled && picks
+                ? calculatePercentages(picks, false)
+                : undefined
             }
             className={`items-start 
-            ${isDisabled && data ? "opacity-50" : ""}`}
+            ${isDisabled && picks ? "opacity-50" : ""}`}
           >
             {homeTeam ? (
               <div className="flex justify-between w-full space-x-0.5 leading-5">
@@ -135,6 +146,7 @@ export default function PickOptions({
                     textSize="lg"
                     imageScheme="spot"
                   />
+                  {showRecord && <RecordDisplay teamID={homeTeam.id} />}
                   <div id="pick-option-home-is-favorite-team">
                     {prefs?.favoriteTeam_id === game.homeTeam_id && (
                       <FavoriteTeamIcon />
@@ -148,8 +160,8 @@ export default function PickOptions({
                   id="pick-option-home-selection-data"
                   className="flex justify-end leading-7"
                 >
-                  {isDisabled && data
-                    ? calculatePercentages(data, false) + "%"
+                  {isDisabled && picks
+                    ? calculatePercentages(picks, false) + "%"
                     : null}
                 </div>
               </div>
