@@ -33,7 +33,7 @@ export function TeamLogo({
   }
 
   const labelElement = (
-    <div className={`mx-2 text-center leading-[${finalHeight}px]`}>
+    <div className={`ml-2 text-center leading-[${finalHeight}px]`}>
       <p
         className={
           `inline-block align-middle leading-[${finalHeight + 10}px] text-` +

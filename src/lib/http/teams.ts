@@ -10,6 +10,25 @@ export interface Team {
   cityName: string;
 }
 
+export interface TeamRecord {
+  id: number;
+  name: string;
+  abbr: string;
+  wins: number;
+  losses: number;
+  winningPercentage: string; // Should be converted to a decimal number if needed.
+}
+
+export interface StandingsResponse {
+  standings: {
+    name: string; // Division name
+    teams: TeamRecord[];
+  };
+  teams: {
+    [key: string]: TeamRecord;
+  };
+}
+
 /**
  * Get all team info from the API.
  */
@@ -29,3 +48,19 @@ export const useFetchTeams = () => {
   });
   return { data, isLoading, isError, teams: data };
 };
+
+export const useFetchStandings = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["standings"],
+    queryFn: () =>
+      axios.get(formatAPIPath("/teams/standings")).then((res) => {
+        return res.data as StandingsResponse;
+      }),
+  });
+  console.log(data);
+  return { data, isLoading, isError, standings: data };
+};
+
+export function getTeamRecord(teamID: number, standings: StandingsResponse) {
+  return standings.teams[teamID.toString()];
+}

@@ -1,7 +1,12 @@
 import { TeamLogo } from "@/components/teams/logos.tsx";
 import { Skeleton } from "@/components/ui/skeleton.tsx";
 import { useState } from "react";
-import { useFetchTeams } from "@/lib/http/teams.ts";
+import {
+  getTeamRecord,
+  TeamRecord,
+  useFetchStandings,
+  useFetchTeams,
+} from "@/lib/http/teams.ts";
 import { Game } from "@/lib/http/games.ts";
 import { GamePick } from "@/lib/http/picks.ts";
 import { CheckedIcon, HollowCheckedIcon } from "@/components/games/icons.tsx";
@@ -11,13 +16,16 @@ export default function GameTeamDisplay({
   pick,
   className,
   defaultView = "team",
+  showRecord = false,
 }: {
   game: Game;
   pick?: GamePick;
   className?: string;
   defaultView?: "team" | "abbr" | "full";
+  showRecord?: boolean;
 }) {
   const { teams } = useFetchTeams();
+  const { standings } = useFetchStandings();
 
   const possibleViews = ["team", "abbr", "full"];
   const [teamView, setTeamView] = useState<number>(
@@ -26,6 +34,18 @@ export default function GameTeamDisplay({
 
   const awayTeam = teams?.find((team) => team.id === game.awayTeam_id);
   const homeTeam = teams?.find((team) => team.id === game.homeTeam_id);
+
+  if (!awayTeam || !homeTeam) {
+    return null;
+  }
+
+  let awayRecord: TeamRecord | null = null;
+  let homeRecord: TeamRecord | null = null;
+
+  if (showRecord && standings) {
+    awayRecord = getTeamRecord(awayTeam.id, standings);
+    homeRecord = getTeamRecord(homeTeam.id, standings);
+  }
 
   function onClick() {
     setTeamView((teamView + 1) % possibleViews.length);
@@ -62,7 +82,7 @@ export default function GameTeamDisplay({
     <div className={className + " space-y-4 mx-2"}>
       <div className="flex justify-between text-lg" onClick={onClick}>
         {awayTeam ? (
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <TeamLogo
               imageOrientation={"left"}
               label={getDisplay(awayTeam)}
@@ -70,6 +90,13 @@ export default function GameTeamDisplay({
               height={32}
               imageScheme="spot"
             />
+            {showRecord && standings && (
+              <div className="flex flex-col justify-center">
+                <p className="text-sm font-sans">
+                  ({awayRecord?.wins}-{awayRecord?.losses})
+                </p>
+              </div>
+            )}
             {pick && !pick.pickedHome && (
               <PickDisplay game={game} pick={pick} />
             )}
@@ -86,7 +113,7 @@ export default function GameTeamDisplay({
       </div>
       <div className={"flex justify-between text-lg "}>
         {homeTeam ? (
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2 ">
             <TeamLogo
               imageOrientation={"left"}
               label={getDisplay(homeTeam)}
@@ -94,6 +121,13 @@ export default function GameTeamDisplay({
               height={32}
               imageScheme="spot"
             />
+            {showRecord && standings && (
+              <div className="flex flex-col justify-center">
+                <p className="text-sm font-sans">
+                  ({homeRecord?.wins}-{homeRecord?.losses})
+                </p>
+              </div>
+            )}
             {pick && pick.pickedHome && <PickDisplay game={game} pick={pick} />}
           </div>
         ) : (

@@ -98,6 +98,7 @@ function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
         </div>
       )}
       <div className={"flex justify-center space-x-2 p-2 " + className}>
+        <p>{game.id}</p>
         <p className="flex justify-start gap-x-2">
           <FaClock className="mt-1" />
           {format(zonedDate, "h:mmaa zzz", { timeZone })
