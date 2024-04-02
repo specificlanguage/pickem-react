@@ -152,6 +152,21 @@ export async function getPick(gameID: number, token: string) {
     .catch(() => null);
 }
 
+export async function getPicksOnDate(
+  year: number,
+  month: number,
+  day: number,
+  token: string,
+) {
+  return await axios
+    .get(
+      formatAPIPath(`/picks/date?year=${year}&month=${month}&day=${day}`),
+      authHeader(token),
+    )
+    .then((res) => res.data as GamePick[])
+    .catch(() => null);
+}
+
 export async function getMultiplePicks(gameIDs: number[], token: string) {
   console.log(gameIDs.join("&gameID="));
   return await axios

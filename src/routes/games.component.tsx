@@ -8,7 +8,7 @@ import GamesLayout from "@/layouts/games-layout.tsx";
 import DatePicker from "@/components/date-picker.tsx";
 import { add, startOfToday } from "date-fns";
 import { useAuth } from "@clerk/clerk-react";
-import { getMultiplePicks } from "@/lib/http/picks.ts";
+import { getPicksOnDate } from "@/lib/http/picks.ts";
 
 export const component = function GamePage() {
   // Note: undefined will *never* occur, it is only used for type checking purposes.
@@ -47,8 +47,10 @@ export const component = function GamePage() {
   const { data: picks } = useQuery({
     queryKey: ["picks", games?.map((game) => game.id)],
     queryFn: async () =>
-      getMultiplePicks(
-        games?.map((game) => game.id) ?? [],
+      getPicksOnDate(
+        date?.getFullYear() ?? 0,
+        date ? date.getMonth() + 1 : 0,
+        date?.getDate() ?? 0,
         (await getToken()) ?? "",
       ),
     enabled: games !== null && games !== undefined && games.length > 0,
