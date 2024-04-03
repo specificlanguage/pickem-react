@@ -51,7 +51,7 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
   const zonedTime = utcToZonedTime(new Date(game.startTimeUTC + "Z"), timeZone);
 
   if (status.status === "SCHEDULED") {
-    if (isAfter(addMinutes(new Date(), 5), zonedTime)) {
+    if (isAfter(new Date(), addMinutes(zonedTime, 10))) {
       return (
         <span className="flex justify-start gap-x-2 text-yellow-500">
           Delayed

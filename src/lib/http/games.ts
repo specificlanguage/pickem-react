@@ -15,8 +15,8 @@ export interface Game {
   homeName?: string;
   awayName?: string;
   status?: GameStatus;
-  homeScore?: number;
-  awayScore?: number;
+  home_score?: number;
+  away_score?: number;
 }
 
 interface DateQueryProps {
@@ -64,7 +64,11 @@ export async function getStatusOfGames(
   day: number,
 ) {
   return await axios
-    .get(formatAPIPath(`/games/status?year=${year}&month=${month}&day=${day}`))
+    .get(
+      formatAPIPath(
+        `/games/status/date?year=${year}&month=${month}&day=${day}`,
+      ),
+    )
     .then((res) => {
       return res.data as GameStatus[];
     });

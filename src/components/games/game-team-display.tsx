@@ -50,8 +50,8 @@ export default function GameTeamDisplay({
 
   function PickDisplay({ game, pick }: { game: Game; pick: GamePick }) {
     const finished = game.finished;
-    const awayScore = game.awayScore ?? -1;
-    const homeScore = game.homeScore ?? -1;
+    const awayScore = game.away_score ?? -1;
+    const homeScore = game.home_score ?? -1;
     if (finished) {
       if (pick.pickedHome && awayScore < homeScore) {
         return <CheckedIcon />;

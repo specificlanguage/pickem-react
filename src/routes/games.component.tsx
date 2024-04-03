@@ -32,8 +32,16 @@ export const component = function GamePage() {
     queryFn: getGamesByDate,
   });
 
+  // Status query
   const { data: statuses } = useQuery({
-    queryKey: ["status", games?.map((game) => game.id)],
+    queryKey: [
+      "status",
+      {
+        year: date?.getFullYear(),
+        month: date ? date.getMonth() + 1 : 0, // Why is month 0-indexed? Javascript moment.
+        day: date?.getDate(),
+      },
+    ],
     queryFn: () =>
       getStatusOfGames(
         date?.getFullYear() ?? 0,
@@ -44,8 +52,16 @@ export const component = function GamePage() {
     enabled: games !== null && games !== undefined && games.length > 0,
   });
 
+  // Picks query
   const { data: picks } = useQuery({
-    queryKey: ["picks", games?.map((game) => game.id)],
+    queryKey: [
+      "picks",
+      {
+        year: date?.getFullYear(),
+        month: date ? date.getMonth() + 1 : 0, // Why is month 0-indexed? Javascript moment.
+        day: date?.getDate(),
+      },
+    ],
     queryFn: async () =>
       getPicksOnDate(
         date?.getFullYear() ?? 0,
