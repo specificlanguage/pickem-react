@@ -10,6 +10,8 @@ import { PickIconDialog } from "@/components/games/picks/pick-dialog.tsx";
 import { SignedIn } from "@clerk/clerk-react";
 import { PiTelevision } from "react-icons/pi";
 import { isToday } from "date-fns";
+import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
+import { Link } from "@tanstack/react-router";
 
 interface GameIconRowProps {
   game: Game;
@@ -34,9 +36,9 @@ function MLBIcon({ gameID }: MLBIconProps) {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
-          <a href={`https://mlb.com/gameday/${gameID}/preview`}>
+          <Link to={`https://mlb.com/gameday/${gameID}/preview`}>
             <SiMlb size={28} />
-          </a>
+          </Link>
         </TooltipTrigger>
         <TooltipContent>
           <p>MLB Gameday Link</p>
@@ -93,7 +95,7 @@ export default function GameIconRow({ game, className }: GameIconRowProps) {
         <MLBIcon gameID={game.id} />
         <MLBTVIcon game={game} />
         <SignedIn>
-          <PickIcon game={game} />
+          {isAfterStartTime(game) ? null : <PickIcon game={game} />}
         </SignedIn>
       </div>
     </div>

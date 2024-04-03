@@ -53,11 +53,8 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
   if (status.status === "SCHEDULED") {
     if (isAfter(addMinutes(new Date(), 5), zonedTime)) {
       return (
-        <span className="flex justify-start gap-x-2">
-          <p className="mt-1">
-            <FaClock />
-          </p>
-          <p>Delayed</p>
+        <span className="flex justify-start gap-x-2 text-yellow-500">
+          Delayed
         </span>
       );
     }
@@ -79,6 +76,9 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
   }
 
   if (status.status === "COMPLETED") {
+    if (status.currentInning && status.currentInning !== 9) {
+      return <span>Final/{status.currentInning}</span>;
+    }
     return <span>Final</span>;
   }
 
