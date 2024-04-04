@@ -16,6 +16,7 @@ export interface PreferencesResult {
 export interface UserInfoObject {
   id: string;
   username: string;
+  image_url: string;
 }
 
 export interface AllUsersResponse {

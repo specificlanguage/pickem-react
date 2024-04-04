@@ -52,6 +52,7 @@ export interface LeaderboardResponse {
   leaders: {
     userID: string;
     correctPicks: number;
+    totalPicks: number;
   }[];
 }
 
