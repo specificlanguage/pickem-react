@@ -14,7 +14,7 @@ import {
   transformFormDataToPicks,
 } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingWheel from "@/components/loading-wheel.tsx";
 import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
 
@@ -67,12 +67,25 @@ export default function PickForm({
     resolver: zodResolver(PickFormSchema),
   });
 
+  const qClient = useQueryClient();
+
   const { isLoading } = useQuery({
     queryKey: ["pick", game.id],
     queryFn: async () => {
       const resp = await getPick(game.id, (await getToken()) ?? "");
       setPick(resp ?? undefined);
       return resp ?? null;
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (pick: GamePick) =>
+      await submitPick(pick, (await getToken()) ?? ""),
+    onSuccess: async () => {
+      // Refresh all pick information
+      await qClient.invalidateQueries({ queryKey: ["pick", game.id] });
+      await qClient.invalidateQueries({ queryKey: ["pickData", game.id] });
+      await qClient.invalidateQueries({ queryKey: ["picks"] });
     },
   });
 
@@ -85,7 +98,7 @@ export default function PickForm({
   async function onSubmit(data: z.infer<typeof PickFormSchema>) {
     setSubmitting(true);
     const pick = transformFormDataToPicks(data, [game])[0]; // Function transforms a list, so just use the first element.
-    await submitPick(pick, (await getToken()) ?? "");
+    mutation.mutate(pick);
     setPick(pick);
     setSubmitting(false);
   }
