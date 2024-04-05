@@ -6,7 +6,7 @@ export interface SessionRequest {
   year: number;
   month: number;
   day: number;
-  token: string;
+  token: Promise<string | null>;
 }
 
 export interface SessionResponse {
@@ -94,7 +94,7 @@ export async function getSession({
   return await axios
     .get(
       formatAPIPath(`/picks/session?year=${year}&month=${month}&day=${day}`),
-      authHeader(token),
+      authHeader((await token) ?? ""),
     )
     .then((res) => res.data as SessionResponse)
     .catch(() => null);
@@ -117,7 +117,7 @@ export async function createSession({
     .post(
       formatAPIPath(`/picks/session/new`),
       { year, month, day },
-      authHeader(token),
+      authHeader((await token) ?? ""),
     )
     .then((res) => {
       return res.data as SessionResponse;
@@ -126,6 +126,42 @@ export async function createSession({
       console.error(err);
       return null;
     });
+}
+
+export async function getOrCreateSession({
+  year,
+  month,
+  day,
+  token,
+}: SessionRequest) {
+  const res = await getSession({
+    year,
+    month,
+    day,
+    token,
+  });
+
+  if (res) {
+    return {
+      games: res.games,
+      picks: convertSessPickToGamePick(res.picks),
+    };
+  }
+  // Create session if none exists
+  const newSess = await createSession({
+    year,
+    month,
+    day,
+    token,
+  });
+  if (newSess) {
+    return {
+      games: newSess.games,
+      picks: convertSessPickToGamePick(newSess.picks),
+    };
+  } else {
+    return null;
+  }
 }
 
 /**

@@ -63,3 +63,10 @@ export const useFetchStandings = () => {
 export function getTeamRecord(teamID: number, standings: StandingsResponse) {
   return standings.teams[teamID.toString()];
 }
+
+export function getTeamFromList(
+  teams: Team[],
+  teamID: number,
+): Team | undefined {
+  return teams.find((team) => team.id === teamID);
+}

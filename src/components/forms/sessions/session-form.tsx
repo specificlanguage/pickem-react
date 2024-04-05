@@ -54,7 +54,6 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
   }
 
   function getPick(game: Game) {
-    console.log(game.id, playerPicks);
     return playerPicks?.find((p) => p.gameID === game.id);
   }
 

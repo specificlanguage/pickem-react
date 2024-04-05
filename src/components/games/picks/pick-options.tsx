@@ -40,6 +40,7 @@ export default function PickOptions({
   const { data: picks } = useQuery({
     queryKey: ["pickData", game.id],
     queryFn: async () => getAllPicks(game.id),
+    enabled: !!gamePick || isAfterStartTime(game), // Only query the database for all picks if gamePick is present.
   });
 
   // Get information about teams

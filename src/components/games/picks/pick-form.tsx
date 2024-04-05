@@ -17,6 +17,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingWheel from "@/components/loading-wheel.tsx";
 import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
+import { utcToZonedTime } from "date-fns-tz";
 
 interface PickFormProps {
   game: Game;
@@ -82,10 +83,20 @@ export default function PickForm({
     mutationFn: async (pick: GamePick) =>
       await submitPick(pick, (await getToken()) ?? ""),
     onSuccess: async () => {
+      const date = utcToZonedTime(new Date(), "America/New_York"); // Database queries are centered at NY time.
       // Refresh all pick information
       await qClient.invalidateQueries({ queryKey: ["pick", game.id] });
       await qClient.invalidateQueries({ queryKey: ["pickData", game.id] });
-      await qClient.invalidateQueries({ queryKey: ["picks"] });
+      await qClient.invalidateQueries({
+        queryKey: [
+          "picks",
+          {
+            year: date.getFullYear(),
+            month: date.getMonth() + 1,
+            day: date.getDate(),
+          },
+        ],
+      });
     },
   });
 

@@ -15,6 +15,7 @@ export interface Game {
   homeName?: string;
   awayName?: string;
   status?: GameStatus;
+  winner?: number;
   home_score?: number;
   away_score?: number;
 }
