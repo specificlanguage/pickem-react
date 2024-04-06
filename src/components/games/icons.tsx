@@ -37,7 +37,7 @@ export const HollowCheckedIcon = () => (
     <Tooltip>
       <TooltipTrigger>
         <span className="leading-7">
-          <span className="border border-foreground inline-block align-middle p-1 text-white rounded-full shadow-none">
+          <span className="border border-foreground inline-block align-middle p-1 text-black dark:text-white rounded-full shadow-none">
             <FaCheck size={12} />
           </span>
         </span>
