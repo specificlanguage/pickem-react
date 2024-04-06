@@ -108,12 +108,18 @@ export const component = function SessionPick() {
         <h4 className="font-bold text-lg">
           Yesterday's games ({format(yesterday, "PPP")}):
         </h4>
-        {yesterdaySession?.games.map((game) => (
-          <PreviousPickCard
-            game={game}
-            pick={yesterdaySession?.picks.find((p) => p.gameID === game.id)}
-          />
-        ))}
+        {yesterdaySession?.games
+          .sort(
+            (g1, g2) =>
+              new Date(g1.startTimeUTC).getTime() -
+              new Date(g2.startTimeUTC).getTime(),
+          )
+          .map((game) => (
+            <PreviousPickCard
+              game={game}
+              pick={yesterdaySession?.picks.find((p) => p.gameID === game.id)}
+            />
+          ))}
       </div>
     </GamesLayout>
   );

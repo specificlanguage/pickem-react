@@ -36,7 +36,7 @@ export function TeamLogo({
     <div className={`ml-2 text-center leading-[${finalHeight}px]`}>
       <p
         className={
-          `inline-block align-middle leading-[${finalHeight + 10}px] text-` +
+          `inline-block align-middle leading-[${finalHeight}px] text-` +
           finalSize
         }
       >
@@ -59,10 +59,13 @@ export function TeamLogo({
         ? labelElement
         : null}
       <img
-        className={imageOrientation === "middle" ? "mx-auto" : ""}
+        className={
+          imageOrientation === "middle"
+            ? "mx-auto"
+            : "" +
+              ` w-[${finalHeight}px] h-[${finalHeight}px] mt-0.5 align-middle`
+        }
         src={logoURL}
-        height={finalHeight}
-        width={finalHeight}
         alt={team.name}
       />
       {(useLabel || label) && imageOrientation === "left" ? labelElement : null}
