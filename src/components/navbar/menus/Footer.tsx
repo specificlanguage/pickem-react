@@ -1,4 +1,4 @@
-import { FaGithub, FaGlobe } from "react-icons/fa6";
+import { FaGithub, FaGlobe, FaMugHot } from "react-icons/fa6";
 
 export default function Footer() {
   return (
@@ -20,6 +20,9 @@ export default function Footer() {
           </a>
           <a href="https://speclang.dev">
             <FaGlobe size={24} />
+          </a>
+          <a href="https://ko-fi.com/specificlanguage">
+            <FaMugHot size={24} />
           </a>
         </div>
         <p className="italic text-sm">
