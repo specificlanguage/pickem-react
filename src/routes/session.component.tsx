@@ -87,7 +87,7 @@ export const component = function SessionPick() {
         </p>
 
         {isLoading ? (
-          <LoadingWheel />
+          <LoadingWheel size={48} />
         ) : isError ? (
           <p>Error: {error?.message}</p>
         ) : todaySession ? (

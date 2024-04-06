@@ -11,7 +11,14 @@ import { ClerkProvider } from "@clerk/clerk-react";
 
 // Create a new router instance
 const router = new Router({ routeTree });
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60, // 1 min
+    },
+  },
+});
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 // Register the router instance for type safety

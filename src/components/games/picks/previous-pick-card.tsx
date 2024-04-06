@@ -37,7 +37,7 @@ export function PreviousPickCard({ game, pick }: PreviousPickCardProps) {
             <p className="leading-8">
               {pick !== undefined &&
                 !pick.pickedHome &&
-                (game.finished && game.winner === homeTeam.id ? (
+                (game.finished && game.winner === awayTeam.id ? (
                   <CheckedIcon />
                 ) : (
                   <HollowCheckedIcon />

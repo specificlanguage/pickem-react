@@ -93,7 +93,7 @@ export default function PickOptions({
                     imageOrientation={"left"}
                     useLabel={"team"}
                     team={awayTeam}
-                    height={32.25}
+                    height={32}
                     textSize="lg"
                     imageScheme="spot"
                   />
@@ -126,7 +126,7 @@ export default function PickOptions({
             disabled={isDisabled}
             showHighlight={pickedHome}
             fillPct={
-              isDisabled && picks
+              isDisabled && picks && picks.homePicks
                 ? calculatePercentages(picks, false)
                 : undefined
             }
@@ -143,7 +143,7 @@ export default function PickOptions({
                     imageOrientation={"left"}
                     useLabel={"team"}
                     team={homeTeam}
-                    height={32.25}
+                    height={32}
                     textSize="lg"
                     imageScheme="spot"
                   />
@@ -161,7 +161,7 @@ export default function PickOptions({
                   id="pick-option-home-selection-data"
                   className="flex justify-end leading-7"
                 >
-                  {isDisabled && picks
+                  {isDisabled && picks && picks.awayPicks
                     ? calculatePercentages(picks, false) + "%"
                     : null}
                 </div>

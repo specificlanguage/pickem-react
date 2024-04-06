@@ -43,7 +43,11 @@ export default function LeaderboardView() {
   });
 
   if (isLoading) {
-    return <LoadingWheel />;
+    return (
+      <div>
+        <LoadingWheel size={48} />;
+      </div>
+    );
   }
 
   if (!leaderboard || !users) {

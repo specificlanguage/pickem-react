@@ -22,6 +22,7 @@ import { utcToZonedTime } from "date-fns-tz";
 interface PickFormProps {
   game: Game;
   id?: string;
+  showRecord?: boolean;
   showSubmitButton?: boolean;
 }
 
@@ -33,6 +34,7 @@ interface PickFormProps {
  *
  * @param game - Game that they are predicting the winner for.
  * @param id - Optional id for the form.
+ * @param showRecord - Whether to show record on the item. Usually defaults to true.
  * @param showSubmitButton - Whether to show the submit button. Should be used in conjunction with the id.
  * @constructor
  */
@@ -40,6 +42,7 @@ interface PickFormProps {
 export default function PickForm({
   game,
   id,
+  showRecord = true,
   showSubmitButton = true,
 }: PickFormProps) {
   const [isSubmitting, setSubmitting] = useState(false);
@@ -137,6 +140,7 @@ export default function PickForm({
               field={field}
               game={game}
               gamePick={pick ?? undefined}
+              showRecord={showRecord}
             />
           )}
         />
