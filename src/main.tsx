@@ -8,6 +8,7 @@ import { routeTree } from "./routeTree.gen";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ClerkProvider } from "@clerk/clerk-react";
+import { HelmetProvider } from "react-helmet-async";
 
 // Create a new router instance
 const router = new Router({ routeTree });
@@ -37,7 +38,9 @@ if (!rootElement.innerHTML) {
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider>
-            <RouterProvider router={router} />
+            <HelmetProvider>
+              <RouterProvider router={router} />{" "}
+            </HelmetProvider>
           </ThemeProvider>
         </QueryClientProvider>
       </ClerkProvider>

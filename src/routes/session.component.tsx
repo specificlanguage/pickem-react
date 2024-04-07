@@ -13,6 +13,7 @@ import { startOfToday, sub } from "date-fns";
 import { PreviousPickCard } from "@/components/games/picks/previous-pick-card.tsx";
 import { format } from "date-fns-tz";
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet-async";
 
 export const component = function SessionPick() {
   const [date] = useState<Date>(startOfToday());
@@ -78,6 +79,9 @@ export const component = function SessionPick() {
   // TODO: Add way to get sessions from previous days
   return (
     <GamesLayout>
+      <Helmet>
+        <title>Pick | Pick'em</title>
+      </Helmet>
       <div className="justify-center max-w-xl mx-auto my-6 space-y-2">
         <h3 className="text-3xl font-bold">Session</h3>
         <p className="text-lg">Pick the winners for each game!</p>

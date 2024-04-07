@@ -9,6 +9,7 @@ import DatePicker from "@/components/date-picker.tsx";
 import { add, startOfToday } from "date-fns";
 import { useAuth } from "@clerk/clerk-react";
 import { getPicksOnDate } from "@/lib/http/picks.ts";
+import { Helmet } from "react-helmet-async";
 
 export const component = function GamePage() {
   // Note: undefined will *never* occur, it is only used for type checking purposes.
@@ -90,6 +91,11 @@ export const component = function GamePage() {
 
   return (
     <GamesLayout>
+      {/* Head layout */}
+      <Helmet>
+        <title>Games | Pick'em</title>
+      </Helmet>
+
       <div className="mx-auto max-w-2xl space-y-2 mb-10">
         <h2 className="my-2 font-bold text-3xl">Games</h2>
         <div className="flex justify-between text-2xl">
