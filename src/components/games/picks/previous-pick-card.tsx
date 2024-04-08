@@ -3,11 +3,7 @@ import { Game } from "@/lib/http/games.ts";
 import { GamePick } from "@/lib/http/picks.ts";
 import { getTeamFromList, useFetchTeams } from "@/lib/http/teams.ts";
 import { TeamLogo } from "@/components/teams/logos.tsx";
-import {
-  CheckedIcon,
-  FavoriteTeamIcon,
-  HollowCheckedIcon,
-} from "@/components/games/icons.tsx";
+import { FavoriteTeamIcon, PickedIcon } from "@/components/games/icons.tsx";
 import { SiMlb } from "react-icons/si";
 import { Button } from "@/components/ui/button.tsx";
 import { useAuth } from "@clerk/clerk-react";
@@ -44,13 +40,7 @@ export function PreviousPickCard({ game, pick }: PreviousPickCardProps) {
               />
               {prefs?.favoriteTeam_id === awayTeam.id && <FavoriteTeamIcon />}
               <p className="leading-8">
-                {pick !== undefined &&
-                  !pick.pickedHome &&
-                  (game.finished && game.winner === awayTeam.id ? (
-                    <CheckedIcon />
-                  ) : (
-                    <HollowCheckedIcon />
-                  ))}
+                <PickedIcon game={game} pick={pick} displayAway={true} />
               </p>
             </div>
             <p className="text-xl font-bold leading-8">
@@ -74,13 +64,7 @@ export function PreviousPickCard({ game, pick }: PreviousPickCardProps) {
               />
               {prefs?.favoriteTeam_id === homeTeam.id && <FavoriteTeamIcon />}
               <p className="leading-8">
-                {pick !== undefined &&
-                  pick?.pickedHome &&
-                  (game.finished && game.winner === homeTeam.id ? (
-                    <CheckedIcon />
-                  ) : (
-                    <HollowCheckedIcon />
-                  ))}
+                <PickedIcon game={game} pick={pick} displayAway={false} />
               </p>
             </div>
             <p className="text-xl font-bold leading-8">

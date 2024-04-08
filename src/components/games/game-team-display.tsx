@@ -4,11 +4,7 @@ import { useState } from "react";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import { Game } from "@/lib/http/games.ts";
 import { GamePick } from "@/lib/http/picks.ts";
-import {
-  CheckedIcon,
-  FavoriteTeamIcon,
-  HollowCheckedIcon,
-} from "@/components/games/icons.tsx";
+import { FavoriteTeamIcon, PickedIcon } from "@/components/games/icons.tsx";
 import { RecordDisplay } from "@/components/teams/records.tsx";
 import { usePrefs } from "@/lib/http/users.ts";
 import { useAuth } from "@clerk/clerk-react";
@@ -57,21 +53,6 @@ export default function GameTeamDisplay({
     }
   }
 
-  function PickDisplay({ game, pick }: { game: Game; pick: GamePick }) {
-    const finished = game.finished;
-    const awayScore = game.away_score ?? -1;
-    const homeScore = game.home_score ?? -1;
-    if (finished) {
-      if (pick.pickedHome && awayScore < homeScore) {
-        return <CheckedIcon />;
-      } else if (!pick.pickedHome && awayScore > homeScore) {
-        return <CheckedIcon />;
-      }
-    }
-
-    return <HollowCheckedIcon />;
-  }
-
   return (
     <div className={className + " space-y-4 mx-2"}>
       <div className="flex justify-between text-lg" onClick={onClick}>
@@ -87,7 +68,7 @@ export default function GameTeamDisplay({
             {showRecord && <RecordDisplay teamID={awayTeam.id} />}
             {prefs?.favoriteTeam_id === awayTeam.id && <FavoriteTeamIcon />}
             {pick && !pick.pickedHome && (
-              <PickDisplay game={game} pick={pick} />
+              <PickedIcon game={game} pick={pick} displayAway={true} />
             )}
           </div>
         ) : (
@@ -112,7 +93,9 @@ export default function GameTeamDisplay({
             />
             {showRecord && <RecordDisplay teamID={homeTeam.id} />}
             {prefs?.favoriteTeam_id === homeTeam.id && <FavoriteTeamIcon />}
-            {pick && pick.pickedHome && <PickDisplay game={game} pick={pick} />}
+            {pick && pick.pickedHome && (
+              <PickedIcon game={game} pick={pick} displayAway={false} />
+            )}
           </div>
         ) : (
           <Skeleton className="h-[32px] w-[32px]" />

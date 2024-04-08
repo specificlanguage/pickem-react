@@ -6,6 +6,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip.tsx";
+import { GamePick } from "@/lib/http/picks.ts";
+import { Game } from "@/lib/http/games.ts";
 
 export const FavoriteTeamIcon = () => (
   <span className="text-yellow-500 leading-7">
@@ -48,3 +50,31 @@ export const HollowCheckedIcon = () => (
     </Tooltip>
   </TooltipProvider>
 );
+
+export function PickedIcon({
+  game,
+  pick,
+  displayAway,
+}: {
+  game: Game;
+  pick?: GamePick;
+  displayAway: boolean;
+}) {
+  if (pick === undefined) return null;
+  if (pick.pickedHome && displayAway) return null;
+  if (!pick.pickedHome && !displayAway) return null;
+  if (game.finished) {
+    console.log(
+      game.winner,
+      game.homeTeam_id,
+      game.awayTeam_id,
+      pick.pickedHome ? game.homeTeam_id : game.awayTeam_id,
+    );
+    if (
+      game.winner === (pick.pickedHome ? game.homeTeam_id : game.awayTeam_id)
+    ) {
+      return <CheckedIcon />;
+    }
+  }
+  return <HollowCheckedIcon />;
+}
