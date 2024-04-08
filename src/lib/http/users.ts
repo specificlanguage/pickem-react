@@ -66,6 +66,7 @@ export function usePrefs(token: Promise<string | null>, uid: string | null) {
           });
       }
     },
+    staleTime: Infinity,
   });
   return { data, isLoading, isError, prefs: data };
 }

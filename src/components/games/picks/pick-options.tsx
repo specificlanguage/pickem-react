@@ -111,7 +111,7 @@ export default function PickOptions({
                   id="pick-option-home-selection-data"
                   className="flex justify-end leading-7"
                 >
-                  {isDisabled && picks
+                  {isDisabled && picks !== null && picks !== undefined
                     ? calculatePercentages(picks, true) + "%"
                     : null}
                 </div>
@@ -161,7 +161,7 @@ export default function PickOptions({
                   id="pick-option-home-selection-data"
                   className="flex justify-end leading-7"
                 >
-                  {isDisabled && picks && picks.awayPicks
+                  {isDisabled && picks !== null && picks !== undefined
                     ? calculatePercentages(picks, false) + "%"
                     : null}
                 </div>

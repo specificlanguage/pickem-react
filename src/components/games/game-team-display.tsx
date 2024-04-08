@@ -4,8 +4,14 @@ import { useState } from "react";
 import { useFetchTeams } from "@/lib/http/teams.ts";
 import { Game } from "@/lib/http/games.ts";
 import { GamePick } from "@/lib/http/picks.ts";
-import { CheckedIcon, HollowCheckedIcon } from "@/components/games/icons.tsx";
+import {
+  CheckedIcon,
+  FavoriteTeamIcon,
+  HollowCheckedIcon,
+} from "@/components/games/icons.tsx";
 import { RecordDisplay } from "@/components/teams/records.tsx";
+import { usePrefs } from "@/lib/http/users.ts";
+import { useAuth } from "@clerk/clerk-react";
 
 export default function GameTeamDisplay({
   game,
@@ -20,7 +26,10 @@ export default function GameTeamDisplay({
   defaultView?: "team" | "abbr" | "full";
   showRecord?: boolean;
 }) {
+  const { getToken, userId } = useAuth();
+
   const { teams } = useFetchTeams();
+  const { prefs } = usePrefs(getToken(), userId ?? "");
 
   const possibleViews = ["team", "abbr", "full"];
   const [teamView, setTeamView] = useState<number>(
@@ -76,6 +85,7 @@ export default function GameTeamDisplay({
               imageScheme="spot"
             />
             {showRecord && <RecordDisplay teamID={awayTeam.id} />}
+            {prefs?.favoriteTeam_id === awayTeam.id && <FavoriteTeamIcon />}
             {pick && !pick.pickedHome && (
               <PickDisplay game={game} pick={pick} />
             )}
@@ -101,6 +111,7 @@ export default function GameTeamDisplay({
               imageScheme="spot"
             />
             {showRecord && <RecordDisplay teamID={homeTeam.id} />}
+            {prefs?.favoriteTeam_id === homeTeam.id && <FavoriteTeamIcon />}
             {pick && pick.pickedHome && <PickDisplay game={game} pick={pick} />}
           </div>
         ) : (

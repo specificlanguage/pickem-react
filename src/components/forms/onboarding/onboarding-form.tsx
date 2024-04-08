@@ -29,6 +29,7 @@ import { useState } from "react";
 import { setPreferences } from "@/lib/http/users.ts";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function OnboardingForm() {
   // TODO: abstract this into its own hook
@@ -36,16 +37,13 @@ export default function OnboardingForm() {
   const [isLoading, setLoading] = useState(false);
   const { getToken } = useAuth();
   const navigate = useNavigate();
+  const qClient = useQueryClient();
 
   const onboardingFormSchema = z.object({
     favoriteTeam: z.string(),
     // otherFavorites: z.array(z.string()).max(3),
     selectionTiming: z.string(),
   });
-  // .refine((data) => data.otherFavorites.includes(data.favoriteTeam), {
-  //   message: "Passwords must match",
-  //   path: ["confirm"],
-  // });
 
   const onboardingForm = useForm<z.infer<typeof onboardingFormSchema>>({
     resolver: zodResolver(onboardingFormSchema),
@@ -64,7 +62,7 @@ export default function OnboardingForm() {
     })
       .then((result) => {
         if (result) {
-          console.log("submitted");
+          qClient.invalidateQueries({ queryKey: ["prefs"] });
           setLoading(false);
           navigate({ to: "/" });
         } else {
