@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Game } from "@/lib/http/games.ts";
 import { authHeader, formatAPIPath } from "@/lib/http/utils.ts";
+import { useQuery } from "@tanstack/react-query";
 
 export interface SessionRequest {
   year: number;
@@ -54,6 +55,75 @@ export interface LeaderboardResponse {
     correctPicks: number;
     totalPicks: number;
   }[];
+}
+
+/**
+ * A hook that allows fetches the picks for a specific date.
+ * @param date - Date
+ * @param enabled - Whether the query should be enabled or not
+ * @param getToken - A function that returns the user's token, or null. See Clerk's getToken.
+ */
+export function useFetchPicksByDate(
+  date: Date,
+  enabled: boolean,
+  getToken: () => Promise<string | null>,
+) {
+  const { data: picks } = useQuery({
+    queryKey: [
+      "picks",
+      {
+        year: date?.getFullYear(),
+        month: date ? date.getMonth() + 1 : 0, // Why is month 0-indexed? Javascript moment.
+        day: date?.getDate(),
+      },
+    ],
+    queryFn: async () =>
+      getPicksOnDate(
+        date?.getFullYear() ?? 0,
+        date ? date.getMonth() + 1 : 0,
+        date?.getDate() ?? 0,
+        (await getToken()) ?? "",
+      ),
+    enabled: enabled,
+  });
+  return { picks };
+}
+
+/**
+ * A hook that fetches the picks for the session for the user.
+ * @param date - Date
+ * @param getToken - A function that returns the user's token, or null. See Clerk's getToken.
+ */
+export function useFetchSession(
+  date: Date,
+  getToken: () => Promise<string | null>,
+) {
+  const {
+    isLoading,
+    isError,
+    data: session,
+    error,
+  } = useQuery({
+    queryKey: [
+      "session",
+      {
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+        day: date.getDate(),
+      },
+    ],
+
+    // Function to get or create a new session from the picks specified
+    queryFn: () =>
+      getOrCreateSession({
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+        day: date.getDate(),
+        token: getToken() ?? "",
+      }),
+  });
+
+  return { isLoading, isError, session, error };
 }
 
 /**

@@ -17,6 +17,9 @@ const IndexComponentImport = new FileRoute('/').createRoute()
 const UserOnboardingComponentImport = new FileRoute(
   '/user/onboarding',
 ).createRoute()
+const ProfileUsernameComponentImport = new FileRoute(
+  '/profile/$username',
+).createRoute()
 
 // Create/Update Routes
 
@@ -90,6 +93,16 @@ const UserOnboardingComponentRoute = UserOnboardingComponentImport.update({
   ),
 })
 
+const ProfileUsernameComponentRoute = ProfileUsernameComponentImport.update({
+  path: '/profile/$username',
+  getParentRoute: () => rootRoute,
+} as any).update({
+  component: lazyRouteComponent(
+    () => import('./routes/profile/$username.component'),
+    'component',
+  ),
+})
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -118,6 +131,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupComponentImport
       parentRoute: typeof rootRoute
     }
+    '/profile/$username': {
+      preLoaderRoute: typeof ProfileUsernameComponentImport
+      parentRoute: typeof rootRoute
+    }
     '/user/onboarding': {
       preLoaderRoute: typeof UserOnboardingComponentImport
       parentRoute: typeof rootRoute
@@ -134,5 +151,6 @@ export const routeTree = rootRoute.addChildren([
   LoginComponentRoute,
   SessionComponentRoute,
   SignupComponentRoute,
+  ProfileUsernameComponentRoute,
   UserOnboardingComponentRoute,
 ])

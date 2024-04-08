@@ -6,7 +6,7 @@ export const component = function Login() {
   return (
     <AuthLayout>
       <Helmet>
-        <title>Signup | Pick'em</title>
+        <title>Signup | Pick'ems</title>
       </Helmet>
       <div className="justify-center max-w-sm mx-auto my-6">
         <RegisterCard />

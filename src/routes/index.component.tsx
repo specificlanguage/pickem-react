@@ -8,7 +8,7 @@ export const component = function Index() {
   return (
     <GamesLayout>
       <Helmet>
-        <title>Home | Pick'em</title>
+        <title>Home | Pick'ems</title>
       </Helmet>
       <div className="p-2">
         <SignedIn>

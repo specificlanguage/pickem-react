@@ -1,5 +1,5 @@
 import axios from "axios";
-import { QueryKey } from "@tanstack/react-query";
+import { QueryKey, useQuery } from "@tanstack/react-query";
 import { formatAPIPath } from "@/lib/http/utils.ts";
 
 export interface Game {
@@ -38,6 +38,58 @@ export interface GameStatus {
   onFirst?: boolean;
   onSecond?: boolean;
   onThird?: boolean;
+}
+
+/**
+ * A hook to fetch games from the API by a date.
+ * @param date - The date to fetch games for.
+ */
+export function useFetchGamesByDate(date: Date) {
+  const {
+    isLoading,
+    isError,
+    data: games,
+  } = useQuery({
+    queryKey: [
+      "games",
+      {
+        year: date?.getFullYear(),
+        month: date ? date.getMonth() + 1 : 0, // Why is month 0-indexed? Javascript moment.
+        day: date?.getDate(),
+      },
+    ],
+    queryFn: getGamesByDate,
+  });
+  return { isLoading, isError, games };
+}
+
+/**
+ * A hook to fetch game statuses by date.
+ * @param date - Date
+ * @param enabled - Whether to query or not.
+ */
+export function useFetchStatusesByDate(date: Date, enabled: boolean) {
+  // Status query
+  const { data: statuses } = useQuery({
+    queryKey: [
+      "status",
+      {
+        year: date?.getFullYear(),
+        month: date ? date.getMonth() + 1 : 0, // Why is month 0-indexed? Javascript moment.
+        day: date?.getDate(),
+      },
+    ],
+    queryFn: () =>
+      getStatusOfGames(
+        date?.getFullYear() ?? 0,
+        date ? date.getMonth() + 1 : 0,
+        date?.getDate() ?? 0,
+      ),
+    refetchInterval: 1000 * 60,
+    enabled: enabled,
+  });
+
+  return { statuses };
 }
 
 /**
