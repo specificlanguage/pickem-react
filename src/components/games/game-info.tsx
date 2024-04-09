@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/collapsible.tsx";
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
+import { GameStatusInningInfo } from "@/components/games/game-status-view.tsx";
 
 interface GameInfoProps {
   game: Game;
@@ -37,16 +38,28 @@ interface GameInfoCollapsibleProps {
 function GameInfoVertical({ game, className, zonedDate }: GameInfoProps) {
   const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
+  function StatusView({ game }: { game: Game }) {
+    const timeDisplay = format(zonedDate, "h:mmaa zzz", { timeZone })
+      .replace("DT", "T")
+      .replace("ST", "T");
+
+    if (game.status) {
+      return <GameStatusInningInfo game={game} />;
+    }
+
+    return (
+      <>
+        <FaClock className="mt-1" />
+        {timeDisplay}
+      </>
+    );
+  }
+
   return (
     <div className="flex h-full justify-start items-center">
       <div className={"space-y-2 " + className}>
         <p className="flex justify-start gap-x-2">
-          <FaClock />
-          {zonedDate.getMinutes() == 33
-            ? "TBD"
-            : format(zonedDate, "h:mmaa zzz", { timeZone })
-                .replace("DT", "T")
-                .replace("ST", "T")}
+          <StatusView game={game} />
         </p>
         <p className="flex justify-start gap-x-2">
           <FaLocationDot />

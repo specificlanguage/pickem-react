@@ -98,7 +98,7 @@ export function useFetchStatusesByDate(date: Date, enabled: boolean) {
  */
 export async function getGamesByDate({
   queryKey,
-}: DateQueryProps): Promise<Game[] | null> {
+}: DateQueryProps): Promise<Game[]> {
   const [, { year, month, day }] = queryKey as [
     string,
     { year: number; month: number; day: number },
@@ -125,4 +125,10 @@ export async function getStatusOfGames(
     .then((res) => {
       return res.data as GameStatus[];
     });
+}
+
+export function joinGamesWithStatuses(games: Game[], statuses: GameStatus[]) {
+  games.forEach((game) => {
+    game.status = statuses.find((s) => s.gameID === game.id);
+  });
 }

@@ -16,10 +16,10 @@ export default function GameCard({ game, pick }: GameCardProps) {
     <Card data-testid={game.id}>
       <CardContent data-testid="game-card" className="p-0 m-0 space-y-2">
         <div className="flex flex-row pb-0 space-y-1 p-6 mb-2">
-          <div className="basis-12/12 md:basis-8/12 my-auto">
+          <div className="basis-12/12 md:basis-8/12 my-auto mr-2">
             <GameTeamDisplay game={game} pick={pick} />
           </div>
-          <div className="invisible md:visible md:basis-1/12">
+          <div className="invisible md:visible md:basis-1/12 ml-2 -mr-4">
             <Separator orientation="vertical" />
           </div>
           <div className="invisible md:visible md:basis-3/12 flex flex-row">

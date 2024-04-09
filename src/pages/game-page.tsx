@@ -1,4 +1,4 @@
-import { add, startOfToday } from "date-fns";
+import { add, isSameDay, startOfToday } from "date-fns";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import DatePicker from "@/components/date-picker.tsx";
 import GameSkeleton from "@/components/games/game-skeleton.tsx";
@@ -27,7 +27,7 @@ export default function GamePage() {
             <FaArrowLeft size={24} />
           </button>
         </span>
-        <DatePicker date={date ?? new Date()} setDate={setDate} />
+        <DatePicker date={date ?? startOfToday()} setDate={setDate} />
         <span className="leading-8 inline-block align-middle">
           <button
             className="inline-block align-middle"
@@ -38,12 +38,12 @@ export default function GamePage() {
         </span>
       </div>
       <hr className="border-2 bg-foreground" />
-      <GameList date={date} />
+      <GameList date={date ?? startOfToday()} />
     </div>
   );
 }
 
-function GameList({ date }: { date?: Date }) {
+function GameList({ date }: { date: Date }) {
   const { getToken } = useAuth();
 
   // Retrieve games
@@ -61,7 +61,7 @@ function GameList({ date }: { date?: Date }) {
   // Retrieve statuses
   const { statuses } = useFetchStatusesByDate(
     date ?? startOfToday(),
-    games !== null && games !== undefined && games.length > 0,
+    games !== undefined && games.length > 0 && isSameDay(date, startOfToday()),
   );
 
   // Add statuses to the games present, sort by time

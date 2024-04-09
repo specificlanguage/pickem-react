@@ -4,7 +4,11 @@ import { useFetchSession } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
 import { format } from "date-fns-tz";
 import { PreviousPickCard } from "@/components/games/picks/previous-pick-card.tsx";
-import { startOfToday, sub } from "date-fns";
+import { isSameDay, startOfToday, sub } from "date-fns";
+import {
+  joinGamesWithStatuses,
+  useFetchStatusesByDate,
+} from "@/lib/http/games.ts";
 
 export default function SessionPage() {
   const date = startOfToday();
@@ -31,6 +35,19 @@ function SessionPickForm({ date }: { date: Date }) {
     date,
     getToken,
   );
+
+  const shouldFetchStatus = session
+    ? session.games && isSameDay(date, startOfToday())
+    : false;
+
+  const { statuses } = useFetchStatusesByDate(
+    date ?? startOfToday(),
+    shouldFetchStatus,
+  );
+
+  if (session && statuses && shouldFetchStatus) {
+    joinGamesWithStatuses(session.games, statuses);
+  }
 
   return (
     <>

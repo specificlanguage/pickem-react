@@ -64,12 +64,6 @@ export function PickedIcon({
   if (pick.pickedHome && displayAway) return null;
   if (!pick.pickedHome && !displayAway) return null;
   if (game.finished) {
-    console.log(
-      game.winner,
-      game.homeTeam_id,
-      game.awayTeam_id,
-      pick.pickedHome ? game.homeTeam_id : game.awayTeam_id,
-    );
     if (
       game.winner === (pick.pickedHome ? game.homeTeam_id : game.awayTeam_id)
     ) {

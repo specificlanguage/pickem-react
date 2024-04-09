@@ -15,6 +15,7 @@ import {
 import { useAuth } from "@clerk/clerk-react";
 import GameTeamDisplay from "@/components/games/game-team-display.tsx";
 import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
+import { Separator } from "@/components/ui/separator.tsx";
 
 interface SessionFormProps {
   games: Game[];
@@ -62,8 +63,8 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         {games.map((game, index) => (
           <div key={index}>
-            <div className="flex flex-row gap-2 gap-x-8">
-              <div className="basis-8/12 m-2">
+            <div className="flex flex-row gap-2 gap-x-1">
+              <div className="basis-8/12 m-2 self-center">
                 <FormField
                   control={form.control}
                   name={game.id.toString()}
@@ -85,12 +86,15 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
                   }
                 />
               </div>
-              <div className="basis-4/12">
+              <div className="basis-1/12">
+                <Separator orientation="vertical" />
+              </div>
+              <div className="basis-4/12 my-4">
                 <GameInfo orientation={"vertical"} game={game} />
               </div>
             </div>
             {index < games.length - 1 && (
-              <hr className="border-neutral-500 my-2" />
+              <hr className="border-neutral-500 my-4" />
             )}
           </div>
         ))}
