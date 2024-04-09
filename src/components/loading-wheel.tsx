@@ -10,7 +10,6 @@ export default function LoadingSpinner({
   className,
   ...props
 }: ISVGProps) {
-  console.log(size);
   return (
     <div className="flex flex-grow items-center justify-center">
       <svg

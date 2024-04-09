@@ -99,7 +99,10 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
           </div>
         ))}
 
-        <div className="flex justify-end">
+        <div className="flex justify-between h-full">
+          <p className="text-[11pt] flex justify-center align-center flex-col">
+            Be careful! You can't change your pick once you submit.
+          </p>
           <SubmitButton
             className="text-lg px-6 py-6"
             isLoading={isLoading}

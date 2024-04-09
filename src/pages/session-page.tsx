@@ -4,26 +4,60 @@ import { useFetchSession } from "@/lib/http/picks.ts";
 import { useAuth } from "@clerk/clerk-react";
 import { format } from "date-fns-tz";
 import { PreviousPickCard } from "@/components/games/picks/previous-pick-card.tsx";
-import { isSameDay, startOfToday, sub } from "date-fns";
+import { add, isSameDay, startOfToday, sub } from "date-fns";
 import {
   joinGamesWithStatuses,
   useFetchStatusesByDate,
 } from "@/lib/http/games.ts";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs.tsx";
 
 export default function SessionPage() {
   const date = startOfToday();
   const yesterday = sub(date, { days: 1 });
+  const tomorrow = add(date, { days: 1 });
 
   return (
     <div className="justify-center max-w-xl mx-auto my-6 space-y-2">
       <h3 className="text-3xl font-bold">Session</h3>
       <p className="text-lg">Pick the winners for each game!</p>
-      <p className="text-[11pt]">
-        These are the games that will be counted on the leaderboards. Be
-        careful! You can't change your pick once you submit.
-      </p>
-      <SessionPickForm date={date} />
-      <PreviousPicks date={yesterday} />
+      <Tabs defaultValue={"today"}>
+        <div className="flex justify-between">
+          <div>
+            <TabsContent
+              value="today"
+              className="flex justify-start gap-2 mt-0"
+            >
+              <h4 className="text-2xl font-bold">Today's games</h4>
+              <p className="text-2xl">({format(date, "MMMM d")})</p>
+            </TabsContent>
+            <TabsContent
+              value="tomorrow"
+              className="flex justify-start gap-2 mt-0"
+            >
+              <h4 className="text-2xl font-bold">Tomorrow's games</h4>
+              <p className="text-2xl">({format(tomorrow, "MMMM d")})</p>
+            </TabsContent>
+          </div>
+          <TabsList>
+            <TabsTrigger value="today">Today</TabsTrigger>
+            <TabsTrigger value="tomorrow">Tomorrow</TabsTrigger>
+          </TabsList>
+        </div>
+        <TabsContent value="today">
+          <SessionPickForm date={date} />
+        </TabsContent>
+        <TabsContent value="tomorrow">
+          <SessionPickForm date={tomorrow} />
+        </TabsContent>
+      </Tabs>
+      <div className="mt-6">
+        <PreviousPicks date={yesterday} />
+      </div>
     </div>
   );
 }
@@ -93,6 +127,7 @@ function PreviousPicks({ date }: { date: Date }) {
         )
         .map((game) => (
           <PreviousPickCard
+            key={game.id}
             game={game}
             pick={session?.picks.find((p) => p.gameID === game.id)}
           />
