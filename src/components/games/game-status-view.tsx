@@ -71,7 +71,7 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
   if (status.status === "SCHEDULED") {
     if (isAfter(new Date(), addMinutes(zonedTime, 10))) {
       return (
-        <span className="flex justify-start gap-x-2 text-yellow-500">
+        <span className="flex justify-start gap-x-2 text-amber-600 font-semibold dark:text-yellow-500">
           Delayed
         </span>
       );
