@@ -52,8 +52,12 @@ export default function PickOptions({
   const alreadyPicked = gamePick !== undefined && game.id === gamePick.gameID;
   const isDisabled = alreadyPicked || isAfterStartTime(game);
 
-  const pickedAway = alreadyPicked && !gamePick?.pickedHome;
-  const pickedHome = alreadyPicked && gamePick?.pickedHome;
+  const pickedAway =
+    field.value === game.awayTeam_id.toString() ||
+    (alreadyPicked && !gamePick?.pickedHome);
+  const pickedHome =
+    field.value === game.homeTeam_id.toString() ||
+    (alreadyPicked && gamePick?.pickedHome);
 
   if (!teams || !awayTeam || !homeTeam) return null;
 
