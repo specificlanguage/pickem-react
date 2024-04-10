@@ -45,6 +45,7 @@ export const useFetchTeams = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["teams"],
     queryFn: getAllTeamInfo,
+    staleTime: Infinity,
   });
   return { data, isLoading, isError, teams: data };
 };

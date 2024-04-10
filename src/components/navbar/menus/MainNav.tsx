@@ -7,8 +7,8 @@ import NavLink from "@/components/navbar/NavLink";
 
 export default function MainNav() {
   return (
-    <NavigationMenu className="text-lg my-2 mx-4 container flex">
-      <NavigationMenuList className="lg:space-x-10 sm:space-x-4 md:flex">
+    <NavigationMenu className="text-lg container flex">
+      <NavigationMenuList className="lg:space-x-10 sm:space-x-4 flex items-center">
         <NavigationMenuItem>
           <NavLink href="/" className="text-2xl font-bold">
             Pick'ems

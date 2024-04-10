@@ -55,9 +55,12 @@ export default function GameTeamDisplay({
 
   return (
     <div className={className + " space-y-4 mx-2"}>
-      <div className="flex justify-between text-lg" onClick={onClick}>
+      <div
+        className="flex justify-between text-lg items-center"
+        onClick={onClick}
+      >
         {awayTeam ? (
-          <div className="flex justify-between gap-2">
+          <div className="flex flex-row justify-between gap-2 items-center">
             <TeamLogo
               imageOrientation={"left"}
               label={getDisplay(awayTeam)}
@@ -76,7 +79,7 @@ export default function GameTeamDisplay({
         )}
         {game.status?.status !== "SCHEDULED" &&
           game.status?.status !== "POSTPONED" && (
-            <div className="flex justify-between gap-x-2">
+            <div className="flex justify-between gap-x-2 items-center">
               <p className="text-2xl font-sans">{game.status?.awayScore}</p>
             </div>
           )}
@@ -102,7 +105,7 @@ export default function GameTeamDisplay({
         )}
         {game.status?.status !== "SCHEDULED" &&
           game.status?.status !== "POSTPONED" && (
-            <div className="flex justify-between gap-x-2">
+            <div className="flex justify-between gap-x-2 items-center">
               <p className="text-2xl font-sans">{game.status?.homeScore}</p>
             </div>
           )}

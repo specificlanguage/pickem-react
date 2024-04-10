@@ -8,7 +8,7 @@ export function RecordDisplay({ teamID }: { teamID: number }) {
   const record = getTeamRecord(teamID, standings);
 
   return (
-    <div className="flex flex-col justify-center">
+    <div className="flex flex-col justify-center items-center">
       <div className="text-sm">
         ({record.wins}-{record.losses})
       </div>

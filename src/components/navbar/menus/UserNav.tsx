@@ -11,9 +11,11 @@ import ProfileDropdown from "@/components/navbar/menus/profile-dropdown.tsx";
 
 export default function UserNav() {
   return (
-    <NavigationMenu className="text-lg my-2 mx-4 container flex">
-      <NavigationMenuList className="lg:space-x-10 sm:space-x-6 md:flex">
-        <ProfileDropdown />
+    <NavigationMenu className="text-lg container flex items-center">
+      <NavigationMenuList className="lg:space-x-10 sm:space-x-6 flex align-middle">
+        <NavigationMenuItem>
+          <ProfileDropdown />
+        </NavigationMenuItem>
         <NavigationMenuItem>
           <SignedOut>
             <div className={"space-x-6"}>

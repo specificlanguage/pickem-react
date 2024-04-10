@@ -27,10 +27,10 @@ export function PreviousPickCard({ game, pick }: PreviousPickCardProps) {
   return (
     <Card>
       <CardContent className="p-0 m-0 space-y-2">
-        <div className="flex flex-row space-x-4 p-1">
-          <div className="basis-5/12 flex justify-between space-x-2 p-2">
+        <div className="flex flex-row space-x-4">
+          <div className="basis-5/12 flex justify-between space-x-2 pl-2 items-center">
             {/* Away team */}
-            <div className="flex justify-start space-x-2">
+            <div className="flex justify-start space-x-2 items-center">
               <TeamLogo
                 imageOrientation={"left"}
                 label={awayTeam.teamName}
@@ -39,22 +39,20 @@ export function PreviousPickCard({ game, pick }: PreviousPickCardProps) {
                 imageScheme="spot"
               />
               {prefs?.favoriteTeam_id === awayTeam.id && <FavoriteTeamIcon />}
-              <p className="leading-8">
-                <PickedIcon game={game} pick={pick} displayAway={true} />
-              </p>
+              <PickedIcon game={game} pick={pick} displayAway={true} />
             </div>
-            <p className="text-xl font-bold leading-8">
+            <span className="text-xl font-bold leading-8">
               {game.away_score === undefined ? null : game.away_score}
-            </p>
+            </span>
           </div>
 
-          <div className="basis-1/16 py-2">
+          <div className="basis-1/16 m-2">
             <Separator orientation="vertical" />
           </div>
 
           {/* Home team */}
-          <div className="basis-5/12 flex justify-between space-x-2 p-2">
-            <div className="flex justify-start space-x-2">
+          <div className="basis-5/12 flex justify-between space-x-2 pl-2 items-center">
+            <div className="flex justify-start space-x-2 items-center">
               <TeamLogo
                 imageOrientation={"left"}
                 label={homeTeam.teamName}
@@ -67,9 +65,9 @@ export function PreviousPickCard({ game, pick }: PreviousPickCardProps) {
                 <PickedIcon game={game} pick={pick} displayAway={false} />
               </p>
             </div>
-            <p className="text-xl font-bold leading-8">
+            <span className="text-xl font-bold">
               {game.home_score === undefined ? null : game.home_score}
-            </p>
+            </span>
           </div>
           <div className="basis-1/16 py-2">
             <Separator orientation="vertical" />

@@ -7,7 +7,7 @@ export interface TeamLogoProps {
   useLabel?: "none" | "city" | "team" | "abbr";
   imageScheme?: "spot" | "light" | "dark";
   imageOrientation?: "left" | "right" | "middle";
-  textSize?: "sm" | "md" | "lg";
+  textSize?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
 }
 
 export function TeamLogo({
@@ -33,38 +33,32 @@ export function TeamLogo({
   }
 
   const labelElement = (
-    <div className={`ml-2 text-center leading-[${finalHeight}px]`}>
-      <p
-        className={
-          `inline-block align-middle leading-[${finalHeight}px] text-` +
-          finalSize
-        }
-      >
-        {label ? (
-          label
-        ) : (
-          <>
-            {useLabel === "city" && team.cityName}
-            {useLabel === "team" && team.name}
-            {useLabel === "abbr" && team.abbr}
-          </>
-        )}
-      </p>
-    </div>
+    <span className={`text-${finalSize}`}>
+      {label ? (
+        label
+      ) : (
+        <>
+          {useLabel === "city" && team.cityName}
+          {useLabel === "team" && team.name}
+          {useLabel === "abbr" && team.abbr}
+        </>
+      )}
+    </span>
   );
 
   return (
-    <div className="flex justify-start">
+    <div
+      className={`flex justify-start h-${finalHeight}px flex-row gap-2 items-center`}
+    >
       {(useLabel || label) && imageOrientation === "right"
         ? labelElement
         : null}
       <img
         className={
-          imageOrientation === "middle"
-            ? "mx-auto"
-            : "" +
-              ` w-[${finalHeight}px] h-[${finalHeight}px] mt-0.5 align-middle`
+          imageOrientation === "middle" ? "mx-auto" : "" + ` my-1 align-middle`
         }
+        width={`${finalHeight}px`}
+        height={`${finalHeight}px`}
         src={logoURL}
         alt={team.name}
       />

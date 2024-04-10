@@ -84,9 +84,9 @@ export default function PickOptions({
             ${isDisabled ? "opacity-50" : ""}`}
           >
             {awayTeam ? (
-              <div className="leading-5 flex justify-between w-full space-x-0.5">
+              <div className="leading-5 flex justify-between w-full space-x-0.5 items-center">
                 <div
-                  className="flex justify-start space-x-2"
+                  className="flex flex-row justify-start space-x-2 items-center"
                   id="pick-option-home-logo"
                 >
                   <TeamLogo
@@ -136,7 +136,7 @@ export default function PickOptions({
             {homeTeam ? (
               <div className="flex justify-between w-full space-x-0.5 leading-5">
                 <div
-                  className="flex justify-start space-x-2"
+                  className="flex justify-start space-x-2 items-center"
                   id="pick-option-home-logo"
                 >
                   <TeamLogo
