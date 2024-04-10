@@ -25,6 +25,14 @@ export interface AllUsersResponse {
   };
 }
 
+export interface AllUserInfo {
+  id: string;
+  username: string;
+  image_url: string;
+  description: string;
+  favoriteTeam_id: number;
+}
+
 /** Set user preferences from a user's uid. */
 export async function setPreferences(token: string, preferences: Preferences) {
   return axios.put(
@@ -71,6 +79,8 @@ export function usePrefs(token: Promise<string | null>, uid: string | null) {
   return { data, isLoading, isError, prefs: data };
 }
 
-export function getUser() {
-  return axios.get(formatAPIPath("/users/me")).then((r) => r.data);
+export function getUser(uidOrUsername: string) {
+  return axios
+    .get(formatAPIPath("/users/" + uidOrUsername))
+    .then((r) => r.data as AllUserInfo);
 }

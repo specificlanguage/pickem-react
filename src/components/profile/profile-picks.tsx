@@ -7,12 +7,21 @@ import {
 import { PreviousPickCard } from "@/components/games/picks/previous-pick-card.tsx";
 import { format } from "date-fns-tz";
 import { parseISO } from "date-fns";
+import LoadingWheel from "@/components/loading-wheel.tsx";
 
 export default function ProfilePicks({ username }: { username: string }) {
-  const { data: picks } = useQuery({
-    queryKey: ["history"],
+  const { data: picks, isLoading } = useQuery({
+    queryKey: ["history", username],
     queryFn: () => getPickHistory(undefined, username),
   });
+
+  if (isLoading) {
+    return (
+      <div className="my-8">
+        <LoadingWheel size={48} />
+      </div>
+    );
+  }
 
   if (!picks) {
     // TODO: make temporary UI to show this user has made no picks
@@ -46,7 +55,7 @@ export function ProfilePicksDate({
   const localDate = parseISO(date);
   return (
     <div>
-      <h2 className="text-2xl my-4">
+      <h2 className="text-xl my-4">
         {format(localDate, "MMMM d", { timeZone: "Etc/UTC" })}
       </h2>
       <div className="space-y-2">
