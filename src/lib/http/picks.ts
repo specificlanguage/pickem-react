@@ -57,6 +57,16 @@ export interface LeaderboardResponse {
   }[];
 }
 
+export interface HistoryPick {
+  userID: string;
+  gameID: number;
+  pickedHome: boolean;
+  isSeries: boolean;
+  isSession: boolean;
+  correct: boolean;
+  game: Game;
+}
+
 /**
  * A hook that allows fetches the picks for a specific date.
  * @param date - Date
@@ -274,17 +284,6 @@ export async function getPicksOnDate(
     .catch(() => null);
 }
 
-export async function getMultiplePicks(gameIDs: number[], token: string) {
-  console.log(gameIDs.join("&gameID="));
-  return await axios
-    .get(
-      formatAPIPath(`/picks/user?gameID=${gameIDs.join("&gameID=")}`),
-      authHeader(token),
-    )
-    .then((res) => res.data as GamePick[])
-    .catch(() => null);
-}
-
 /**
  * Submits a pick for a single game.
  * @param pick - The pick for the game. See the interface for more details.
@@ -301,17 +300,6 @@ export async function submitPick(pick: GamePick, token: string) {
     .catch(() => false);
 }
 
-export async function getAllPicksForGames(gameIDs: number[]) {
-  return await axios
-    .get(
-      formatAPIPath(
-        `/picks/all?gameID=${gameIDs.join("&gameID=")}&isSeries=false`,
-      ),
-    ) // TODO: Implement series
-    .then((res) => res.data)
-    .catch(() => null);
-}
-
 export async function getAllPicks(gameID: number) {
   return await axios
     .get(formatAPIPath(`/picks/all?gameID=${gameID}&isSeries=false`))
@@ -324,4 +312,35 @@ export async function getLeaderboard() {
     .get(formatAPIPath("/picks/leaderboard"))
     .then((res) => res.data as LeaderboardResponse)
     .catch(() => null);
+}
+
+export async function getPickHistory(userID?: string, username?: string) {
+  if (!userID && !username) {
+    return null;
+  }
+
+  return await axios
+    .get(
+      formatAPIPath(
+        `/picks/user/history?${userID ? `userID=${userID}` : `username=${username}`}`,
+      ),
+    )
+    .then((res) => res.data as HistoryPick[])
+    .catch(() => null);
+}
+
+export function convertHistoryPickToGamePick(historyPick: HistoryPick) {
+  return {
+    gameID: historyPick.gameID,
+    pickedHome: historyPick.pickedHome,
+    isSeries: historyPick.isSeries,
+  } as GamePick;
+}
+
+export function convertHistoryPickToGame(historyPick: HistoryPick) {
+  return {
+    ...historyPick.game,
+    series_num: 0, // Temporary, please change
+    venue: "",
+  } as Game;
 }
