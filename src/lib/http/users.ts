@@ -70,3 +70,7 @@ export function usePrefs(token: Promise<string | null>, uid: string | null) {
   });
   return { data, isLoading, isError, prefs: data };
 }
+
+export function getUser() {
+  return axios.get(formatAPIPath("/users/me")).then((r) => r.data);
+}

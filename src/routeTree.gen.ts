@@ -9,6 +9,7 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const SignupComponentImport = new FileRoute('/signup').createRoute()
+const SettingsComponentImport = new FileRoute('/settings').createRoute()
 const SessionComponentImport = new FileRoute('/session').createRoute()
 const LoginComponentImport = new FileRoute('/login').createRoute()
 const LeaderboardComponentImport = new FileRoute('/leaderboard').createRoute()
@@ -29,6 +30,16 @@ const SignupComponentRoute = SignupComponentImport.update({
 } as any).update({
   component: lazyRouteComponent(
     () => import('./routes/signup.component'),
+    'component',
+  ),
+})
+
+const SettingsComponentRoute = SettingsComponentImport.update({
+  path: '/settings',
+  getParentRoute: () => rootRoute,
+} as any).update({
+  component: lazyRouteComponent(
+    () => import('./routes/settings.component'),
     'component',
   ),
 })
@@ -127,6 +138,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SessionComponentImport
       parentRoute: typeof rootRoute
     }
+    '/settings': {
+      preLoaderRoute: typeof SettingsComponentImport
+      parentRoute: typeof rootRoute
+    }
     '/signup': {
       preLoaderRoute: typeof SignupComponentImport
       parentRoute: typeof rootRoute
@@ -150,6 +165,7 @@ export const routeTree = rootRoute.addChildren([
   LeaderboardComponentRoute,
   LoginComponentRoute,
   SessionComponentRoute,
+  SettingsComponentRoute,
   SignupComponentRoute,
   ProfileUsernameComponentRoute,
   UserOnboardingComponentRoute,
