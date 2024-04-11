@@ -1,7 +1,7 @@
 import LoadingWheel from "@/components/loading-wheel.tsx";
 import SessionForm from "@/components/forms/sessions/session-form.tsx";
 import { useFetchSession } from "@/lib/http/picks.ts";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { format } from "date-fns-tz";
 import { PreviousPickCard } from "@/components/games/picks/previous-pick-card.tsx";
 import { add, isSameDay, startOfToday, sub } from "date-fns";
@@ -15,6 +15,9 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import { FaArrowRight } from "react-icons/fa6";
+import { Link } from "@tanstack/react-router";
 
 export default function SessionPage() {
   const date = startOfToday();
@@ -107,18 +110,34 @@ function SessionPickForm({ date }: { date: Date }) {
 
 function PreviousPicks({ date }: { date: Date }) {
   const { getToken } = useAuth();
+  const { user } = useUser();
 
   const { isLoading, session } = useFetchSession(date, getToken);
 
   if (isLoading) {
     return null;
   }
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="justify-center max-w-xl mx-auto mt-8 space-y-2">
-      <h4 className="font-bold text-lg mt-4">
-        Yesterday's games ({format(date, "PPP")}):
-      </h4>
+      <div className="flex flex-row justify-between items-center">
+        <h4 className="font-bold text-lg">
+          Yesterday's games ({format(date, "PPP")}):
+        </h4>
+
+        <Link
+          to="/profile/$username"
+          params={{ username: user.username ?? "" }}
+        >
+          <Button variant="ghost" className="h-7.5 dark:text-white text-black">
+            See more
+            <FaArrowRight className="ml-2" />
+          </Button>
+        </Link>
+      </div>
       {session?.games
         .sort(
           (g1, g2) =>

@@ -39,7 +39,7 @@ export const HollowCheckedIcon = () => (
         </span>
       </TooltipTrigger>
       <TooltipContent>
-        <p>Your pick</p>
+        <p>Picked team</p>
       </TooltipContent>
     </Tooltip>
   </TooltipProvider>

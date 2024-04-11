@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table.tsx";
 import { Avatar } from "@/components/ui/avatar.tsx";
 import { AvatarImage } from "@radix-ui/react-avatar";
+import { Link } from "@tanstack/react-router";
 
 export const leaderboardColumns: ColumnDef<LeaderboardRow>[] = [
   {
@@ -78,11 +79,16 @@ export default function LeaderboardView() {
           <TableRow key={index} className="p-2">
             <TableCell>{index + 1}</TableCell>
             <TableCell>
-              <div className="flex justify-left gap-4">
+              <div className="flex justify-left gap-4 items-center">
                 <UserAvatar imageURL={users.users[leader.userID].image_url} />
-                <p className="leading-7 font-bold">
-                  {users.users[leader.userID].username}
-                </p>
+                <Link
+                  to="/profile/$username"
+                  params={{ username: users.users[leader.userID].username }}
+                >
+                  <span className="font-bold hover:underline underline-offset-2">
+                    {users.users[leader.userID].username}
+                  </span>
+                </Link>
               </div>
             </TableCell>
             <TableCell>{leader.correctPicks}</TableCell>
