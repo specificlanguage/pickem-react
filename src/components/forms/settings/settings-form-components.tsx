@@ -16,12 +16,12 @@ import {
   FaFlag,
 } from "react-icons/fa6";
 
-export function FavoriteTeamSelection() {
+export function FavoriteTeamSelection({ className }: { className?: string }) {
   const { teams } = useFetchTeams();
 
   return (
     <>
-      <FormControl>
+      <FormControl className={className ?? ""}>
         <SelectTrigger>
           <SelectValue placeholder="Choose team..." className="text-gray-500" />
         </SelectTrigger>
@@ -57,7 +57,7 @@ export function FavoriteTeamSelection() {
   );
 }
 
-export function FrequencySelection() {
+export function FrequencySelection({ className }: { className?: string }) {
   function SeriesFrequency() {
     return (
       <SelectItem value="series" disabled>
@@ -100,7 +100,7 @@ export function FrequencySelection() {
 
   return (
     <>
-      <FormControl>
+      <FormControl className={className ?? ""}>
         <SelectTrigger>
           <SelectValue placeholder="Choose team..." className="text-gray-500" />
         </SelectTrigger>
@@ -190,10 +190,46 @@ export function FrequencyDescription({ value }: { value: string }) {
       );
       break;
     default:
-      break;
+      descriptionComponent = (
+        <>
+          <p className="text-sm">
+            You'll see more information about the frequency you pick here.
+          </p>
+        </>
+      );
   }
 
   return (
     <div className="my-2 text-muted-foreground">{descriptionComponent}</div>
   );
+}
+
+export function ConfirmationMessage({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <p className="text-green-700 dark:text-green-500">{children}</p>;
+}
+
+export function ErrorMessage({ children }: { children: React.ReactNode }) {
+  return <p className="text-destructive">{children}</p>;
+}
+
+export function FormFeedbackMessage({
+  message,
+  isError,
+}: {
+  message?: string;
+  isError: boolean;
+}) {
+  if (isError) {
+    return (
+      <ErrorMessage>
+        {message ?? "Something went wrong, try again later."}
+      </ErrorMessage>
+    );
+  } else {
+    return <ConfirmationMessage>{message ?? "Submitted!"}</ConfirmationMessage>;
+  }
 }

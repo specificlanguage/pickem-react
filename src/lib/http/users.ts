@@ -3,14 +3,16 @@ import { authHeader, formatAPIPath } from "@/lib/http/utils.ts";
 import { useQuery } from "@tanstack/react-query";
 
 interface Preferences {
-  favoriteTeam: number;
-  selectionTiming: string;
+  favoriteTeam?: number;
+  selectionTiming?: string;
+  description?: string;
 }
 
 export interface PreferencesResult {
   favoriteTeam_id: number;
   id: string;
   selectionTiming: string;
+  description: string;
 }
 
 export interface UserInfoObject {
