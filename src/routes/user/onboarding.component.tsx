@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import OnboardingForm from "@/components/forms/onboarding/onboarding-form.tsx";
+import OnboardingForm from "@/components/forms/settings/onboarding-form.tsx";
 // import { useAuth } from "@clerk/clerk-react";
 // import { useNavigate } from "@tanstack/react-router";
 import AuthLayout from "@/layouts/auth-layout.tsx";
