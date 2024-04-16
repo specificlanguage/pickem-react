@@ -46,7 +46,7 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
 
   if (!status) {
     if (game.finished) {
-      return <span className="text-lime-950">Final</span>;
+      return <span>Final</span>;
     } else {
       const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
       const zonedDate = utcToZonedTime(
@@ -57,8 +57,8 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
         .replace("DT", "T")
         .replace("ST", "T");
       return (
-        <span className="text-lime-950">
-          <FaClock className="mt-1" />
+        <span className="flex justify-start gap-x-2 items-center">
+          <FaClock />
           {timeDisplay}
         </span>
       );
@@ -78,17 +78,13 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
     }
 
     return (
-      <span className="flex justify-start gap-x-2">
-        <p className="mt-1">
-          <FaClock />
-        </p>
-        <p>
-          {format(zonedTime, "h:mmaa zzz", {
-            timeZone,
-          })
-            .replace("DT", "T")
-            .replace("ST", "T")}
-        </p>
+      <span className="flex justify-start gap-x-2 items-center">
+        <FaClock />
+        {format(zonedTime, "h:mmaa zzz", {
+          timeZone,
+        })
+          .replace("DT", "T")
+          .replace("ST", "T")}
       </span>
     );
   }
@@ -116,7 +112,7 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
           );
         } else {
           return (
-            <div className="flex justify-between gap-x-3 mr-2 text-lime-800 dark:text-green-500">
+            <div className="flex justify-between gap-x-3 text-lime-800 dark:text-green-500">
               <span>Top {getOrdinalSuffix(status.currentInning ?? 0)}</span>
               <BaseDisplay
                 bases={{
@@ -138,7 +134,7 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
           );
         } else {
           return (
-            <div className="flex justify-between gap-x-3 mr-2 text-lime-800 dark:text-green-500">
+            <div className="flex justify-between gap-x-3 text-lime-800 dark:text-green-500">
               <span>Bot {getOrdinalSuffix(status.currentInning ?? 0)}</span>
               <BaseDisplay
                 bases={{

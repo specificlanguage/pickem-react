@@ -35,7 +35,7 @@ interface GameInfoCollapsibleProps {
  * @param zonedDate - zoned time object that gets passed by the GameInfo component
  * @constructor
  */
-function GameInfoVertical({ game, className, zonedDate }: GameInfoProps) {
+function GameInfoVertical({ game, zonedDate }: GameInfoProps) {
   const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
 
   function StatusView({ game }: { game: Game }) {
@@ -48,20 +48,18 @@ function GameInfoVertical({ game, className, zonedDate }: GameInfoProps) {
     }
 
     return (
-      <>
-        <FaClock className="mt-1" />
+      <div className="flex justify-start gap-x-2 items-center w-full">
+        <FaClock />
         {timeDisplay}
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="flex h-full justify-start items-center">
-      <div className={"space-y-2 " + className}>
-        <p className="flex justify-start gap-x-2">
-          <StatusView game={game} />
-        </p>
-        <p className="flex justify-start gap-x-2">
+    <div className="flex h-full justify-start items-center mx-1">
+      <div className={"space-y-2 w-full my-2"}>
+        <StatusView game={game} />
+        <p className="flex justify-start gap-x-2 items-center">
           <FaLocationDot />
           {game.venue}
         </p>

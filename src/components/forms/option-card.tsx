@@ -41,7 +41,7 @@ export function OptionCard({
         htmlFor={value}
         className={
           `flex flex-col items-center justify-between \
-                      rounded-md border-2 border-muted bg-popover p-2.5 leading-8 relative peer \
+                      rounded-md border-2 border-muted bg-popover py-1 px-2 leading-8 relative peer \
                       ${fillPct === undefined ? "hover:bg-accent hover:text-accent-foreground" : ""} 
                       ${showHighlight ? "border-primary" : ""} 
                       ${disabled ? "opacity-50 hover:bg-popover hover:text-foreground" : ""}` +

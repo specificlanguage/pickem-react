@@ -35,7 +35,7 @@ export default function ProfileHeader({ username }: { username: string }) {
       <CardContent className="p-6">
         <div className="grid grid-rows-2 grid-flow-col gap-4">
           <div className="row-span-2 m-auto">
-            <Avatar className="w-24 h-24 md:w-50 md:h-50">
+            <Avatar className="w-32 h-32 md:w-50 md:h-50">
               <AvatarImage src={userInfo.image_url} />
             </Avatar>
           </div>

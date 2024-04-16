@@ -13,7 +13,7 @@ export default function GameTeamDisplay({
   game,
   pick,
   className,
-  defaultView = "team",
+  defaultView = "full",
   showRecord = false,
 }: {
   game: Game;
@@ -27,7 +27,7 @@ export default function GameTeamDisplay({
   const { teams } = useFetchTeams();
   const { prefs } = usePrefs(getToken(), userId ?? "");
 
-  const possibleViews = ["team", "abbr", "full"];
+  const possibleViews = ["team", "full"];
   const [teamView, setTeamView] = useState<number>(
     possibleViews.indexOf(defaultView) ?? 0,
   );
@@ -84,9 +84,9 @@ export default function GameTeamDisplay({
             </div>
           )}
       </div>
-      <div className={"flex justify-between text-lg "}>
+      <div className={"flex justify-between text-lg items-center"}>
         {homeTeam ? (
-          <div className="flex justify-between gap-2 ">
+          <div className="flex justify-between gap-2 items-center ">
             <TeamLogo
               imageOrientation={"left"}
               label={getDisplay(homeTeam)}

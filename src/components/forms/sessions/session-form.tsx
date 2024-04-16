@@ -64,7 +64,7 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
         {games.map((game, index) => (
           <div key={index}>
             <div className="flex flex-row gap-2 gap-x-1">
-              <div className="basis-8/12 m-2 self-center">
+              <div className="basis-[63%] m-2 self-center">
                 <FormField
                   control={form.control}
                   name={game.id.toString()}
@@ -86,10 +86,10 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
                   }
                 />
               </div>
-              <div className="basis-1/12">
+              <div className="mx-1">
                 <Separator orientation="vertical" />
               </div>
-              <div className="basis-4/12 my-4">
+              <div className="basis-[38%] my-auto w-full">
                 <GameInfo orientation={"vertical"} game={game} />
               </div>
             </div>
