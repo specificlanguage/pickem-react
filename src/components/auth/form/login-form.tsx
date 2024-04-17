@@ -16,6 +16,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { LuLoader2 } from "react-icons/lu";
 import { useState } from "react";
 import { useSignIn } from "@clerk/clerk-react";
+import { getUser } from "@/lib/http/users.ts";
 
 export function LoginForm() {
   const [isLoading, setLoading] = useState(false);
@@ -43,10 +44,15 @@ export function LoginForm() {
         identifier: values.username,
         password: values.password,
       })
-      .then((result) => {
+      .then(async (result) => {
         if (result.status === "complete") {
-          setActive({ session: result.createdSessionId });
-          navigate({ to: "/" });
+          await setActive({ session: result.createdSessionId });
+          const userInfo = await getUser(values.username);
+          if (userInfo == null) {
+            navigate({ to: "/user/onboarding" });
+          } else {
+            navigate({ to: "/" });
+          }
         } else {
           console.log(result);
           setLoading(false);

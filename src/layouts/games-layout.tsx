@@ -11,7 +11,7 @@ export default function GamesLayout({ children }: GamesLayoutProps) {
   return (
     <>
       <header className="w-full bg-neutral-300 text-black">
-        <div className="ml-auto flex justify-between max-w-6xl mx-auto p-2 gap-2">
+        <div className="ml-auto flex justify-between max-w-6xl mx-auto p-2 gap-2 h-16">
           <MainNav />
           <UserNav />
         </div>

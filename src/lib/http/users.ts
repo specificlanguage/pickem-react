@@ -84,5 +84,6 @@ export function usePrefs(token: Promise<string | null>, uid: string | null) {
 export function getUser(uidOrUsername: string) {
   return axios
     .get(formatAPIPath("/users/" + uidOrUsername))
-    .then((r) => r.data as AllUserInfo);
+    .then((r) => r.data as AllUserInfo)
+    .catch(() => null);
 }
