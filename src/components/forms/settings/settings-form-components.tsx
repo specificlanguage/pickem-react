@@ -62,7 +62,7 @@ export function FrequencySelection({ className }: { className?: string }) {
     return (
       <SelectItem value="series" disabled>
         <p className="flex justify-between items-center gap-x-2">
-          <FaCalendarWeek /> Series (currently disabled in Beta)
+          <FaCalendarWeek /> Series (coming soon!)
         </p>
       </SelectItem>
     );
