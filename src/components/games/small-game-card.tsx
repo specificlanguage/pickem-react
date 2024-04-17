@@ -1,23 +1,28 @@
-import { Card, CardContent } from "@/components/ui/card.tsx";
-import { Game } from "@/lib/http/games.ts";
-import { GamePick, useFetchSession } from "@/lib/http/picks.ts";
+import { useAuth } from "@clerk/clerk-react";
 import { getTeamFromList, useFetchTeams } from "@/lib/http/teams.ts";
+import { usePrefs } from "@/lib/http/users.ts";
+import { Card, CardContent } from "@/components/ui/card.tsx";
 import { TeamLogo } from "@/components/teams/logos.tsx";
 import { FavoriteTeamIcon, PickedIcon } from "@/components/games/icons.tsx";
-import { SiMlb } from "react-icons/si";
-import { Button } from "@/components/ui/button.tsx";
-import { useAuth, useUser } from "@clerk/clerk-react";
-import { usePrefs } from "@/lib/http/users.ts";
 import { Separator } from "@/components/ui/separator.tsx";
-import { Link } from "@tanstack/react-router";
-import { FaArrowRight } from "react-icons/fa6";
+import { Button } from "@/components/ui/button.tsx";
+import { SiMlb } from "react-icons/si";
+import { Game } from "@/lib/http/games.ts";
+import { GamePick } from "@/lib/http/picks.ts";
 
-interface PreviousPickCardProps {
+interface SmallGameCardProps {
   game: Game;
-  pick?: GamePick;
+  pick: GamePick;
+  retrieveStatus: boolean;
 }
 
-export function PreviousPickCard({ game, pick }: PreviousPickCardProps) {
+/**
+ * Will be customized soon, right now is similar to PreviousPickCard.
+ * @param game - The game to display
+ * @param pick - The pick for the game
+ * @constructor
+ */
+export function SmallGameCard({ game, pick }: SmallGameCardProps) {
   const { getToken, userId } = useAuth();
   const { data: teams } = useFetchTeams();
   const { prefs } = usePrefs(getToken(), userId ?? "");
@@ -89,62 +94,5 @@ export function PreviousPickCard({ game, pick }: PreviousPickCardProps) {
         </div>
       </CardContent>
     </Card>
-  );
-}
-
-export function PreviousPicks({
-  date,
-  title,
-  showProfileLink,
-}: {
-  date: Date;
-  title?: string;
-  showProfileLink?: boolean;
-}) {
-  const { getToken } = useAuth();
-  const { user } = useUser();
-
-  const { isLoading, session } = useFetchSession(date, getToken);
-
-  if (isLoading) {
-    return null;
-  }
-  if (!user) {
-    return null;
-  }
-
-  return (
-    <div className="justify-center mt-8 space-y-2">
-      <div className="flex flex-row justify-between items-center">
-        <h4 className="font-bold text-lg">{title}</h4>
-        {showProfileLink && (
-          <Link
-            to="/profile/$username"
-            params={{ username: user.username ?? "" }}
-          >
-            <Button
-              variant="ghost"
-              className="h-7.5 dark:text-white text-black"
-            >
-              See more
-              <FaArrowRight className="ml-2" />
-            </Button>
-          </Link>
-        )}
-      </div>
-      {session?.games
-        .sort(
-          (g1, g2) =>
-            new Date(g1.startTimeUTC).getTime() -
-            new Date(g2.startTimeUTC).getTime(),
-        )
-        .map((game) => (
-          <PreviousPickCard
-            key={game.id}
-            game={game}
-            pick={session?.picks.find((p) => p.gameID === game.id)}
-          />
-        ))}
-    </div>
   );
 }

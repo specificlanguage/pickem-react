@@ -1,9 +1,9 @@
 import LoadingWheel from "@/components/loading-wheel.tsx";
 import SessionForm from "@/components/forms/sessions/session-form.tsx";
 import { useFetchSession } from "@/lib/http/picks.ts";
-import { useAuth, useUser } from "@clerk/clerk-react";
+import { useAuth } from "@clerk/clerk-react";
 import { format } from "date-fns-tz";
-import { PreviousPickCard } from "@/components/games/picks/previous-pick-card.tsx";
+import { PreviousPicks } from "@/components/games/picks/previous-pick-card.tsx";
 import { add, isSameDay, startOfToday, sub } from "date-fns";
 import {
   joinGamesWithStatuses,
@@ -15,9 +15,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import { FaArrowRight } from "react-icons/fa6";
-import { Link } from "@tanstack/react-router";
 
 export default function SessionPage() {
   const date = startOfToday();
@@ -59,7 +56,10 @@ export default function SessionPage() {
         </TabsContent>
       </Tabs>
       <div className="mt-6">
-        <PreviousPicks date={yesterday} />
+        <PreviousPicks
+          date={yesterday}
+          title={`Yesterday's picks (${format(yesterday, "MMM d, yyyy")})`}
+        />
       </div>
     </div>
   );
@@ -105,52 +105,5 @@ function SessionPickForm({ date }: { date: Date }) {
         "No games today!"
       )}
     </>
-  );
-}
-
-function PreviousPicks({ date }: { date: Date }) {
-  const { getToken } = useAuth();
-  const { user } = useUser();
-
-  const { isLoading, session } = useFetchSession(date, getToken);
-
-  if (isLoading) {
-    return null;
-  }
-  if (!user) {
-    return null;
-  }
-
-  return (
-    <div className="justify-center max-w-xl mx-auto mt-8 space-y-2">
-      <div className="flex flex-row justify-between items-center">
-        <h4 className="font-bold text-lg">
-          Yesterday's games ({format(date, "PPP")}):
-        </h4>
-
-        <Link
-          to="/profile/$username"
-          params={{ username: user.username ?? "" }}
-        >
-          <Button variant="ghost" className="h-7.5 dark:text-white text-black">
-            See more
-            <FaArrowRight className="ml-2" />
-          </Button>
-        </Link>
-      </div>
-      {session?.games
-        .sort(
-          (g1, g2) =>
-            new Date(g1.startTimeUTC).getTime() -
-            new Date(g2.startTimeUTC).getTime(),
-        )
-        .map((game) => (
-          <PreviousPickCard
-            key={game.id}
-            game={game}
-            pick={session?.picks.find((p) => p.gameID === game.id)}
-          />
-        ))}
-    </div>
   );
 }

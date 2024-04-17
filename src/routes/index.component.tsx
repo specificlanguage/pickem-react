@@ -1,10 +1,9 @@
-import { SignedIn, SignedOut, useUser } from "@clerk/clerk-react";
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import GamesLayout from "@/layouts/games-layout.tsx";
 import { Helmet } from "react-helmet-async";
+import { HomePageAuthenticated, HomePageNoAuth } from "@/pages/home-page.tsx";
 
 export const component = function Index() {
-  const { user } = useUser();
-
   return (
     <GamesLayout>
       <Helmet>
@@ -12,10 +11,10 @@ export const component = function Index() {
       </Helmet>
       <div className="p-2">
         <SignedIn>
-          <h3>Welcome Home, {user?.username}!</h3>
+          <HomePageAuthenticated />
         </SignedIn>
         <SignedOut>
-          <h3>Welcome Home!</h3>
+          <HomePageNoAuth />
         </SignedOut>
       </div>
     </GamesLayout>
