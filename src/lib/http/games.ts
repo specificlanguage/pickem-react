@@ -92,6 +92,16 @@ export function useFetchStatusesByDate(date: Date, enabled: boolean) {
   return { statuses };
 }
 
+export function useFetchSingleGameStatus(gameID: number) {
+  return useQuery({
+    queryKey: ["game", gameID],
+    queryFn: () =>
+      axios
+        .get(formatAPIPath(`/games/status/${gameID}`))
+        .then((res) => res.data),
+  });
+}
+
 /**
  * Get games by date from the API.
  * @param queryKey - The query key, formatted as ["games", {year: number, month: number, day: number}]

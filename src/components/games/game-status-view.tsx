@@ -3,6 +3,7 @@ import { format, utcToZonedTime } from "date-fns-tz";
 import { FaCircle, FaClock, FaDiamond, FaRegCircle } from "react-icons/fa6";
 import { GoDiamond } from "react-icons/go";
 import { addMinutes, isAfter } from "date-fns";
+import { TimeDisplay } from "@/components/games/icons.tsx";
 
 function getOrdinalSuffix(n: number) {
   const s = ["th", "st", "nd", "rd"];
@@ -12,7 +13,7 @@ function getOrdinalSuffix(n: number) {
 
 function OutsDisplay({ outs }: { outs?: number }) {
   return (
-    <span className="flex justify-between mt-1.5 gap-0.5">
+    <span className="flex justify-between gap-0.5">
       {Array.from(new Array(outs ?? 0)).map((_, index) => (
         <FaCircle key={index} size={10} />
       ))}
@@ -41,7 +42,13 @@ function BaseDisplay({
   );
 }
 
-export function GameStatusInningInfo({ game }: { game: Game }) {
+export function GameStatusInningInfo({
+  game,
+  omitBases,
+}: {
+  game: Game;
+  omitBases?: boolean;
+}) {
   const status = game.status;
 
   if (!status) {
@@ -53,15 +60,7 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
         new Date(game.startTimeUTC + "Z"),
         timeZone,
       );
-      const timeDisplay = format(zonedDate, "h:mmaa zzz", { timeZone })
-        .replace("DT", "T")
-        .replace("ST", "T");
-      return (
-        <span className="flex justify-start gap-x-2 items-center">
-          <FaClock />
-          {timeDisplay}
-        </span>
-      );
+      return <TimeDisplay zonedTime={zonedDate} />;
     }
   }
 
@@ -112,15 +111,17 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
           );
         } else {
           return (
-            <div className="flex justify-between gap-x-3 text-lime-800 dark:text-green-500">
+            <div className="flex justify-between gap-x-3 text-lime-800 dark:text-green-500 items-center">
               <span>Top {getOrdinalSuffix(status.currentInning ?? 0)}</span>
-              <BaseDisplay
-                bases={{
-                  first: status.onFirst ?? false,
-                  second: status.onSecond ?? false,
-                  third: status.onThird ?? false,
-                }}
-              />
+              {omitBases ? null : (
+                <BaseDisplay
+                  bases={{
+                    first: status.onFirst ?? false,
+                    second: status.onSecond ?? false,
+                    third: status.onThird ?? false,
+                  }}
+                />
+              )}
               <OutsDisplay outs={status.outs ?? 0} />
             </div>
           );
@@ -134,15 +135,17 @@ export function GameStatusInningInfo({ game }: { game: Game }) {
           );
         } else {
           return (
-            <div className="flex justify-between gap-x-3 text-lime-800 dark:text-green-500">
+            <div className="flex justify-between gap-x-3 text-lime-800 dark:text-green-500 items-center">
               <span>Bot {getOrdinalSuffix(status.currentInning ?? 0)}</span>
-              <BaseDisplay
-                bases={{
-                  first: status.onFirst ?? false,
-                  second: status.onSecond ?? false,
-                  third: status.onThird ?? false,
-                }}
-              />
+              {omitBases ? null : (
+                <BaseDisplay
+                  bases={{
+                    first: status.onFirst ?? false,
+                    second: status.onSecond ?? false,
+                    third: status.onThird ?? false,
+                  }}
+                />
+              )}
               <OutsDisplay outs={status.outs ?? 0} />
             </div>
           );

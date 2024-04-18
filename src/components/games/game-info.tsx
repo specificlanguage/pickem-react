@@ -1,10 +1,9 @@
 import { Game } from "@/lib/http/games.ts";
-import { format, utcToZonedTime } from "date-fns-tz";
+import { utcToZonedTime } from "date-fns-tz";
 import {
   FaArrowDown,
   FaArrowUp,
   FaCircle,
-  FaClock,
   FaLocationDot,
 } from "react-icons/fa6";
 import MarqueeBadge from "@/components/games/marquee-badge.tsx";
@@ -16,6 +15,7 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { GameStatusInningInfo } from "@/components/games/game-status-view.tsx";
+import { TimeDisplay } from "@/components/games/icons.tsx";
 
 interface GameInfoProps {
   game: Game;
@@ -36,23 +36,12 @@ interface GameInfoCollapsibleProps {
  * @constructor
  */
 function GameInfoVertical({ game, zonedDate }: GameInfoProps) {
-  const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
-
   function StatusView({ game }: { game: Game }) {
-    const timeDisplay = format(zonedDate, "h:mmaa zzz", { timeZone })
-      .replace("DT", "T")
-      .replace("ST", "T");
-
     if (game.status) {
       return <GameStatusInningInfo game={game} />;
     }
 
-    return (
-      <div className="flex justify-start gap-x-2 items-center w-full">
-        <FaClock />
-        {timeDisplay}
-      </div>
-    );
+    return <TimeDisplay zonedTime={zonedDate} />;
   }
 
   return (
@@ -84,8 +73,6 @@ function GameInfoVertical({ game, zonedDate }: GameInfoProps) {
  */
 
 function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
-  const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
-
   /**
    * CircleDivider -- a simple component to render a circle divider
    * @constructor
@@ -109,13 +96,8 @@ function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
         </div>
       )}
       <div className={"flex justify-center space-x-2 p-2 " + className}>
-        <p>{game.id}</p>
-        <p className="flex justify-start gap-x-2">
-          <FaClock className="mt-1" />
-          {format(zonedDate, "h:mmaa zzz", { timeZone })
-            .replace("DT", "T")
-            .replace("ST", "T")}
-        </p>
+        <p>ID: {game.id}</p>
+        <TimeDisplay zonedTime={zonedDate} />
         <CircleDivider />
         <p className="flex justify-start gap-x-2">
           <FaLocationDot className="mt-1" />

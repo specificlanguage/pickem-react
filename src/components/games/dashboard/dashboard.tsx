@@ -19,9 +19,9 @@ import { useFetchSession } from "@/lib/http/picks.ts";
 import { isBefore, startOfToday, sub } from "date-fns";
 import React from "react";
 import { Separator } from "@/components/ui/separator.tsx";
-import { PreviousPicks } from "@/components/games/picks/previous-pick-card.tsx";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
 import { format } from "date-fns-tz";
+import { SmallGameCardsByDate } from "@/components/games/small-game-card.tsx";
 
 function DashboardCard({
   title,
@@ -127,13 +127,13 @@ export default function Dashboard() {
         session.picks.length === 0 && !lastGameStarted ? (
           <NotPickedAlert />
         ) : (
-          <PreviousPicks
+          <SmallGameCardsByDate
             date={startOfToday()}
             title={`Today's games (${format(startOfToday(), "MMM d, yyyy")})`}
           />
         )
       ) : null}
-      <PreviousPicks date={yesterday} title={`Yesterday's picks`} />
+      <SmallGameCardsByDate date={yesterday} title={`Yesterday's picks`} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { FaStar } from "react-icons/fa6";
+import { FaClock, FaStar } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa";
 import {
   Tooltip,
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/tooltip.tsx";
 import { GamePick } from "@/lib/http/picks.ts";
 import { Game } from "@/lib/http/games.ts";
+import { format, utcToZonedTime } from "date-fns-tz";
 
 export const FavoriteTeamIcon = () => (
   <span className="text-yellow-500 inline-block align-middle">
@@ -65,4 +66,33 @@ export function PickedIcon({
     }
   }
   return <HollowCheckedIcon />;
+}
+
+export function TimeDisplay({
+  utcTime,
+  zonedTime,
+}: {
+  utcTime?: string | Date;
+  zonedTime?: Date;
+}) {
+  if (!utcTime && !zonedTime) {
+    return null;
+  }
+
+  let finalTime: Date;
+  const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
+
+  if (zonedTime) {
+    finalTime = zonedTime;
+  } else {
+    finalTime = utcToZonedTime(new Date(utcTime + "Z"), timeZone);
+  }
+  return (
+    <span className="flex justify-start gap-x-2 items-center w-full">
+      <FaClock className="mt-1" />
+      {format(finalTime, "h:mmaa zzz", { timeZone })
+        .replace("DT", "T")
+        .replace("ST", "T")}
+    </span>
+  );
 }

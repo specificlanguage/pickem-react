@@ -1,7 +1,7 @@
 import { useUser } from "@clerk/clerk-react";
-import { Link } from "@tanstack/react-router";
 import Dashboard from "@/components/games/dashboard/dashboard.tsx";
 import { Avatar, AvatarImage } from "@/components/ui/avatar.tsx";
+import { DashboardNoAuth } from "@/components/games/dashboard/dashboard-no-auth.tsx";
 
 export function HomePageAuthenticated() {
   const { user } = useUser();
@@ -25,12 +25,7 @@ export function HomePageNoAuth() {
       <h1 className="scroll-m-20 text-2xl font-bold lg:text-3xl">
         Welcome to Pick'ems!
       </h1>
-      <p className="text-lg">
-        <Link className="text-blue-500 hover:underline" to={"/login"}>
-          Sign in
-        </Link>{" "}
-        to get started.
-      </p>
+      <DashboardNoAuth />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { getTeamFromList, useFetchTeams } from "@/lib/http/teams.ts";
 import { usePrefs } from "@/lib/http/users.ts";
 import { Card, CardContent } from "@/components/ui/card.tsx";
@@ -7,13 +7,21 @@ import { FavoriteTeamIcon, PickedIcon } from "@/components/games/icons.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { SiMlb } from "react-icons/si";
-import { Game } from "@/lib/http/games.ts";
-import { GamePick } from "@/lib/http/picks.ts";
+import {
+  Game,
+  joinGamesWithStatuses,
+  useFetchStatusesByDate,
+} from "@/lib/http/games.ts";
+import { GamePick, useFetchSession } from "@/lib/http/picks.ts";
+import { GameStatusInningInfo } from "@/components/games/game-status-view.tsx";
+import { Link } from "@tanstack/react-router";
+import { FaArrowRight } from "react-icons/fa6";
+import { isToday } from "date-fns";
 
 interface SmallGameCardProps {
   game: Game;
-  pick: GamePick;
-  retrieveStatus: boolean;
+  pick?: GamePick;
+  retrieveStatus?: boolean;
 }
 
 /**
@@ -34,8 +42,8 @@ export function SmallGameCard({ game, pick }: SmallGameCardProps) {
   return (
     <Card>
       <CardContent className="p-0 m-0 space-y-2">
-        <div className="flex flex-row space-x-4">
-          <div className="basis-5/12 flex justify-between space-x-2 pl-2 items-center">
+        <div className="flex flex-row space-x-4 h-12">
+          <div className="basis-1/3 flex justify-between space-x-2 pl-2 items-center">
             {/* Away team */}
             <div className="flex justify-start space-x-2 items-center">
               <TeamLogo
@@ -50,15 +58,18 @@ export function SmallGameCard({ game, pick }: SmallGameCardProps) {
             </div>
             <span className="text-xl font-bold leading-8">
               {game.away_score === undefined ? null : game.away_score}
+              {game.status && game.status.status === "IN_PROGRESS"
+                ? game.status.awayScore
+                : null}
             </span>
           </div>
 
-          <div className="basis-1/16 m-2">
+          <div className=" m-2">
             <Separator orientation="vertical" />
           </div>
 
           {/* Home team */}
-          <div className="basis-5/12 flex justify-between space-x-2 pl-2 items-center">
+          <div className="basis-1/3 flex justify-between space-x-2 pl-2 items-center">
             <div className="flex justify-start space-x-2 items-center">
               <TeamLogo
                 imageOrientation={"left"}
@@ -74,25 +85,95 @@ export function SmallGameCard({ game, pick }: SmallGameCardProps) {
             </div>
             <span className="text-xl font-bold">
               {game.home_score === undefined ? null : game.home_score}
+              {game.status && game.status.status === "IN_PROGRESS"
+                ? game.status.homeScore
+                : null}
             </span>
           </div>
-          <div className="basis-1/16 py-2">
+          <div className="m-2">
             <Separator orientation="vertical" />
           </div>
-          <div className="flex justify-start m-2">
-            <a
-              href={`https://mlb.com/gameday/${game.id}/`}
-              target="_blank"
-              rel="noreferrer nofollow"
-            >
-              <Button className="bg-gray-600 hover:bg-gray-700 gap-x-1 p-0 px-2 mr-2">
-                <SiMlb size={22} />
-                <p className="text-sm">Box</p>
-              </Button>
-            </a>
+          <div className="flex justify-center m-2 items-center">
+            {game.finished ? (
+              <a
+                href={`https://mlb.com/gameday/${game.id}/`}
+                target="_blank"
+                rel="noreferrer nofollow"
+              >
+                <Button className="bg-gray-600 hover:bg-gray-700 gap-x-1 p-0 px-2 mr-2 h-9">
+                  <SiMlb size={22} />
+                  <p className="text-sm">Box</p>
+                </Button>
+              </a>
+            ) : (
+              <div className="text-sm items-center">
+                <GameStatusInningInfo game={game} omitBases={true} />
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+export function SmallGameCardsByDate({
+  date,
+  title,
+  showProfileLink,
+}: {
+  date: Date;
+  title?: string;
+  showProfileLink?: boolean;
+}) {
+  const { getToken } = useAuth();
+  const { user } = useUser();
+  const { isLoading, session } = useFetchSession(date, getToken);
+  const { statuses } = useFetchStatusesByDate(date, isToday(date));
+
+  if (isLoading) {
+    return null;
+  }
+  if (!user) {
+    return null;
+  }
+  if (statuses) {
+    joinGamesWithStatuses(session?.games ?? [], statuses);
+  }
+
+  return (
+    <div className="justify-center mt-8 space-y-2">
+      <div className="flex flex-row justify-between items-center">
+        <h4 className="font-bold text-lg">{title}</h4>
+        {showProfileLink && (
+          <Link
+            to="/profile/$username"
+            params={{ username: user.username ?? "" }}
+          >
+            <Button
+              variant="ghost"
+              className="h-7.5 dark:text-white text-black"
+            >
+              See more
+              <FaArrowRight className="ml-2" />
+            </Button>
+          </Link>
+        )}
+      </div>
+      {session?.games
+        .sort(
+          (g1, g2) =>
+            new Date(g1.startTimeUTC).getTime() -
+            new Date(g2.startTimeUTC).getTime(),
+        )
+        .map((game) => (
+          <SmallGameCard
+            key={game.id}
+            game={game}
+            pick={session?.picks.find((p) => p.gameID === game.id)}
+            retrieveStatus={isToday(date)}
+          />
+        ))}
+    </div>
   );
 }
