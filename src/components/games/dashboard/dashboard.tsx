@@ -43,18 +43,41 @@ function DashboardCard({
   );
 }
 
+export function StatsCards() {
+  const { user } = useUser();
+
+  const { data: userRecord } = useQuery({
+    queryKey: ["userRecord", user?.username, "week"],
+    queryFn: () => getUserRecord("week", user?.id),
+  });
+
+  return (
+    <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      <DashboardCard title={"Total picks (past week)"} icon={<FaCheck />}>
+        <div className="text-2xl font-bold">{userRecord?.total}</div>
+      </DashboardCard>
+      <DashboardCard
+        title={"Correct picks (past week)"}
+        icon={<FaCheckDouble />}
+      >
+        <div className="text-2xl font-bold">{userRecord?.correct}</div>
+        <p className="text-xs text-muted-foreground">
+          {Math.round(
+            ((userRecord?.correct ?? 0) / (userRecord?.total ?? 1)) * 100,
+          )}
+          % accuracy
+        </p>
+      </DashboardCard>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { user } = useUser();
   const { getToken } = useAuth();
   const date = startOfToday();
   const yesterday = sub(date, { days: 1 });
-
-  const { data: userRecord, isLoading } = useQuery({
-    queryKey: ["userRecord", user?.username, "week"],
-    queryFn: () => getUserRecord("week", user?.id),
-  });
-
-  const { session } = useFetchSession(date, getToken);
+  const { session, isLoading } = useFetchSession(date, getToken);
 
   const lastGameStarted = session
     ? isBefore(
@@ -65,28 +88,6 @@ export default function Dashboard() {
 
   if (isLoading) {
     return <LoadingSpinner size={48} />;
-  }
-
-  function DashboardCards() {
-    return (
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
-        <DashboardCard title={"Total picks (past week)"} icon={<FaCheck />}>
-          <div className="text-2xl font-bold">{userRecord?.total}</div>
-        </DashboardCard>
-        <DashboardCard
-          title={"Correct picks (past week)"}
-          icon={<FaCheckDouble />}
-        >
-          <div className="text-2xl font-bold">{userRecord?.correct}</div>
-          <p className="text-xs text-muted-foreground">
-            {Math.round(
-              ((userRecord?.correct ?? 0) / (userRecord?.total ?? 1)) * 100,
-            )}
-            % accuracy
-          </p>
-        </DashboardCard>
-      </div>
-    );
   }
 
   function NotPickedAlert() {
@@ -110,7 +111,7 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col space-y-4 w-full">
       <div className="space-2">
-        <DashboardCards />
+        <StatsCards />
         <div className="flex justify-end m-2">
           <Link
             to={"/profile/$username"}

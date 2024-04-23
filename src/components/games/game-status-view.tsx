@@ -111,7 +111,7 @@ export function GameStatusInningInfo({
           );
         } else {
           return (
-            <div className="flex justify-between gap-x-3 text-lime-800 dark:text-green-500 items-center">
+            <div className="flex justify-between gap-x-2 text-lime-800 dark:text-green-500 items-center">
               <span>Top {getOrdinalSuffix(status.currentInning ?? 0)}</span>
               {omitBases ? null : (
                 <BaseDisplay
@@ -135,7 +135,7 @@ export function GameStatusInningInfo({
           );
         } else {
           return (
-            <div className="flex justify-between gap-x-3 text-lime-800 dark:text-green-500 items-center">
+            <div className="flex justify-between gap-x-2 text-lime-800 dark:text-green-500 items-center">
               <span>Bot {getOrdinalSuffix(status.currentInning ?? 0)}</span>
               {omitBases ? null : (
                 <BaseDisplay

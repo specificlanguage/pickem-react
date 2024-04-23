@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import ProfilePicks from "@/components/profile/profile-picks.tsx";
 import ProfileHeader from "@/components/profile/profile-header.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
+import { StatsCards } from "@/components/games/dashboard/dashboard.tsx";
 
 interface ProfileParams {
   username: string; // user id
@@ -19,6 +20,7 @@ export const component = function Profile() {
       </Helmet>
       <div className="mx-auto max-w-2xl">
         <ProfileHeader username={username} />
+        <StatsCards />
         <h3 className="text-2xl mt-6 mb-2">Previous Picks</h3>
         <Separator />
         <ProfilePicks username={username} />

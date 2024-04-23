@@ -95,7 +95,11 @@ function GameInfoHorizontal({ game, className, zonedDate }: GameInfoProps) {
           <p>AB: {game.status.atBat}</p>
         </div>
       )}
-      <div className={"flex justify-center space-x-2 p-2 " + className}>
+      <div
+        className={
+          "flex justify-center items-center space-x-2 p-2 " + className
+        }
+      >
         <p>ID: {game.id}</p>
         <TimeDisplay zonedTime={zonedDate} />
         <CircleDivider />

@@ -88,7 +88,7 @@ export function TimeDisplay({
     finalTime = utcToZonedTime(new Date(utcTime + "Z"), timeZone);
   }
   return (
-    <span className="flex justify-start gap-x-2 items-center w-full">
+    <span className="flex justify-start gap-x-2 items-center">
       <FaClock className="mt-1" />
       {format(finalTime, "h:mmaa zzz", { timeZone })
         .replace("DT", "T")

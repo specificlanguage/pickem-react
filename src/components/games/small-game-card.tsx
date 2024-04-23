@@ -107,7 +107,7 @@ export function SmallGameCard({ game, pick }: SmallGameCardProps) {
               </a>
             ) : (
               <div className="text-sm items-center">
-                <GameStatusInningInfo game={game} omitBases={true} />
+                <GameStatusInningInfo game={game} />
               </div>
             )}
           </div>

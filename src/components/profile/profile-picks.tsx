@@ -4,10 +4,14 @@ import {
   getPickHistory,
   HistoryPick,
 } from "@/lib/http/picks.ts";
-import { PreviousPickCard } from "@/components/games/picks/previous-pick-card.tsx";
 import { format } from "date-fns-tz";
-import { parseISO } from "date-fns";
+import { isToday, parseISO } from "date-fns";
 import LoadingWheel from "@/components/loading-wheel.tsx";
+import { SmallGameCard } from "@/components/games/small-game-card.tsx";
+import {
+  joinGamesWithStatuses,
+  useFetchStatusesByDate,
+} from "@/lib/http/games.ts";
 
 export default function ProfilePicks({ username }: { username: string }) {
   const { data: picks, isLoading } = useQuery({
@@ -53,6 +57,13 @@ export function ProfilePicksDate({
   picks: HistoryPick[];
 }) {
   const localDate = parseISO(date);
+  const { statuses } = useFetchStatusesByDate(localDate, isToday(localDate));
+  if (statuses) {
+    joinGamesWithStatuses(
+      picks.map((p) => p.game),
+      statuses,
+    );
+  }
   return (
     <div>
       <h2 className="text-xl my-4">
@@ -60,7 +71,7 @@ export function ProfilePicksDate({
       </h2>
       <div className="space-y-2">
         {picks.map((pick) => (
-          <PreviousPickCard
+          <SmallGameCard
             game={pick.game}
             pick={convertHistoryPickToGamePick(pick)}
             key={pick.game.id}
