@@ -80,7 +80,9 @@ export default function GameTeamDisplay({
         {game.status?.status !== "SCHEDULED" &&
           game.status?.status !== "POSTPONED" && (
             <div className="flex justify-between gap-x-2 items-center">
-              <p className="text-2xl font-sans">{game.status?.awayScore}</p>
+              <p className="text-2xl font-sans">
+                {game.status ? game.status.awayScore : game.away_score}
+              </p>
             </div>
           )}
       </div>
@@ -106,7 +108,9 @@ export default function GameTeamDisplay({
         {game.status?.status !== "SCHEDULED" &&
           game.status?.status !== "POSTPONED" && (
             <div className="flex justify-between gap-x-2 items-center">
-              <p className="text-2xl font-sans">{game.status?.homeScore}</p>
+              <p className="text-2xl font-sans">
+                {game.status ? game.status.homeScore : game.home_score}
+              </p>
             </div>
           )}
       </div>
