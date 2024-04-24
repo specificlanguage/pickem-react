@@ -16,6 +16,8 @@ import { useAuth } from "@clerk/clerk-react";
 import GameTeamDisplay from "@/components/games/game-team-display.tsx";
 import { isAfterStartTime } from "@/lib/datetime/gameDates.ts";
 import { Separator } from "@/components/ui/separator.tsx";
+import { useQueryClient } from "@tanstack/react-query";
+import { startOfToday } from "date-fns";
 
 interface SessionFormProps {
   games: Game[];
@@ -26,6 +28,7 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
   const [isLoading, setLoading] = useState(false);
   const [playerPicks, setPlayerPicks] = useState<GamePick[]>(picks ?? []);
   const { getToken } = useAuth();
+  const qClient = useQueryClient();
 
   // Parser to create the fields for the schema.
   const fields = games
@@ -50,6 +53,17 @@ export default function SessionForm({ games, picks }: SessionFormProps) {
     setLoading(true);
     const submitPicks = transformFormDataToPicks(data, games);
     await submitSessionPicks(submitPicks, (await getToken()) ?? "");
+
+    qClient.invalidateQueries({
+      queryKey: [
+        "session",
+        {
+          year: startOfToday().getFullYear(),
+          month: startOfToday().getMonth() + 1,
+          day: startOfToday().getDate(),
+        },
+      ],
+    });
     setPlayerPicks(submitPicks);
     setLoading(false);
   }

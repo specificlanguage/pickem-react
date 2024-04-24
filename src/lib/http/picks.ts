@@ -131,7 +131,7 @@ export function useFetchSession(
         day: date.getDate(),
         token: getToken() ?? "",
       }),
-    refetchInterval: 1000 * 60,
+    staleTime: Infinity,
   });
 
   return { isLoading, isError, session, error };
