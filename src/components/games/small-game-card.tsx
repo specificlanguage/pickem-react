@@ -93,22 +93,23 @@ export function SmallGameCard({ game, pick }: SmallGameCardProps) {
           <div className="m-2">
             <Separator orientation="vertical" />
           </div>
-          <div className="flex justify-center m-2 items-center">
+          <div className="flex justify-center text-sm gap-x-2 m-2 items-center">
             {game.finished ? (
-              <a
-                href={`https://mlb.com/gameday/${game.id}/`}
-                target="_blank"
-                rel="noreferrer nofollow"
-              >
-                <Button className="bg-gray-600 hover:bg-gray-700 gap-x-1 p-0 px-2 mr-2 h-9">
-                  <SiMlb size={22} />
-                  <p className="text-sm">Box</p>
-                </Button>
-              </a>
+              <>
+                <a
+                  href={`https://mlb.com/gameday/${game.id}/`}
+                  target="_blank"
+                  rel="noreferrer nofollow"
+                >
+                  <Button className="bg-gray-600 hover:bg-gray-700 gap-x-1 p-0 px-2 mr-2 h-9">
+                    <SiMlb size={22} />
+                    <p className="text-sm">Box</p>
+                  </Button>
+                </a>
+                Final
+              </>
             ) : (
-              <div className="text-sm items-center">
-                <GameStatusInningInfo game={game} />
-              </div>
+              <GameStatusInningInfo game={game} />
             )}
           </div>
         </div>

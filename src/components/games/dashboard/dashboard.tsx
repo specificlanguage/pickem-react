@@ -22,6 +22,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
 import { format } from "date-fns-tz";
 import { SmallGameCardsByDate } from "@/components/games/small-game-card.tsx";
+import { MarqueeStatCard } from "@/components/games/dashboard/game-stats-card.tsx";
 
 function DashboardCard({
   title,
@@ -122,6 +123,7 @@ export default function Dashboard() {
             </span>
           </Link>
         </div>
+        <MarqueeStatCard />
       </div>
       <Separator />
       {session ? (

@@ -1,30 +1,15 @@
-import { Game } from "@/lib/http/games.ts";
+import { Game, GameStatus } from "@/lib/http/games.ts";
 import { utcToZonedTime } from "date-fns-tz";
-import {
-  FaArrowDown,
-  FaArrowUp,
-  FaCircle,
-  FaLocationDot,
-} from "react-icons/fa6";
+import { FaCircle, FaLocationDot } from "react-icons/fa6";
 import MarqueeBadge from "@/components/games/marquee-badge.tsx";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible.tsx";
-import { useState } from "react";
-import { Button } from "@/components/ui/button.tsx";
 import { GameStatusInningInfo } from "@/components/games/game-status-view.tsx";
 import { TimeDisplay } from "@/components/games/icons.tsx";
+import { CardFooter } from "@/components/ui/card.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
 
 interface GameInfoProps {
   game: Game;
   zonedDate: Date;
-  className?: string;
-}
-
-interface GameInfoCollapsibleProps {
-  game: Game;
   className?: string;
 }
 
@@ -158,30 +143,46 @@ export default function GameInfo({
   }
 }
 
-export function GameInfoCollapsible({
+export function StatusFooter({
+  status,
   game,
-  className,
-}: GameInfoCollapsibleProps) {
-  const [isOpen, setIsOpen] = useState(false);
+}: {
+  status: GameStatus | undefined;
+  venue: string;
+  game: Game;
+}) {
+  function ExtraStatusInfo() {
+    if (game.finished) {
+      return null; // TODO later: Add winning/losing pitchers
+    }
+    if (!status) {
+      return (
+        <>
+          <FaLocationDot />
+          <span>{game.venue}</span>
+        </>
+      );
+    }
+    if (status.outs === 3) {
+      return null;
+    }
+    return (
+      <>
+        <span>P: {status.currentPitcher}</span>
+        <Separator orientation={"vertical"} className="m-2" />
+        <span>AB: {status.atBat}</span>
+      </>
+    );
+  }
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger asChild>
-        <Button
-          variant="ghost"
-          className="hover:bg-background w-full m-0 py-0.5 h-6"
-        >
-          <div className="flex justify-between space-x-2">
-            <p>More info</p>
-            <span className="mt-1">
-              {isOpen ? <FaArrowUp /> : <FaArrowDown />}
-            </span>
-          </div>
-        </Button>
-      </CollapsibleTrigger>
-      <CollapsibleContent className="bg-accent">
-        <GameInfo game={game} className={className} />
-      </CollapsibleContent>
-    </Collapsible>
+    <CardFooter className="flex justify-between w-full pb-2">
+      <div className="flex justify-start space-x-2 text-sm items-center ">
+        <ExtraStatusInfo />
+      </div>
+      <div className="flex justify-end text-sm">
+        <GameStatusInningInfo game={game} />
+      </div>
+    </CardFooter>
   );
 }

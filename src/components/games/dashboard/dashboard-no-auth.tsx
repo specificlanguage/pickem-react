@@ -1,6 +1,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
 import { Link } from "@tanstack/react-router";
 import { IoPersonCircle } from "react-icons/io5";
+import { MarqueeStatCard } from "@/components/games/dashboard/game-stats-card.tsx";
 
 export function DashboardNoAuth() {
   function NotLoggedInAlert() {
@@ -26,6 +27,7 @@ export function DashboardNoAuth() {
   return (
     <div className="flex flex-col space-y-4 w-full">
       <NotLoggedInAlert />
+      <MarqueeStatCard />
     </div>
   );
 }

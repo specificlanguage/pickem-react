@@ -46,8 +46,8 @@ export function LoginForm() {
       })
       .then(async (result) => {
         if (result.status === "complete") {
-          await setActive({ session: result.createdSessionId });
           const userInfo = await getUser(values.username);
+          await setActive({ session: result.createdSessionId });
           if (userInfo == null) {
             navigate({ to: "/user/onboarding" });
           } else {

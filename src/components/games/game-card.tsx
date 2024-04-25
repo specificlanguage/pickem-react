@@ -1,10 +1,10 @@
 import { Game } from "@/lib/http/games.ts";
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import { GameInfoCollapsible } from "@/components/games/game-info.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { GameButtonsCol } from "@/components/games/game-buttons-col.tsx";
 import GameTeamDisplay from "@/components/games/game-team-display.tsx";
 import { GamePick } from "@/lib/http/picks.ts";
+import { StatusFooter } from "@/components/games/game-info.tsx";
 
 interface GameCardProps {
   game: Game;
@@ -14,7 +14,7 @@ interface GameCardProps {
 export default function GameCard({ game, pick }: GameCardProps) {
   return (
     <Card data-testid={game.id}>
-      <CardContent data-testid="game-card" className="p-0 m-0 space-y-2">
+      <CardContent data-testid="game-card" className="p-0 space-y-2">
         <div className="flex flex-row pb-0 space-y-1 p-6 mb-2">
           <div className="basis-12/12 md:basis-8/12 my-auto mr-2">
             <GameTeamDisplay game={game} pick={pick} />
@@ -28,8 +28,10 @@ export default function GameCard({ game, pick }: GameCardProps) {
             </div>
           </div>
         </div>
-        <GameInfoCollapsible game={game} />
+        {/*<GameInfoCollapsible game={game} />*/}
       </CardContent>
+      <Separator className="my-2" />
+      <StatusFooter status={game.status} venue={game.venue} game={game} />
     </Card>
   );
 }
