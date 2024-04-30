@@ -45,10 +45,10 @@ export function GameStatsCard({ game }: { game: Game }) {
 
   if (data) {
     const awayPct = Math.round(
-      (data.awayPicks / (data.totalPicks === 0 ? data.totalPicks : 1)) * 100,
+      (data.awayPicks / (data.totalPicks === 0 ? 1 : data.totalPicks)) * 100,
     );
     const homePct = Math.round(
-      (data.homePicks / (data.totalPicks === 0 ? data.totalPicks : 1)) * 100,
+      (data.homePicks / (data.totalPicks === 0 ? 1 : data.totalPicks)) * 100,
     );
 
     if (statuses) {
@@ -69,7 +69,8 @@ export function GameStatsCard({ game }: { game: Game }) {
               />
               <div className="flex justify-start gap-x-2 text-sm items-center">
                 <div
-                  className={`bg-foreground rounded-r-lg pl-2 h-2 w-[${awayPct}%]`}
+                  className="bg-foreground rounded-r-lg pl-2 h-2"
+                  style={{ width: awayPct + "%" }}
                 />
                 {awayPct}%
               </div>
@@ -87,7 +88,8 @@ export function GameStatsCard({ game }: { game: Game }) {
               />
               <div className="flex justify-start gap-x-2 text-sm items-center">
                 <div
-                  className={`bg-foreground rounded-r-lg pl-2 h-2 w-[${homePct}%]`}
+                  className="bg-foreground rounded-r-lg pl-2 h-2"
+                  style={{ width: homePct + "%" }}
                 />
                 {homePct}%
               </div>

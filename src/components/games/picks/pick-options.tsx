@@ -36,7 +36,7 @@ export default function PickOptions({
 }: PickOptionsProps) {
   const { getToken, userId } = useAuth();
   const { teams } = useFetchTeams();
-  const { prefs } = usePrefs(getToken(), userId ?? "");
+  const { prefs } = usePrefs(getToken(), userId ?? null, userId !== null);
   const { data: picks } = useQuery({
     queryKey: ["pickData", game.id],
     queryFn: async () => getAllPicks(game.id),

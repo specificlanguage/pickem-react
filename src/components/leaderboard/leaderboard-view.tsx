@@ -46,7 +46,7 @@ export default function LeaderboardView() {
   if (isLoading) {
     return (
       <div>
-        <LoadingWheel size={48} />;
+        <LoadingWheel size={48} />
       </div>
     );
   }

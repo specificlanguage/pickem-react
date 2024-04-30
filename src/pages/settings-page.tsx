@@ -9,7 +9,11 @@ import { AuthSettingsForm } from "@/components/forms/settings/auth-settings-form
 
 export default function SettingsPage() {
   const { getToken, userId } = useAuth();
-  const { prefs, isLoading } = usePrefs(getToken(), userId ?? "");
+  const { prefs, isLoading } = usePrefs(
+    getToken(),
+    userId ?? null,
+    userId !== null,
+  );
 
   const [settingsScreen, setSettingsScreen] = useState("main");
 

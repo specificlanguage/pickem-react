@@ -57,7 +57,11 @@ export async function getAllUsers() {
  * @param token - The token function of the user (i.e. getToken).
  * @param uid - UID (or null)
  */
-export function usePrefs(token: Promise<string | null>, uid: string | null) {
+export function usePrefs(
+  token: Promise<string | null>,
+  uid: string | null,
+  enabled?: boolean,
+) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["prefs"],
     queryFn: async () => {
@@ -77,6 +81,7 @@ export function usePrefs(token: Promise<string | null>, uid: string | null) {
       }
     },
     staleTime: Infinity,
+    enabled: enabled ?? uid !== null,
   });
   return { data, isLoading, isError, prefs: data };
 }

@@ -15,7 +15,7 @@ export default function GameCard({ game, pick }: GameCardProps) {
   return (
     <Card data-testid={game.id}>
       <CardContent data-testid="game-card" className="p-0 space-y-2">
-        <div className="flex flex-row pb-0 space-y-1 p-6 mb-2">
+        <div className="flex flex-row pb-4 space-y-1 p-6 mb-2">
           <div className="basis-12/12 md:basis-8/12 my-auto mr-2">
             <GameTeamDisplay game={game} pick={pick} />
           </div>

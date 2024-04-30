@@ -33,7 +33,7 @@ interface SmallGameCardProps {
 export function SmallGameCard({ game, pick }: SmallGameCardProps) {
   const { getToken, userId } = useAuth();
   const { data: teams } = useFetchTeams();
-  const { prefs } = usePrefs(getToken(), userId ?? "");
+  const { prefs } = usePrefs(getToken(), userId ?? null, userId !== null);
   if (!teams) return null;
   const awayTeam = getTeamFromList(teams, game.awayTeam_id);
   const homeTeam = getTeamFromList(teams, game.homeTeam_id);

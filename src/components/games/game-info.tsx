@@ -151,34 +151,41 @@ export function StatusFooter({
   venue: string;
   game: Game;
 }) {
-  function ExtraStatusInfo() {
-    if (game.finished) {
-      return null; // TODO later: Add winning/losing pitchers
-    }
-    if (!status) {
+  function ExtraStatusInfo({
+    status,
+    game,
+  }: {
+    status: GameStatus | undefined;
+    game: Game;
+  }) {
+    console.log(status, game);
+
+    if (!status || status.status === "SCHEDULED") {
       return (
         <>
           <FaLocationDot />
-          <span>{game.venue}</span>
+          <span>{game.venue}</span>{" "}
+        </>
+      );
+    } else if (game.finished) {
+      return null; // Usually return winning pitcher or not, but need to be implemented in backend first
+    } else if (status.outs === 3) {
+      return null;
+    } else {
+      return (
+        <>
+          <span>P: {status.currentPitcher}</span>
+          <Separator orientation={"vertical"} className="m-2" />
+          <span>AB: {status.atBat}</span>
         </>
       );
     }
-    if (status.outs === 3) {
-      return null;
-    }
-    return (
-      <>
-        <span>P: {status.currentPitcher}</span>
-        <Separator orientation={"vertical"} className="m-2" />
-        <span>AB: {status.atBat}</span>
-      </>
-    );
   }
 
   return (
     <CardFooter className="flex justify-between w-full pb-2">
       <div className="flex justify-start space-x-2 text-sm items-center ">
-        <ExtraStatusInfo />
+        <ExtraStatusInfo status={status} game={game} />
       </div>
       <div className="flex justify-end text-sm">
         <GameStatusInningInfo game={game} />

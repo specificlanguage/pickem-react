@@ -25,7 +25,7 @@ export default function GameTeamDisplay({
   const { getToken, userId } = useAuth();
 
   const { teams } = useFetchTeams();
-  const { prefs } = usePrefs(getToken(), userId ?? "");
+  const { prefs } = usePrefs(getToken(), userId ?? null, userId !== null);
 
   const possibleViews = ["team", "full"];
   const [teamView, setTeamView] = useState<number>(
