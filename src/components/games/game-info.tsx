@@ -158,8 +158,6 @@ export function StatusFooter({
     status: GameStatus | undefined;
     game: Game;
   }) {
-    console.log(status, game);
-
     if (!status || status.status === "SCHEDULED") {
       return (
         <>
