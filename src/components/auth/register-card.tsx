@@ -8,6 +8,7 @@ import {
 import { RegisterForm } from "@/components/auth/form/register-form.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Link } from "@tanstack/react-router";
+import { OAuthButtons } from "@/components/auth/oauth-buttons.tsx";
 
 export default function RegisterCard() {
   return (
@@ -20,8 +21,12 @@ export default function RegisterCard() {
       </CardHeader>
       <CardContent>
         <RegisterForm />
-        <Separator className="my-4" />
-        {/*TODO: Log into google*/}
+        <div className="my-2 flex justify-between items-center gap-x-4">
+          <Separator className="w-5/12" />
+          <span>or</span>
+          <Separator className="w-5/12" />
+        </div>
+        <OAuthButtons />
         <Separator className="my-4" />
         <p className="text-sm">
           Already signed up?{" "}

@@ -8,10 +8,9 @@ import {
 import { LoginForm } from "@/components/auth/form/login-form.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Link } from "@tanstack/react-router";
+import { OAuthButtons } from "@/components/auth/oauth-buttons.tsx";
 
 export default function LoginCard() {
-  // TODO eventually: OAuth implementations with Google/Discord, see https://clerk.com/docs/custom-flows/oauth-connections
-
   return (
     <Card>
       <CardHeader>
@@ -22,8 +21,12 @@ export default function LoginCard() {
       </CardHeader>
       <CardContent>
         <LoginForm />
-        <Separator className="my-4" />
-        {/*TODO: Log into google*/}
+        <div className="my-2 flex justify-between items-center gap-x-4">
+          <Separator className="w-5/12" />
+          <span>or</span>
+          <Separator className="w-5/12" />
+        </div>
+        <OAuthButtons />
         <Separator className="my-4" />
         <p className="text-sm">
           Don't have an account?{" "}

@@ -11,6 +11,9 @@ import { Route as rootRoute } from './routes/__root'
 const SignupComponentImport = new FileRoute('/signup').createRoute()
 const SettingsComponentImport = new FileRoute('/settings').createRoute()
 const SessionComponentImport = new FileRoute('/session').createRoute()
+const OauthCallbackComponentImport = new FileRoute(
+  '/oauth-callback',
+).createRoute()
 const LoginComponentImport = new FileRoute('/login').createRoute()
 const LeaderboardComponentImport = new FileRoute('/leaderboard').createRoute()
 const GamesComponentImport = new FileRoute('/games').createRoute()
@@ -50,6 +53,16 @@ const SessionComponentRoute = SessionComponentImport.update({
 } as any).update({
   component: lazyRouteComponent(
     () => import('./routes/session.component'),
+    'component',
+  ),
+})
+
+const OauthCallbackComponentRoute = OauthCallbackComponentImport.update({
+  path: '/oauth-callback',
+  getParentRoute: () => rootRoute,
+} as any).update({
+  component: lazyRouteComponent(
+    () => import('./routes/oauth-callback.component'),
     'component',
   ),
 })
@@ -134,6 +147,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginComponentImport
       parentRoute: typeof rootRoute
     }
+    '/oauth-callback': {
+      preLoaderRoute: typeof OauthCallbackComponentImport
+      parentRoute: typeof rootRoute
+    }
     '/session': {
       preLoaderRoute: typeof SessionComponentImport
       parentRoute: typeof rootRoute
@@ -164,6 +181,7 @@ export const routeTree = rootRoute.addChildren([
   GamesComponentRoute,
   LeaderboardComponentRoute,
   LoginComponentRoute,
+  OauthCallbackComponentRoute,
   SessionComponentRoute,
   SettingsComponentRoute,
   SignupComponentRoute,
