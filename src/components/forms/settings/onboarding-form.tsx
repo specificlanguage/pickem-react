@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { LuLoader2 } from "react-icons/lu";
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
-import { setPreferences } from "@/lib/http/users.ts";
+import { setPreferences, usePrefs } from "@/lib/http/users.ts";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,12 +24,13 @@ import {
   FrequencyDescription,
   FrequencySelection,
 } from "@/components/forms/settings/settings-form-components.tsx";
+import LoadingSpinner from "@/components/loading-wheel.tsx";
 
 export default function OnboardingForm() {
   // TODO: abstract this into its own hook
   const { teams } = useFetchTeams();
   const [isLoading, setLoading] = useState(false);
-  const { getToken } = useAuth();
+  const { getToken, userId, isLoaded } = useAuth();
   const navigate = useNavigate();
   const qClient = useQueryClient();
 
@@ -47,6 +48,20 @@ export default function OnboardingForm() {
       selectionTiming: "",
     },
   });
+
+  const { isLoading: isPrefsLoading, prefs } = usePrefs(
+    getToken() ?? "",
+    userId ?? "",
+    isLoaded,
+  );
+
+  if (!isLoaded || isPrefsLoading) {
+    return <LoadingSpinner size={48} />;
+  }
+
+  if (prefs !== null) {
+    navigate({ to: "/" });
+  }
 
   async function onSubmit(values: z.infer<typeof onboardingFormSchema>) {
     setLoading(true);

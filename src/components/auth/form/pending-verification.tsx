@@ -39,11 +39,12 @@ export function PendingVerification(props: UserInputs) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     signUp
       ?.attemptEmailAddressVerification({ code: values.code })
-      .then((result) => {
+      .then(async (result) => {
         if (result.status === "complete") {
-          setActive({ session: result.createdSessionId });
+          await setActive({ session: result.createdSessionId });
           navigate({ to: "/user/onboarding" });
         } else {
           console.log(result);
