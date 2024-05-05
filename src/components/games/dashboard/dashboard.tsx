@@ -61,10 +61,12 @@ export function StatsCards() {
         title={"Correct picks (past week)"}
         icon={<FaCheckDouble />}
       >
-        <div className="text-2xl font-bold">{userRecord?.correct}</div>
+        <div className="text-2xl font-bold">{userRecord?.correct ?? 0}</div>
         <p className="text-xs text-muted-foreground">
           {Math.round(
-            ((userRecord?.correct ?? 0) / (userRecord?.total ?? 1)) * 100,
+            ((userRecord?.correct ?? 0) /
+              (userRecord && userRecord.total ? 0 : 1)) *
+              100,
           )}
           % accuracy
         </p>
@@ -82,7 +84,15 @@ export default function Dashboard() {
 
   const lastGameStarted = session
     ? isBefore(
-        new Date(session.games[session.games.length - 1].startTimeUTC),
+        new Date(
+          // Unreadable code, but at the end of the day, sorts games by time
+          session.games.sort(
+            (g1, g2) =>
+              new Date(g1.startTimeUTC).getTime() -
+              new Date(g2.startTimeUTC).getTime(),
+            // Then makes sure the last game has started or not.
+          )[session.games.length - 1].startTimeUTC,
+        ),
         new Date(),
       )
     : false;
@@ -127,7 +137,7 @@ export default function Dashboard() {
       </div>
       <Separator />
       {session ? (
-        session.picks.length === 0 && !lastGameStarted ? (
+        session.picks.length <= session.games.length && !lastGameStarted ? (
           <NotPickedAlert />
         ) : (
           <SmallGameCardsByDate
