@@ -6,8 +6,12 @@ export const Route = new RootRoute({
   component: () => (
     <div className="flex flex-col min-h-screen">
       <Outlet />
-      <TanStackRouterDevtools />
-      <ReactQueryDevtools />
+      {import.meta.env.DEV ? (
+        <>
+          <TanStackRouterDevtools />
+          <ReactQueryDevtools />
+        </>
+      ) : null}
     </div>
   ),
 });
