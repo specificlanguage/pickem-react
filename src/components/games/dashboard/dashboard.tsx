@@ -136,15 +136,16 @@ export default function Dashboard() {
         <MarqueeStatCard />
       </div>
       <Separator />
+      {session &&
+      !lastGameStarted &&
+      session.picks.length < session.games.length ? (
+        <NotPickedAlert />
+      ) : null}
       {session ? (
-        session.picks.length <= session.games.length && !lastGameStarted ? (
-          <NotPickedAlert />
-        ) : (
-          <SmallGameCardsByDate
-            date={startOfToday()}
-            title={`Today's games (${format(startOfToday(), "MMM d, yyyy")})`}
-          />
-        )
+        <SmallGameCardsByDate
+          date={startOfToday()}
+          title={`Today's games (${format(startOfToday(), "MMM d, yyyy")})`}
+        />
       ) : null}
       <SmallGameCardsByDate date={yesterday} title={`Yesterday's picks`} />
     </div>
