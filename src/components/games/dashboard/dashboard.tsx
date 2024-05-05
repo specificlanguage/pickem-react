@@ -65,7 +65,7 @@ export function StatsCards() {
         <p className="text-xs text-muted-foreground">
           {Math.round(
             ((userRecord?.correct ?? 0) /
-              (userRecord && userRecord.total ? 0 : 1)) *
+              (userRecord && userRecord.total ? userRecord.total : 1)) *
               100,
           )}
           % accuracy
